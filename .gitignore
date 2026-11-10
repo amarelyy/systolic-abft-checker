@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+*.pyc
+sim_build/
+.pytest_cache/

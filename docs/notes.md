@@ -1,9 +1,10 @@
 # Notes
 
-## Step 1.14: data flow of one WS multiply
+## Data flow of one WS multiply
 
 Source: `logs/2026-11-10T172359_ws_ctrl_W20_waves/` (`dump.vcd`, test `test_identity`,
-W = 20, seed 12345). The table below is `cycle_table.txt` from that folder: signals of
+W = 20, seed 12345; recorded before the width was fixed at 18, which does not change the
+data flow). The table below is `cycle_table.txt` from that folder: signals of
 `systolic_ws_ctrl` sampled once per cycle (on the falling clock edge), starting at the cycle
 after `start`.
 
@@ -59,34 +60,67 @@ What happens:
    outputs are the rows of A, skewed: C[0][0] = -8 at t = 4, C[3][3] = 7 at t = 10.
 5. **done** is high in the cycle after the last capture. From the clock edge that takes
    `start` to the cycle where `done` is high is 4 (load) + 11 (run) = 15 cycles.
-   `test_ws_ctrl.py` checks this number for every multiply. Inputs are latched at start, and
+   The tests check this number for every multiply. Inputs are latched at start, and
    `c_mat` holds the result until the next start.
 
-Utilisation: each PE does useful work for 4 of the 11 RUN cycles. This number is needed in
-step 2.12 (WS vs OS).
+Utilisation: each PE does useful work for 4 of the 11 RUN cycles.
 
-## Open issue: no overflow is possible with a 4x4 array at W = 20, 24 or 32
+## Accumulator width: W = 18
 
-Found while writing the step 1.12 tests. **Needs a decision from rr.**
+### Why 18
 
-With 4x4 INT8, one output is a sum of 4 products. The largest result is
+One output of a 4x4 INT8 multiply is a sum of K = 4 products. The largest result is
 4 x (-128 x -128) = 65536 = 2^16, and the smallest is 4 x (-128 x 127) = -65024.
-A signed 20-bit register holds -524288 .. 524287, so **no result can ever overflow at
-W = 20, 24 or 32**. The "all -128" test in step 1.12 gives 65536 and does not wrap.
+In general a sum of K products of two b-bit numbers needs about 2b + log2(K) bits, which
+for b = 8 and K = 4 is 18 bits. A signed 18-bit register holds -131072 .. 131071, so
+**W = 18 is the smallest width that can never overflow** for this array.
 
-This affects later steps that expect overflow cases:
-- step 2.6 coverage bin "overflow" can never be hit,
-- step 3.2 and step 3.8 ("including overflow cases") cannot test overflow in the hardware,
-- the W sweep will show no difference in detection between widths, only in area.
+Real accelerators use 32-bit accumulators instead (for example the TPU, Jouppi et al.,
+ISCA 2017, and the integer-only inference scheme of Jacob et al., CVPR 2018), because their
+dot products are much longer (K in the hundreds or thousands, often summed over several
+passes). That reason does not apply to a single 4x4 array, so this project uses the minimum.
 
-Possible fixes (not done, choose one):
-1. **Add a smaller width to the sweep**, for example W = 16 or 17. At W = 16 the
-   "all -128" case already wraps (65536 becomes 0). Cheapest change.
-2. **Let psum start from a loaded value (bias or previous tile)** instead of 0. That
-   models accumulating a longer dot product over several 4x4 tiles, where overflow is real.
-   It is more work, and it changes the PE top edge and the checksum reference.
-3. **Keep the plan as is** and state in the README that overflow cannot happen for this
-   array size, and explain why.
+### Consequence: overflow cannot happen in the array
 
-The PE itself is already tested with overflow: step 1.5 feeds random W-bit `psum_in`
-values, so wrap-around is tested at the PE level for every W.
+With W = 18 no result can wrap, so:
+- the coverage bin "a result overflows" can never be hit (see `docs/results.md`),
+- overflow behaviour is still tested at the PE level: the PE random test feeds random
+  W-bit `psum_in` values, so wrap-around of the adder is checked there.
+
+### Pre-study used for the decision
+
+These are not final results: area here is generic Yosys gates. Full synthesis results will
+be added later.
+
+How often a result overflows, for 1,000,000 random 4x4 INT8 matrix pairs (seed 12345).
+Log: `logs/2026-11-10T182224_overflow_study/overflow_study.txt`
+(`python model/overflow_study.py`).
+
+| W | elements that overflow | matrices with at least one overflow | corner cases that overflow |
+|---|---|---|---|
+| 16 | 0.30% | 4.49% | all three (-128x-128, 127x127, -128x127) |
+| 17 | 0% | 0% | only all -128 x all -128 (result 65536) |
+| 18 | 0% | 0% | none |
+| 20, 24, 32 | 0% | 0% | none |
+
+Area of the array alone (no checker).
+Log: `logs/2026-11-10T182225_area_sweep/summary.txt` (`synth/area_sweep.sh`).
+
+| W | cells | flip-flops |
+|---|---|---|
+| 16 | 8280 | 480 |
+| 17 | 8617 | 492 |
+| 18 | 8794 | 500 |
+| 20 | 9042 | 508 |
+| 24 | 9240 | 524 |
+| 32 | 9430 | 556 |
+
+From W = 16 to 32 the cell count grows only about 14%. The reason: psum starts at 0, so the
+bits above about bit 17 are always copies of the sign bit, and Yosys proves this and merges
+many of those flip-flops. (Without merging the count is 16 x (8 + 8 + W) minus the 32 unused
+`a_out` bits of the last column, which is 480 at W = 16 and matches exactly.) In a design
+where psum continues from an earlier value, those bits would really change and would cost
+real area.
+
+A side effect for fault injection: at large W, many register bits in simulation do not
+exist after synthesis. Faults injected into those bits test hardware that is not there.

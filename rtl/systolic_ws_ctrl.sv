@@ -1,9 +1,9 @@
-// systolic_ws_ctrl.sv: weight-stationary array plus its control logic (step 1.10)
+// systolic_ws_ctrl.sv: weight-stationary array plus its control logic
 //
 // Computes C = A x B for N x N INT8 matrices. Matrices are flat packed buses,
 // element [r][c] at index r*N + c.
 //
-// Sequence after a start pulse (A and B are latched on start):
+// Sequence after start is accepted (A and B are latched then):
 //   LOAD, N cycles:  cycle c shifts row N-1-c of B into the top of the array,
 //                    so after N cycles PE[k][j] holds B[k][j].
 //   RUN, 3N-1 cycles (t = 0 .. 3N-2):
@@ -11,14 +11,20 @@
 //                    C[i][j] leaves the bottom of column j at t = i + j + N.
 //   done pulses for one cycle after the last C value is captured.
 //   c_mat holds the result until the next start.
+//
+// Back-pressure: while stall is high, the whole datapath and the FSM hold their state
+// (the PEs get en = 0), so a stalled cycle changes nothing. start is only accepted in IDLE
+// when stall is low; the sender keeps start high until busy goes high.
+// From accepted start to done is 4N - 1 cycles plus one cycle per stalled busy cycle.
 
 module systolic_ws_ctrl #(
     parameter int N = 4,
-    parameter int W = 32
+    parameter int W = 18
 ) (
     input  logic                  clk,
     input  logic                  rst_n,
-    input  logic                  start,     // ignored while busy
+    input  logic                  stall,
+    input  logic                  start,     // ignored while busy or stalled
     input  logic [N*N-1:0][7:0]   a_mat,
     input  logic [N*N-1:0][7:0]   b_mat,
     output logic                  busy,
@@ -51,7 +57,7 @@ module systolic_ws_ctrl #(
 
     assign busy   = (state != IDLE);
     assign load_w = (state == LOAD);
-    assign en     = 1'b1;            // always on until back-pressure is added in step 2.5
+    assign en     = !stall;
 
     always_comb begin
         int t;
@@ -76,34 +82,36 @@ module systolic_ws_ctrl #(
             c_mat <= '0;
         end else begin
             done <= 1'b0;
-            case (state)
-                IDLE: if (start) begin
-                    a_q   <= a_mat;
-                    b_q   <= b_mat;
-                    cnt   <= '0;
-                    state <= LOAD;
-                end
-                LOAD: if (int'(cnt) == N-1) begin
-                    cnt   <= '0;
-                    state <= RUN;
-                end else begin
-                    cnt <= cnt + 1'b1;
-                end
-                RUN: begin
-                    for (int j = 0; j < N; j++) begin
-                        // C[i][j] is at the bottom of column j when t = i + j + N
-                        if (int'(cnt) >= j + N && int'(cnt) < j + 2*N)
-                            c_mat[(int'(cnt) - j - N)*N + j] <= psum_bottom[j];
+            if (!stall) begin
+                case (state)
+                    IDLE: if (start) begin
+                        a_q   <= a_mat;
+                        b_q   <= b_mat;
+                        cnt   <= '0;
+                        state <= LOAD;
                     end
-                    if (int'(cnt) == LAST_T) begin
-                        done  <= 1'b1;
-                        state <= IDLE;
+                    LOAD: if (int'(cnt) == N-1) begin
+                        cnt   <= '0;
+                        state <= RUN;
                     end else begin
                         cnt <= cnt + 1'b1;
                     end
-                end
-                default: state <= IDLE;
-            endcase
+                    RUN: begin
+                        for (int j = 0; j < N; j++) begin
+                            // C[i][j] is at the bottom of column j when t = i + j + N
+                            if (int'(cnt) >= j + N && int'(cnt) < j + 2*N)
+                                c_mat[(int'(cnt) - j - N)*N + j] <= psum_bottom[j];
+                        end
+                        if (int'(cnt) == LAST_T) begin
+                            done  <= 1'b1;
+                            state <= IDLE;
+                        end else begin
+                            cnt <= cnt + 1'b1;
+                        end
+                    end
+                    default: state <= IDLE;
+                endcase
+            end
         end
     end
 

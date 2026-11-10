@@ -1,10 +1,10 @@
-"""Golden reference model (step 1.7).
+"""Golden reference model.
 
 C = A x B computed in int64, then masked to W bits, so it wraps mod 2^W exactly like the
 hardware accumulator. The result is the raw W-bit pattern (unsigned), which is what the
 testbench reads from the DUT. Use to_signed() to read it as a signed number.
 
-Keep this file in model/ only (tab 5, filing rule 4).
+This is the only copy of the reference model; tests import it from here.
 """
 
 import numpy as np

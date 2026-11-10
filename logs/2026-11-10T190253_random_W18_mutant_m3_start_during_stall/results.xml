@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites name="cocotb tests"><testsuite name="test_random" errors="0" failures="1" skipped="0" tests="1" time="0.230" timestamp="2026-11-10T12:02:57.054689+00:00" hostname="ursula-ubuntu"><testcase classname="test_random" name="test_random" time="0.230"><failure message="monitor saw 270 of 300 transactions&#10;assert 270 == 300&#10; +  where 270 = len([Transaction(A=array([[ -24, -128,   91,    1],\n       [  36,  126,   41,   27],\n       [ -23,   18,  126,   65],\n    ...9],\n       [249571,  16685,      0, 259048]]), cycles=17, stall_cycles=1, stalled_at_start=False, stalled_in={1}), ...])" type="AssertionError">Traceback (most recent call last):
+  File "/home/ursula/systolic-abft-checker/tb/test_random.py", line 58, in test_random
+    assert len(done) == NUM_TESTS, f"monitor saw {len(done)} of {NUM_TESTS} transactions"
+AssertionError: monitor saw 270 of 300 transactions
+assert 270 == 300
+ +  where 270 = len([Transaction(A=array([[ -24, -128,   91,    1],\n       [  36,  126,   41,   27],\n       [ -23,   18,  126,   65],\n    ...9],\n       [249571,  16685,      0, 259048]]), cycles=17, stall_cycles=1, stalled_at_start=False, stalled_in={1}), ...])
+</failure><properties><property name="cocotb" value="True" /><property name="random_seed" value="12345" /><property name="file" value="/home/ursula/systolic-abft-checker/tb/test_random.py" /><property name="line" value="28" /><property name="sim_time_unit" value="ns" /><property name="sim_time_start" value="0.0" /><property name="sim_time_stop" value="61625.0" /><property name="sim_time_duration" value="61625.0" /><property name="sim_time_ratio" value="267374.2000485615" /><property name="attachment" value="/home/ursula/systolic-abft-checker/logs/2026-11-10T190253_random_W18_mutant_m3_start_during_stall/sim.log" /></properties><system-out>[[ATTACHMENT|/home/ursula/systolic-abft-checker/logs/2026-11-10T190253_random_W18_mutant_m3_start_during_stall/sim.log]]
+</system-out><system-err>Test failed with COCOTB_RANDOM_SEED=12345
+</system-err></testcase></testsuite></testsuites>

@@ -1,1 +1,1 @@
-// top.sv: connects array, control and checker. Placeholder, written in step 3.7.
+// top.sv: connects the array, control logic and checker. Placeholder, will be added later.

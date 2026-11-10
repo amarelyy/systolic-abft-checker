@@ -1,4 +1,4 @@
-"""PE tests (steps 1.4, 1.5).
+"""PE tests.
 
 Run all widths:  pytest tb/test_pe.py
 """
@@ -10,7 +10,7 @@ import pytest
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles, FallingEdge, RisingEdge
 
-from run_util import run_cocotb
+from run_util import WIDTHS, run_cocotb
 
 
 async def reset(dut):
@@ -44,7 +44,7 @@ async def mac(dut, a, psum_in):
 
 @cocotb.test()
 async def test_pe_basic(dut):
-    """Step 1.4: a=2, w=3, psum_in=1, expect 7."""
+    """a=2, w=3, psum_in=1, expect 7."""
     await reset(dut)
     await load_weight(dut, 3)
     got = await mac(dut, 2, 1)
@@ -53,7 +53,7 @@ async def test_pe_basic(dut):
 
 @cocotb.test()
 async def test_pe_random(dut):
-    """Step 1.5: 1000 random MACs over the full INT8 range and full psum range."""
+    """1000 random MACs over the full INT8 range and full psum range."""
     W = int(dut.W.value)
     mask = (1 << W) - 1
     await reset(dut)
@@ -71,6 +71,6 @@ async def test_pe_random(dut):
     dut._log.info("1000 random PE tests passed")
 
 
-@pytest.mark.parametrize("W", [20, 24, 32])
+@pytest.mark.parametrize("W", WIDTHS)
 def test_pe_runner(W):
     run_cocotb("pe", ["pe.sv"], "test_pe", f"pe_W{W}", parameters={"W": W})

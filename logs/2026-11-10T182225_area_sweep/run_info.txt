@@ -1,0 +1,1 @@
+Yosys 0.70+368 (git sha1 7cf88aca6, Release, Clang /usr/bin/clang++ 21.1.8)

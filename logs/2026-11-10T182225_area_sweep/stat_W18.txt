@@ -1,0 +1,27 @@
+
+5. Printing statistics.
+
+=== $paramod\systolic_ws\W=s32'00000000000000000000000000010010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     7745 wires
+    14751 wire bits
+      267 public wires
+     2580 public wire bits
+        7 ports
+      140 port bits
+     8794 cells
+      129   $_ANDNOT_
+     1499   $_AND_
+       70   $_MUX_
+     3116   $_NAND_
+       41   $_NOR_
+      157   $_NOT_
+       61   $_ORNOT_
+      400   $_OR_
+      500   $_SDFFE_PN0P_
+      789   $_XNOR_
+     2016   $_XOR_
+       16   $scopeinfo
+

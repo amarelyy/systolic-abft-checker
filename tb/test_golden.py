@@ -1,4 +1,4 @@
-"""Golden model tests (step 1.8).
+"""Golden model tests.
 
 Run:  pytest tb/test_golden.py
 """

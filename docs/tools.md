@@ -1,4 +1,4 @@
-# Tools and versions (step 1.1)
+# Tools and versions
 
 Recorded on 2026-11-10. A result is only reproducible if these versions are known.
 If a tool is updated, add a new dated section below instead of editing this one.
@@ -21,13 +21,13 @@ installed in `~/tools/oss-cad-suite`.
 |---|---|---|
 | Verilator (chosen simulator) | 5.055 devel rev v5.054-183-g9040f8666 | All simulation, SVA assertions |
 | Icarus Verilog (backup only) | 14.0 (devel) s20260301-948-gbd5af2914 | Not used for results |
-| Yosys | 0.70+368 (git sha1 7cf88aca6) | Synthesis, cell counts (steps 5.5, 5.6) |
-| SymbiYosys (sby) | from the same suite build | Formal proofs (steps 5.2, 5.4) |
+| Yosys | 0.70+368 (git sha1 7cf88aca6) | Synthesis, cell counts |
+| SymbiYosys (sby) | from the same suite build | Formal proofs |
 | Z3 | 4.15.5 | Formal solver |
 | Bitwuzla | 0.9.1 | Formal solver |
 | Boolector | 3.2.4 | Formal solver |
 | Yices | 2.7.0 | Formal solver |
-| GTKWave (chosen waveform viewer) | v4.0.0-prealpha (e40ba79) | Waveform debugging (steps 1.14, 3.9) |
+| GTKWave (chosen waveform viewer) | v4.0.0-prealpha (e40ba79) | Waveform debugging |
 
 ## Python (project venv, `.venv/`)
 
@@ -44,13 +44,13 @@ stable release is easier to reproduce.
 
 ## Choices and why
 
-- **Simulator: Verilator.** It runs SVA assertions (step 1.6), and it is fast enough for the
-  10,000-run and 3 x 1000-injection campaigns. Verilator is 2-state (no X values), so every
+- **Simulator: Verilator.** It runs SVA assertions, and it is fast enough for large
+  random-test and fault-injection campaigns. Verilator is 2-state (no X values), so every
   register in the RTL must have a reset.
 - **Waveform viewer: GTKWave.** Surfer is in the suite but needs glibc 2.43, which Ubuntu
   22.04 does not have.
-- **OpenLane / OpenSTA: not installed yet.** They are only needed at step 5.7. Record the
-  version and PDK here when they are installed.
+- **OpenLane / OpenSTA: not installed yet.** They are needed for place-and-route and timing
+  results, which will be added later. Their version and PDK will be recorded here.
 - **Old apt packages** (`/usr/bin/verilator` 4.038, `/usr/bin/yosys` 0.9,
   `/usr/bin/iverilog` 11.0) are still on the system. `source env.sh` puts the suite first on
   PATH, so they are not used. Do not run tests without sourcing `env.sh`.
@@ -61,8 +61,9 @@ stable release is easier to reproduce.
 source env.sh
 ```
 
-This loads the suite and the venv, and removes snap GTK variables that break GTKWave when the
-terminal is opened inside snap VS Code.
+This loads the suite and the venv. It also clears `PYTHONPATH` (on this machine `~/.bashrc`
+adds ROS Humble packages there, and they break pytest), and removes snap GTK variables that
+break GTKWave when the terminal is opened inside snap VS Code.
 
 ## How to reinstall from scratch
 

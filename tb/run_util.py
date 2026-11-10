@@ -1,8 +1,8 @@
 """Shared cocotb runner: builds with Verilator and saves every run to its own logs/ folder.
 
 Each run gets logs/<timestamp>_<tag>/ with sim.log (includes the seed), build.log,
-results.xml and run_info.txt (W, seed, tool versions). Logs are never deleted
-(tab 5, filing rule 6).
+results.xml and run_info.txt (W, seed, tool versions). Logs are never deleted:
+a failed run is evidence too.
 """
 
 import datetime
@@ -13,8 +13,9 @@ from pathlib import Path
 from cocotb_tools.runner import get_results, get_runner
 
 ROOT = Path(__file__).resolve().parent.parent
-RTL = ROOT / "rtl"
+RTL = Path(os.environ.get("RTL_DIR", ROOT / "rtl"))   # RTL_DIR: test a modified copy
 DEFAULT_SEED = 12345
+WIDTHS = [18]          # accumulator widths every test runs at
 
 
 def _version(cmd):
@@ -31,7 +32,7 @@ def run_cocotb(toplevel, sources, test_module, tag, parameters=None, seed=None, 
     parameters = parameters or {}
     seed = int(os.environ.get("SEED", seed if seed is not None else DEFAULT_SEED))
     stamp = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
-    log_dir = ROOT / "logs" / f"{stamp}_{tag}"
+    log_dir = ROOT / "logs" / f"{stamp}_{tag}{os.environ.get('LOG_TAG', '')}"
     log_dir.mkdir(parents=True)
 
     param_str = "_".join(f"{k}{v}" for k, v in parameters.items())
@@ -41,6 +42,7 @@ def run_cocotb(toplevel, sources, test_module, tag, parameters=None, seed=None, 
     (log_dir / "run_info.txt").write_text(
         f"toplevel: {toplevel}\n"
         f"test_module: {test_module}\n"
+        f"rtl_dir: {RTL}\n"
         f"parameters: {parameters}\n"
         f"seed: {seed}\n"
         f"verilator: {_version(['verilator', '--version'])}\n"

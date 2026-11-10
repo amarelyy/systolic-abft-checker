@@ -1,4 +1,4 @@
-"""Directed tests for the WS array with control logic (steps 1.11, 1.12, 1.13).
+"""Directed tests for the WS array with control logic.
 
 Every result is compared with model/golden.py.
 
@@ -15,15 +15,16 @@ from cocotb.triggers import ClockCycles, FallingEdge, RisingEdge
 
 from mat_util import pack_matrix, unpack_matrix
 from model.golden import matmul_golden
-from run_util import run_cocotb
+from run_util import WIDTHS, run_cocotb
 
 N = 4
-LATENCY = N + 3 * N - 1      # LOAD + RUN cycles, from start to done
+LATENCY = N + 3 * N - 1      # LOAD + RUN cycles after the edge that accepts start
 
 
 async def reset(dut):
     cocotb.start_soon(Clock(dut.clk, 10, unit="ns").start())
     dut.rst_n.value = 0
+    dut.stall.value = 0
     dut.start.value = 0
     dut.a_mat.value = 0
     dut.b_mat.value = 0
@@ -66,7 +67,7 @@ def full(v):
 
 @cocotb.test()
 async def test_identity(dut):
-    """Step 1.11: B = identity, so C must equal A."""
+    """B = identity, so C must equal A."""
     await reset(dut)
     A = np.arange(N * N).reshape(N, N) - 8          # -8 .. 7, both signs
     await check(dut, "identity", A, np.eye(N, dtype=int))
@@ -77,7 +78,7 @@ async def test_identity(dut):
 
 @cocotb.test()
 async def test_extremes(dut):
-    """Step 1.12: all zeros, then -128 and 127 values."""
+    """All zeros, then -128 and 127 values."""
     await reset(dut)
     await check(dut, "zeros", full(0), full(0))
     await check(dut, "all -128", full(-128), full(-128))   # largest positive result, 4 * 16384
@@ -91,7 +92,7 @@ async def test_extremes(dut):
 
 @cocotb.test()
 async def test_mixed_signs(dut):
-    """Step 1.13: mixed signs, compared with golden.py."""
+    """Mixed signs, compared with golden.py."""
     await reset(dut)
     signs = np.where(np.random.default_rng(1).random((N, N)) < 0.5, -1, 1)
     await check(dut, "sign pattern", signs * 100, -signs.T * 77)
@@ -101,7 +102,7 @@ async def test_mixed_signs(dut):
         await check(dut, f"random mixed {n}", A, B)
 
 
-@pytest.mark.parametrize("W", [20, 24, 32])
+@pytest.mark.parametrize("W", WIDTHS)
 def test_ws_ctrl_runner(W):
     run_cocotb("systolic_ws_ctrl", ["pe.sv", "systolic_ws.sv", "systolic_ws_ctrl.sv"],
                "test_ws_ctrl", f"ws_ctrl_W{W}", parameters={"W": W})

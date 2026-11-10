@@ -1,0 +1,24 @@
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:242  in gpi_load_users                  Loaded entry library: '/usr/lib/x86_64-linux-gnu/libpython3.10.so.1.0'
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:233  in gpi_load_users                  Running entry func 'initialize' from loaded library '/home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb/simulator.cpython-310-x86_64-linux-gnu.so'
+     -.--ns INFO     pygpi                              ..ib/pygpi/embed.cpp:114  in initialize                      Using Python 3.10.19 interpreter at /home/ursula/systolic-abft-checker/.venv/bin/python3
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:74   in gpi_print_registered_impl       GPI: VPI support registered
+     0.00ns INFO     cocotb.initialize                  Seeding Python random module with 12345
+     0.00ns INFO     cocotb.initialize                  Initialized cocotb v2.1.0 from /home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb
+     0.00ns INFO     cocotb.initialize                  Running on Verilator version 5.055 devel
+     0.00ns INFO     cocotb.regression                  Running tests
+     0.00ns INFO     cocotb.regression                  running test_random.test_random (1/1)
+ 61625.00ns WARNING  cocotb.regression                  test_random.test_random failed
+                                                        Traceback (most recent call last):
+                                                          File "/home/ursula/systolic-abft-checker/tb/test_random.py", line 58, in test_random
+                                                            assert len(done) == NUM_TESTS, f"monitor saw {len(done)} of {NUM_TESTS} transactions"
+                                                        AssertionError: monitor saw 270 of 300 transactions
+                                                        assert 270 == 300
+                                                         +  where 270 = len([Transaction(A=array([[ -24, -128,   91,    1],\n       [  36,  126,   41,   27],\n       [ -23,   18,  126,   65],\n    ...9],\n       [249571,  16685,      0, 259048]]), cycles=17, stall_cycles=1, stalled_at_start=False, stalled_in={1}), ...])
+ 61625.00ns INFO     cocotb.regression                  **************************************************************************************
+                                                        ** TEST                          STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        **************************************************************************************
+                                                        ** test_random.test_random        FAIL       61625.00           0.23     267374.20  **
+                                                        **************************************************************************************
+                                                        ** TESTS=1 PASS=0 FAIL=1 SKIP=0              61625.00           0.23     266542.02  **
+                                                        **************************************************************************************
+- (null):0: Verilog $finish

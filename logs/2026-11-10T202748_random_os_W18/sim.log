@@ -1,0 +1,55 @@
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:242  in gpi_load_users                  Loaded entry library: '/usr/lib/x86_64-linux-gnu/libpython3.10.so.1.0'
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:233  in gpi_load_users                  Running entry func 'initialize' from loaded library '/home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb/simulator.cpython-310-x86_64-linux-gnu.so'
+     -.--ns INFO     pygpi                              ..ib/pygpi/embed.cpp:114  in initialize                      Using Python 3.10.19 interpreter at /home/ursula/systolic-abft-checker/.venv/bin/python3
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:74   in gpi_print_registered_impl       GPI: VPI support registered
+     0.00ns INFO     cocotb.initialize                  Seeding Python random module with 12345
+     0.00ns INFO     cocotb.initialize                  Initialized cocotb v2.1.0 from /home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb
+     0.00ns INFO     cocotb.initialize                  Running on Verilator version 5.055 devel
+     0.00ns INFO     cocotb.regression                  Running tests
+     0.00ns INFO     cocotb.regression                  running test_random.test_random (1/1)
+280165.00ns INFO     cocotb.systolic_os_ctrl            
+                                                        Functional coverage, design = os, W = 18
+                                                        
+                                                        coverpoint          bins   hit  coverage      raw
+                                                        a_value              256   256    100.0%   100.0%
+                                                        w_value              256   256    100.0%   100.0%
+                                                        sign_a                 3     3    100.0%   100.0%
+                                                        sign_w                 3     3    100.0%   100.0%
+                                                        sign_a_x_sign_w        9     9    100.0%   100.0%
+                                                        overflow               1     1    100.0%    50.0%
+                                                        stall                  2     2    100.0%    50.0%
+                                                        start_blocked          2     2    100.0%   100.0%
+                                                        sign_x_stall          18    18    100.0%   100.0%
+                                                        overflow_x_stall       2     2    100.0%    50.0%
+                                                        TOTAL (average)                   100.0%    85.0%
+                                                        (coverage = excluded bins removed; raw = nothing excluded)
+                                                        
+                                                        Excluded bins (unreachable):
+                                                          overflow: True: no 4x4 INT8 result can overflow W = 18 (range -65024 .. 65536, register holds -131072 .. 131071)
+                                                          overflow_x_stall: (True, False): no 4x4 INT8 result can overflow W = 18 (range -65024 .. 65536, register holds -131072 .. 131071)
+                                                          overflow_x_stall: (True, True): no 4x4 INT8 result can overflow W = 18 (range -65024 .. 65536, register holds -131072 .. 131071)
+                                                          stall: load: the output-stationary design has no load phase
+                                                          stall: load+run: the output-stationary design has no load phase
+                                                        
+                                                        Reachable bins never hit:
+                                                          none
+                                                        
+                                                        Hit counts (small coverpoints):
+                                                          sign_a: neg=58504, zero=11832, pos=57664
+                                                          sign_w: neg=57516, zero=13104, pos=57380
+                                                          sign_a_x_sign_w: ('neg', 'neg')=26106, ('neg', 'zero')=6149, ('neg', 'pos')=26249, ('zero', 'neg')=5468, ('zero', 'zero')=1126, ('zero', 'pos')=5238, ('pos', 'neg')=25942, ('pos', 'zero')=5829, ('pos', 'pos')=25893
+                                                          overflow: False=32000, True=0
+                                                          stall: none=884, load=0, run=1116, load+run=0
+                                                          start_blocked: False=1763, True=237
+                                                          sign_x_stall: ('neg', 'neg', False)=11822, ('neg', 'neg', True)=14284, ('neg', 'zero', False)=2731, ('neg', 'zero', True)=3418, ('neg', 'pos', False)=11731, ('neg', 'pos', True)=14518, ('zero', 'neg', False)=2364, ('zero', 'neg', True)=3104, ('zero', 'zero', False)=436, ('zero', 'zero', True)=690, ('zero', 'pos', False)=2268, ('zero', 'pos', True)=2970, ('pos', 'neg', False)=11422, ('pos', 'neg', True)=14520, ('pos', 'zero', False)=2405, ('pos', 'zero', True)=3424, ('pos', 'pos', False)=11397, ('pos', 'pos', True)=14496
+                                                          overflow_x_stall: (False, False)=14144, (False, True)=17856, (True, False)=0, (True, True)=0
+280165.00ns INFO     cocotb.systolic_os_ctrl            2000 passed, 0 mismatches, 2000 transactions
+280165.00ns INFO     cocotb.regression                  test_random.test_random passed
+280165.00ns INFO     cocotb.regression                  **************************************************************************************
+                                                        ** TEST                          STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        **************************************************************************************
+                                                        ** test_random.test_random        PASS      280165.00           1.21     231116.36  **
+                                                        **************************************************************************************
+                                                        ** TESTS=1 PASS=1 FAIL=0 SKIP=0             280165.00           1.21     231058.45  **
+                                                        **************************************************************************************
+- (null):0: Verilog $finish

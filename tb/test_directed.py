@@ -1,4 +1,4 @@
-"""Directed tests for the WS array with control logic.
+"""Directed tests for the WS and OS arrays with control logic.
 
 Every result is compared with model/golden.py.
 
@@ -15,10 +15,12 @@ from cocotb.triggers import ClockCycles, FallingEdge, RisingEdge
 
 from mat_util import pack_matrix, unpack_matrix
 from model.golden import matmul_golden
-from run_util import WIDTHS, run_cocotb
+from run_util import DESIGNS, WIDTHS, run_cocotb
 
 N = 4
-LATENCY = N + 3 * N - 1      # LOAD + RUN cycles after the edge that accepts start
+# Cycles after the edge that accepts start, until done is high.
+LATENCY = {"systolic_ws_ctrl": N + 3 * N - 1,    # LOAD + RUN
+           "systolic_os_ctrl": 3 * N - 2}        # RUN only
 
 
 async def reset(dut):
@@ -48,7 +50,8 @@ async def run_matmul(dut, A, B):
             break
     else:
         raise AssertionError("done never came")
-    assert cycles == LATENCY, f"done after {cycles} cycles, expected {LATENCY}"
+    expected = LATENCY[dut._name]
+    assert cycles == expected, f"done after {cycles} cycles, expected {expected}"
     return unpack_matrix(dut.c_mat.value.to_unsigned(), W, N)
 
 
@@ -103,6 +106,7 @@ async def test_mixed_signs(dut):
 
 
 @pytest.mark.parametrize("W", WIDTHS)
-def test_ws_ctrl_runner(W):
-    run_cocotb("systolic_ws_ctrl", ["pe.sv", "systolic_ws.sv", "systolic_ws_ctrl.sv"],
-               "test_ws_ctrl", f"ws_ctrl_W{W}", parameters={"W": W})
+@pytest.mark.parametrize("design", DESIGNS)
+def test_directed_runner(design, W):
+    top, sources = DESIGNS[design]
+    run_cocotb(top, sources, "test_directed", f"directed_{design}_W{W}", parameters={"W": W})

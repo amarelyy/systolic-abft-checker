@@ -1,0 +1,35 @@
+Functional coverage, design = os, W = 32
+
+coverpoint          bins   hit  coverage      raw
+a_value              256   256    100.0%   100.0%
+w_value              256   256    100.0%   100.0%
+sign_a                 3     3    100.0%   100.0%
+sign_w                 3     3    100.0%   100.0%
+sign_a_x_sign_w        9     9    100.0%   100.0%
+overflow               1     1    100.0%    50.0%
+stall                  2     2    100.0%    50.0%
+start_blocked          2     2    100.0%   100.0%
+sign_x_stall          18    18    100.0%   100.0%
+overflow_x_stall       2     2    100.0%    50.0%
+TOTAL (average)                   100.0%    85.0%
+(coverage = excluded bins removed; raw = nothing excluded)
+
+Excluded bins (unreachable):
+  overflow: True: no 4x4 INT8 result can overflow W = 32 (range -65024 .. 65536, register holds -2147483648 .. 2147483647)
+  overflow_x_stall: (True, False): no 4x4 INT8 result can overflow W = 32 (range -65024 .. 65536, register holds -2147483648 .. 2147483647)
+  overflow_x_stall: (True, True): no 4x4 INT8 result can overflow W = 32 (range -65024 .. 65536, register holds -2147483648 .. 2147483647)
+  stall: load: the output-stationary design has no load phase
+  stall: load+run: the output-stationary design has no load phase
+
+Reachable bins never hit:
+  none
+
+Hit counts (small coverpoints):
+  sign_a: neg=58504, zero=11832, pos=57664
+  sign_w: neg=57516, zero=13104, pos=57380
+  sign_a_x_sign_w: ('neg', 'neg')=26106, ('neg', 'zero')=6149, ('neg', 'pos')=26249, ('zero', 'neg')=5468, ('zero', 'zero')=1126, ('zero', 'pos')=5238, ('pos', 'neg')=25942, ('pos', 'zero')=5829, ('pos', 'pos')=25893
+  overflow: False=32000, True=0
+  stall: none=884, load=0, run=1116, load+run=0
+  start_blocked: False=1763, True=237
+  sign_x_stall: ('neg', 'neg', False)=11822, ('neg', 'neg', True)=14284, ('neg', 'zero', False)=2731, ('neg', 'zero', True)=3418, ('neg', 'pos', False)=11731, ('neg', 'pos', True)=14518, ('zero', 'neg', False)=2364, ('zero', 'neg', True)=3104, ('zero', 'zero', False)=436, ('zero', 'zero', True)=690, ('zero', 'pos', False)=2268, ('zero', 'pos', True)=2970, ('pos', 'neg', False)=11422, ('pos', 'neg', True)=14520, ('pos', 'zero', False)=2405, ('pos', 'zero', True)=3424, ('pos', 'pos', False)=11397, ('pos', 'pos', True)=14496
+  overflow_x_stall: (False, False)=14144, (False, True)=17856, (True, False)=0, (True, True)=0

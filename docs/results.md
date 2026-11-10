@@ -95,7 +95,9 @@ hit by any input. Without these bins, every reachable bin is hit (100%).
 Coverage literature treats this case explicitly: a coverage model can contain bins that the
 design can never reach, and they should be marked as excluded with a written reason, not
 "closed" by more random tests (Piziali, 2004). SystemVerilog has `ignore_bins` and
-`illegal_bins` for this (IEEE 1800-2017). Excluding them with this proof will be added later.
+`illegal_bins` for this (IEEE 1800-2017). `tb/func_coverage.py` now does this: unreachable bins
+are listed with the reason and left out of the percentage, and the raw percentage is printed
+next to it (see the next section).
 
 Overflow behaviour itself is still tested where it can happen: the PE random test feeds
 random 18-bit `psum_in` values, so the PE adder wraps in many of those tests.
@@ -132,9 +134,84 @@ Two bugs were found, both in the testbench, not in the RTL. See `docs/bug_log.md
 - Coverage is sampled at the transaction level (the A, B and C the monitor saw), not inside
   each PE.
 
+## Unreachable bins excluded, and the width ablation
+
+The WS array was rerun at three accumulator widths. W = 18 is the main design. W = 16 and
+W = 32 are an ablation: 16 is the only width where results can wrap, 32 is the width real
+accelerators use. 2000 random multiplies each, seed 12345.
+
+| Design | W | Mismatches | Coverage (excluded removed) | Raw coverage | Overflowed elements | Log |
+|---|---|---|---|---|---|---|
+| WS | 18 | 0 / 2000 | 100.0% | 90.0% | 0 of 32000 | `logs/2026-11-10T202741_random_ws_W18` |
+| WS | 16 | 0 / 2000 | 100.0% | 100.0% | 742 of 32000 (2.3%) | `logs/2026-11-10T202744_random_ws_W16` |
+| WS | 32 | 0 / 2000 | 100.0% | 90.0% | 0 of 32000 | `logs/2026-11-10T202746_random_ws_W32` |
+| OS | 18 | 0 / 2000 | 100.0% | 85.0% | 0 of 32000 | `logs/2026-11-10T202748_random_os_W18` |
+| OS | 16 | 0 / 2000 | 100.0% | 95.0% | 827 of 32000 (2.6%) | `logs/2026-11-10T202749_random_os_W16` |
+| OS | 32 | 0 / 2000 | 100.0% | 85.0% | 0 of 32000 | `logs/2026-11-10T202751_random_os_W32` |
+
+What this shows:
+
+- **The design is correct at all three widths, including when results wrap.** At W = 16, 742
+  results (WS) and 827 (OS) overflowed, and all were bit-exact with `model/golden.py`, which
+  wraps mod 2^W. This is the first test of the wrap-around behaviour in the full array, and it
+  is the case the checksum has to survive later.
+- **Excluded bins:** at W = 18 and 32 the bins "a result overflows" are excluded with the
+  reason (the largest possible result is 65536, smaller than the register limit). At W = 16
+  they are reachable and were hit, so nothing is excluded and raw coverage is 100%. For the
+  OS design the "stalled during load" bins are also excluded, because OS has no load phase.
+- **The stimulus shaping matters:** in the pre-study, uniform random input made 0.30% of
+  elements overflow at W = 16. Here it is 2.3%, about 8 times more, because of the extreme
+  and corner-value matrices (`tb/driver.py`). Rare cases happen often enough to be tested.
+- **W = 18 and W = 32 behave identically in simulation.** This is expected: with no overflow
+  possible, the extra bits of W = 32 are only copies of the sign. Differences between them
+  can only show up in area (pre-study: 8794 vs 9430 cells) and in fault injection, where
+  flips of those sign-copy bits will mostly be masked. That is measured later.
+
+## Mutation test for the OS array
+
+Same idea as above, two planted bugs, 300 multiplies each (`logs/*_mutant_os_*`):
+
+| Mutant | Planted bug | Caught? |
+|---|---|---|
+| a | A is fed with a wrong column offset (skew error) | yes, 300 of 300 |
+| b | the clear no longer zeroes the pass-through registers | **no, 0 of 300** |
+
+Mutant b is an *equivalent mutant*: at the end of every multiply the skewed schedule has
+already pushed zeros through every register that feeds another PE, so the extra clear changes
+nothing. This is from reading the schedule, not from a formal proof. It means the clear of the
+pass-through registers is redundant hardware (a few multiplexers per PE) that can be removed.
+It is kept for now as a safety margin.
+
 ## WS vs OS
 
-Not measured yet. Will be added later.
+Both designs pass the same random and directed tests at W = 18, 16 and 32 (logs above).
+The numbers below for one 4x4 multiply:
+
+| | Weight-stationary | Output-stationary | Source |
+|---|---|---|---|
+| Cycles from accepting start to done | 16 | 11 | measured: the scoreboard checks it on all 2000 multiplies per run, 0 mismatches |
+| Phases | 4 load + 11 run + 1 | 10 run + 1 | RTL |
+| PE utilisation (64 MACs / (16 PEs x cycles)) | 25.0% | 36.4% | computed from the measured cycles |
+| INT8 elements moved for one tile (A + B + C) | 48 | 48 | counted from the schedule, not a simulator output |
+| Extra registers per PE | stored weight (8 bit) | none | RTL |
+
+Analysis:
+
+- **OS is faster here (11 vs 16 cycles) because it has no load phase.** The result stays where
+  it is computed, so nothing has to be preloaded. WS must first shift 4 rows of weights into
+  the grid.
+- **WS only wins when the weights are reused.** The 4 load cycles are paid once, and then
+  many activation tiles can stream through the same weights. This testbench loads new weights
+  for every multiply, so it never gets that benefit. Because of this, the comparison above
+  favours OS by construction. Dataflow comparisons need a workload with reuse to be fair
+  (Chen, Emer, Sze, 2016). A reuse workload (one B, many A) will be added later.
+- **Memory traffic is equal for one tile** (A, B and C each cross the boundary once). They
+  differ for many tiles: with one B shared by T tiles of A, WS moves 16 + 32T elements and
+  OS moves 48T. These two formulas are counted by hand, so treat them as expected, not
+  measured, until a reuse run exists.
+- **Utilisation is low for both** (25% and 36%) because the 4x4 array spends many cycles with
+  only some diagonals active (fill and drain). Larger arrays and back-to-back tiles raise it.
+
 
 ## Detection coverage and false alarms
 
@@ -156,3 +233,4 @@ Not measured yet. Will be added later.
 - A. Piziali, *Functional Verification Coverage Measurement and Analysis*, Springer, 2004.
 - C. Spear, G. Tumbush, *SystemVerilog for Verification*, 3rd ed., Springer, 2012.
 - IEEE Std 1800-2017, *SystemVerilog*, clause 19 (functional coverage).
+- Y.-H. Chen, J. Emer, V. Sze, "Eyeriss: A Spatial Architecture for Energy-Efficient Dataflow for Convolutional Neural Networks", *ISCA*, 2016.

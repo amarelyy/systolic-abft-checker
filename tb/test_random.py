@@ -1,4 +1,4 @@
-"""Constrained-random test of the WS array with back-pressure and functional coverage.
+"""Constrained-random test of the WS and OS arrays with back-pressure and functional coverage.
 
 Each transaction picks a matrix mode (driver.random_matrix) and a stall mode
 (StallDriver.MODES). The monitor reports what the DUT did, the scoreboard checks it against
@@ -19,7 +19,7 @@ from cocotb.triggers import ClockCycles, FallingEdge
 from func_coverage import Coverage
 from driver import InputDriver, StallDriver, random_matrix
 from monitor import Monitor
-from run_util import WIDTHS, run_cocotb
+from run_util import DESIGNS, WIDTHS, run_cocotb
 from scoreboard import Scoreboard
 
 NUM_TESTS = int(os.environ.get("NUM_TESTS", 2000))
@@ -28,11 +28,12 @@ NUM_TESTS = int(os.environ.get("NUM_TESTS", 2000))
 @cocotb.test()
 async def test_random(dut):
     W = int(dut.W.value)
+    design = "os" if "_os_" in dut._name else "ws"
     cocotb.start_soon(Clock(dut.clk, 10, unit="ns").start())
     driver = InputDriver(dut)
     stall = StallDriver(dut)
-    scoreboard = Scoreboard(dut._log, W)
-    coverage = Coverage(W)
+    scoreboard = Scoreboard(dut._log, W, design)
+    coverage = Coverage(W, design=design)
     done = []
 
     def on_transaction(tr):
@@ -66,6 +67,7 @@ async def test_random(dut):
 
 
 @pytest.mark.parametrize("W", WIDTHS)
-def test_random_runner(W):
-    run_cocotb("systolic_ws_ctrl", ["pe.sv", "systolic_ws.sv", "systolic_ws_ctrl.sv"],
-               "test_random", f"random_W{W}", parameters={"W": W})
+@pytest.mark.parametrize("design", DESIGNS)
+def test_random_runner(design, W):
+    top, sources = DESIGNS[design]
+    run_cocotb(top, sources, "test_random", f"random_{design}_W{W}", parameters={"W": W})

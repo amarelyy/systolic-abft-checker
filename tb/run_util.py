@@ -15,7 +15,12 @@ from cocotb_tools.runner import get_results, get_runner
 ROOT = Path(__file__).resolve().parent.parent
 RTL = Path(os.environ.get("RTL_DIR", ROOT / "rtl"))   # RTL_DIR: test a modified copy
 DEFAULT_SEED = 12345
-WIDTHS = [18]          # accumulator widths every test runs at
+WIDTHS = [18, 16, 32]   # accumulator widths every test runs at (18 = main, others = ablation)
+# design name -> (top module, sources)
+DESIGNS = {
+    "ws": ("systolic_ws_ctrl", ["pe.sv", "systolic_ws.sv", "systolic_ws_ctrl.sv"]),
+    "os": ("systolic_os_ctrl", ["pe_os.sv", "systolic_os.sv", "systolic_os_ctrl.sv"]),
+}
 
 
 def _version(cmd):

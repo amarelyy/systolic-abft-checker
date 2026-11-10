@@ -1,4 +1,4 @@
-"""Step 1.9 test: drive the bare WS array edges by hand from Python.
+"""Bare WS array test: drive the array edges by hand from Python.
 
 The weight load and the skew are done here in the testbench, not in RTL,
 to check the grid wiring before the control logic exists.
@@ -16,7 +16,7 @@ from cocotb.triggers import ClockCycles, FallingEdge
 
 from mat_util import pack
 from model.golden import matmul_golden
-from run_util import run_cocotb
+from run_util import WIDTHS, run_cocotb
 
 N = 4
 
@@ -67,7 +67,7 @@ async def test_hand_fed(dut):
     dut._log.info("20 hand-fed random matrices match golden.py")
 
 
-@pytest.mark.parametrize("W", [20, 24, 32])
+@pytest.mark.parametrize("W", WIDTHS)
 def test_systolic_ws_runner(W):
     run_cocotb("systolic_ws", ["pe.sv", "systolic_ws.sv"], "test_systolic_ws",
                f"systolic_ws_W{W}", parameters={"W": W})

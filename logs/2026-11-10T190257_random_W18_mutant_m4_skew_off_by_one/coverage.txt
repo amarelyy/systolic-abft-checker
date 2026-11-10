@@ -1,0 +1,29 @@
+Functional coverage, W = 18
+
+coverpoint          bins   hit  coverage
+a_value              256   256    100.0%
+w_value              256   256    100.0%
+sign_a                 3     3    100.0%
+sign_w                 3     3    100.0%
+sign_a_x_sign_w        9     9    100.0%
+overflow               2     1     50.0%
+stall                  4     4    100.0%
+start_blocked          2     2    100.0%
+sign_x_stall          18    18    100.0%
+overflow_x_stall       4     2     50.0%
+TOTAL (average)                    90.0%
+
+Bins never hit:
+  overflow: True
+  overflow_x_stall: (True, False)
+  overflow_x_stall: (True, True)
+
+Hit counts (small coverpoints):
+  sign_a: neg=8872, zero=1956, pos=8372
+  sign_w: neg=8972, zero=1364, pos=8864
+  sign_a_x_sign_w: ('neg', 'neg')=4157, ('neg', 'zero')=634, ('neg', 'pos')=4081, ('zero', 'neg')=876, ('zero', 'zero')=139, ('zero', 'pos')=941, ('pos', 'neg')=3939, ('pos', 'zero')=591, ('pos', 'pos')=3842
+  overflow: False=4800, True=0
+  stall: none=112, load=26, run=75, load+run=87
+  start_blocked: False=267, True=33
+  sign_x_stall: ('neg', 'neg', False)=1546, ('neg', 'neg', True)=2611, ('neg', 'zero', False)=249, ('neg', 'zero', True)=385, ('neg', 'pos', False)=1469, ('neg', 'pos', True)=2612, ('zero', 'neg', False)=417, ('zero', 'neg', True)=459, ('zero', 'zero', False)=63, ('zero', 'zero', True)=76, ('zero', 'pos', False)=396, ('zero', 'pos', True)=545, ('pos', 'neg', False)=1441, ('pos', 'neg', True)=2498, ('pos', 'zero', False)=204, ('pos', 'zero', True)=387, ('pos', 'pos', False)=1383, ('pos', 'pos', True)=2459
+  overflow_x_stall: (False, False)=1792, (False, True)=3008, (True, False)=0, (True, True)=0

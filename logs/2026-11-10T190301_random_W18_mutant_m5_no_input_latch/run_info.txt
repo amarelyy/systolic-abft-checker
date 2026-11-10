@@ -1,0 +1,7 @@
+toplevel: systolic_ws_ctrl
+test_module: test_random
+rtl_dir: /tmp/claude-1000/-home-ursula-systolic-abft-checker/dc88c982-5da4-41ec-87d3-9eabd169d3c9/scratchpad/mutants/m5_no_input_latch
+parameters: {'W': 18}
+seed: 12345
+verilator: Verilator 5.055 devel rev v5.054-183-g9040f8666 (mod)
+cocotb: 2.1.0

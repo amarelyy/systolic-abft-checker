@@ -1,0 +1,49 @@
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:242  in gpi_load_users                  Loaded entry library: '/usr/lib/x86_64-linux-gnu/libpython3.10.so.1.0'
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:233  in gpi_load_users                  Running entry func 'initialize' from loaded library '/home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb/simulator.cpython-310-x86_64-linux-gnu.so'
+     -.--ns INFO     pygpi                              ..ib/pygpi/embed.cpp:114  in initialize                      Using Python 3.10.19 interpreter at /home/ursula/systolic-abft-checker/.venv/bin/python3
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:74   in gpi_print_registered_impl       GPI: VPI support registered
+     0.00ns INFO     cocotb.initialize                  Seeding Python random module with 12345
+     0.00ns INFO     cocotb.initialize                  Initialized cocotb v2.1.0 from /home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb
+     0.00ns INFO     cocotb.initialize                  Running on Verilator version 5.055 devel
+     0.00ns INFO     cocotb.regression                  Running tests
+     0.00ns INFO     cocotb.regression                  running test_random.test_random (1/1)
+406925.00ns INFO     cocotb.systolic_ws_ctrl            
+                                                        Functional coverage, W = 18
+                                                        
+                                                        coverpoint          bins   hit  coverage
+                                                        a_value              256   256    100.0%
+                                                        w_value              256   256    100.0%
+                                                        sign_a                 3     3    100.0%
+                                                        sign_w                 3     3    100.0%
+                                                        sign_a_x_sign_w        9     9    100.0%
+                                                        overflow               2     1     50.0%
+                                                        stall                  4     4    100.0%
+                                                        start_blocked          2     2    100.0%
+                                                        sign_x_stall          18    18    100.0%
+                                                        overflow_x_stall       4     2     50.0%
+                                                        TOTAL (average)                    90.0%
+                                                        
+                                                        Bins never hit:
+                                                          overflow: True
+                                                          overflow_x_stall: (True, False)
+                                                          overflow_x_stall: (True, True)
+                                                        
+                                                        Hit counts (small coverpoints):
+                                                          sign_a: neg=57888, zero=12740, pos=57372
+                                                          sign_w: neg=58156, zero=12492, pos=57352
+                                                          sign_a_x_sign_w: ('neg', 'neg')=26246, ('neg', 'zero')=5731, ('neg', 'pos')=25911, ('zero', 'neg')=5786, ('zero', 'zero')=1158, ('zero', 'pos')=5796, ('pos', 'neg')=26124, ('pos', 'zero')=5603, ('pos', 'pos')=25645
+                                                          overflow: False=32000, True=0
+                                                          stall: none=735, load=171, run=511, load+run=583
+                                                          start_blocked: False=1753, True=247
+                                                          sign_x_stall: ('neg', 'neg', False)=9528, ('neg', 'neg', True)=16718, ('neg', 'zero', False)=1949, ('neg', 'zero', True)=3782, ('neg', 'pos', False)=9479, ('neg', 'pos', True)=16432, ('zero', 'neg', False)=2417, ('zero', 'neg', True)=3369, ('zero', 'zero', False)=475, ('zero', 'zero', True)=683, ('zero', 'pos', False)=2392, ('zero', 'pos', True)=3404, ('pos', 'neg', False)=9599, ('pos', 'neg', True)=16525, ('pos', 'zero', False)=1860, ('pos', 'zero', True)=3743, ('pos', 'pos', False)=9341, ('pos', 'pos', True)=16304
+                                                          overflow_x_stall: (False, False)=11760, (False, True)=20240, (True, False)=0, (True, True)=0
+406925.00ns INFO     cocotb.systolic_ws_ctrl            2000 passed, 0 mismatches, 2000 transactions
+406925.00ns INFO     cocotb.regression                  test_random.test_random passed
+406925.00ns INFO     cocotb.regression                  **************************************************************************************
+                                                        ** TEST                          STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        **************************************************************************************
+                                                        ** test_random.test_random        PASS      406925.00           1.64     248385.73  **
+                                                        **************************************************************************************
+                                                        ** TESTS=1 PASS=1 FAIL=0 SKIP=0             406925.00           1.64     248343.94  **
+                                                        **************************************************************************************
+- (null):0: Verilog $finish

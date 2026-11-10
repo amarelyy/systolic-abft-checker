@@ -1,0 +1,11 @@
+N=4, uniform random INT8 A and B, 1000000 matrices, seed 12345
+true C range seen: -55743 .. 55703
+worst case possible: -65024 .. 65536
+
+  W               signed range  elements overflowed  matrices with >=1  corner cases that overflow
+ 16            -32768 .. 32767             0.3010%           4.4884%  all -128 x all -128, all 127 x all 127, all -128 x all 127
+ 17            -65536 .. 65535             0.0000%           0.0000%  all -128 x all -128
+ 18          -131072 .. 131071             0.0000%           0.0000%  none
+ 20          -524288 .. 524287             0.0000%           0.0000%  none
+ 24        -8388608 .. 8388607             0.0000%           0.0000%  none
+ 32  -2147483648 .. 2147483647             0.0000%           0.0000%  none

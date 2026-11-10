@@ -1,0 +1,6 @@
+- V e r i l a t i o n   R e p o r t: Verilator 5.055 devel rev v5.054-183-g9040f8666 (mod)
+- Verilator: Built from 0.000 MB sources in 0 modules, into 0.000 MB in 0 C++ files needing 0.000 MB
+- Verilator: Walltime 0.001 s (elab=0.000, cvt=0.000, bld=0.000); cpu 0.001 s on 1 threads; allocated 9.285 MB
+make: Entering directory '/home/ursula/systolic-abft-checker/sim_build/systolic_ws_ctrl_W18'
+make: Nothing to be done for 'default'.
+make: Leaving directory '/home/ursula/systolic-abft-checker/sim_build/systolic_ws_ctrl_W18'

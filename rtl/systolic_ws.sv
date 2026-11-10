@@ -1,4 +1,4 @@
-// systolic_ws.sv: N x N weight-stationary systolic array (step 1.9)
+// systolic_ws.sv: N x N weight-stationary systolic array
 //
 // PE[k][j] holds weight B[k][j]. Grid rows are k, grid columns are j.
 //   - Activations enter at the left of row k (a_left[k]) and move right.
@@ -6,12 +6,12 @@
 //   - Weights are shifted in from the top (w_top[j]) while load_w is high.
 //   - psum_bottom[j] is the finished column result.
 //
-// The edges are fed by hand in the step 1.9 test. systolic_ws_ctrl.sv (step 1.10)
-// adds the control logic that does the weight load and the input skew.
+// tb/test_systolic_ws.py feeds the edges by hand. systolic_ws_ctrl.sv adds the control
+// logic that does the weight load and the input skew.
 
 module systolic_ws #(
     parameter int N = 4,
-    parameter int W = 32
+    parameter int W = 18
 ) (
     input  logic                clk,
     input  logic                rst_n,

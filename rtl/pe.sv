@@ -1,4 +1,4 @@
-// pe.sv: processing element (steps 1.3, 1.6)
+// pe.sv: processing element
 //
 // One multiply-accumulate per cycle: psum_out <= psum_in + a_in * w.
 // a and w are signed INT8. psum is W bits and wraps mod 2^W, like a real register.
@@ -8,10 +8,10 @@
 // Activations pass to the right through a_out, psums pass down through psum_out.
 //
 // en is the clock enable. When en is low every register holds its value.
-// It is always high in phase 1 and is used for back-pressure in step 2.5.
+// systolic_ws_ctrl.sv drives it low to stall the array (back-pressure).
 
 module pe #(
-    parameter int W = 32                    // accumulator width
+    parameter int W = 18                    // accumulator width
 ) (
     input  logic                clk,
     input  logic                rst_n,      // active-low synchronous reset
@@ -54,7 +54,7 @@ module pe #(
     end
 
 `ifndef SYNTHESIS
-    // Step 1.6: psum_out == psum_in + a*w, one cycle later.
+    // psum_out == psum_in + a*w, one cycle later.
     // The right side is written independently of psum_next on purpose: all operands are
     // signed, so they are sign-extended to W bits and the product is taken mod 2^W.
     a_mac : assert property (

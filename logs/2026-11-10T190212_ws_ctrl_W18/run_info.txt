@@ -1,0 +1,6 @@
+toplevel: systolic_ws_ctrl
+test_module: test_ws_ctrl
+parameters: {'W': 18}
+seed: 12345
+verilator: Verilator 5.055 devel rev v5.054-183-g9040f8666 (mod)
+cocotb: 2.1.0

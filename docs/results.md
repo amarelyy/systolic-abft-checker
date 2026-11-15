@@ -11,9 +11,10 @@ unless stated otherwise. Tool versions are in [tools.md](tools.md).
 4. [Can the testbench fail? Mutation tests](#4-can-the-testbench-fail-mutation-tests)
 5. [Accumulator width: 18, 16, 32](#5-accumulator-width-18-16-32)
 6. [Weight-stationary vs output-stationary](#6-weight-stationary-vs-output-stationary)
-7. [Not measured yet](#7-not-measured-yet)
-8. [Limits](#8-limits)
-9. [References](#9-references)
+7. [ABFT checksum prototype (Python)](#7-abft-checksum-prototype-python)
+8. [Not measured yet](#8-not-measured-yet)
+9. [Limits](#9-limits)
+10. [References](#10-references)
 
 ---
 
@@ -32,9 +33,11 @@ accumulator width W. They are checked against a Python reference model.
 | 3 | The testbench catches 6 of 7 deliberately planted bugs. The seventh is a bug that changes nothing (an unneeded hardware step), and removing that step passed every test. | section 4 |
 | 4 | No result of a 4x4 INT8 multiply can overflow at W = 18, so 18 is the smallest safe width. W = 16 is the only tested width where results wrap (2.3% of elements), and the arrays handle it correctly. | section 5 |
 | 5 | For one tile OS is faster (11 vs 16 cycles). With weight reuse WS moves up to 33% less data. With overlapped tiles WS reaches 4 cycles per tile against 11 for OS, so WS is about 2.75 times faster in steady state. | section 6 |
+| 6 | The checksum math works in Python: 0 false alarms in 100,000 fault-free matrix pairs at every width, including 12,677 that really overflow at W = 16. A reference that saturates instead of wrapping gives a false alarm on every overflowing matrix. | section 7 |
+| 7 | In the Python model, the checksums detect every single, double and triple output error, and every datapath fault modelled (0 missed of about 8.3 million changed outputs). Four errors in a rectangle can cancel and are never detected. | section 7 |
 
-**Not measured yet:** the checksum error detector (ABFT), fault injection, formal proofs,
-real synthesis area and timing. See [section 7](#7-not-measured-yet).
+**Not measured yet:** the checker in hardware, fault injection in the real design, formal
+proofs, real synthesis area and timing. See [section 8](#8-not-measured-yet).
 
 ---
 
@@ -42,12 +45,13 @@ real synthesis area and timing. See [section 7](#7-not-measured-yet).
 
 ```bash
 source env.sh          # every new terminal
-pytest                 # 26 tests: all designs and widths, about one minute
+pytest                 # 36 tests: all designs and widths, about one minute
 ```
 
 Each run writes its own folder in `logs/` with the simulator log, the seed, the tool versions
 and (for random runs) `coverage.txt`. Single files: `pytest tb/test_random.py`,
-`pytest tb/test_reuse.py`, `pytest tb/test_overlap.py`. `NUM_TESTS=50` shortens the random run.
+`pytest tb/test_reuse.py`, `pytest tb/test_overlap.py`, `pytest tb/test_abft_model.py`. The checksum study is
+`python model/abft_study.py`. `NUM_TESTS=50` shortens the random run.
 
 ---
 
@@ -285,14 +289,121 @@ drain, so they tend to II as T grows; the steady-state rate is II.
 
 ---
 
-## 7. Not measured yet
+## 7. ABFT checksum prototype (Python)
 
-- The ABFT checksum checker: false alarms, detection of an injected wrong value, latency.
-- Fault injection (bit-flip and stuck-at): detection coverage, masked faults, latency, per width.
+Before building any checker hardware, the checksum math was written and tested in Python
+(`model/abft.py`). This model is also what the hardware checker will be compared against.
+
+### 7.1 How the checksums work
+
+For C = A x B, the sum of each column of C equals (the column sums of A) times B, and the sum
+of each row of C equals A times (the row sums of B). Example from the project plan:
+A = [[1,2],[3,4]], B = [[5,6],[7,8]], C = [[19,22],[43,50]]. Column sums of C are [62, 72]; column
+sums of A are [4, 6], and [4, 6] x B = [62, 72]. They match. If one element of C is wrong, exactly
+one column sum and one row sum disagree, and where they cross is the wrong element.
+This is algorithm-based fault tolerance (Huang and Abraham, 1984): the extra work is two small
+vector-matrix products instead of a second copy of the whole array.
+
+The identity is linear, so it also holds modulo 2^W. If the output wraps around, the checksums
+wrap the same way and still match, as long as the reference wraps exactly like the hardware.
+
+### 7.2 Results
+
+Log: `logs/2026-11-15T114228_abft_prototype/summary.txt` (`python model/abft_study.py`, seed
+12345). Pass/fail tests of the same properties: `tb/test_abft_model.py` (10 tests, all pass).
+
+**Without wrap-around:** the column and row identities hold for all 100 random matrix pairs.
+
+**With wrap-around, no fault injected** (100,000 random pairs per width, shaped stimulus):
+
+| W | matrices that really overflow | false alarms |
+|---|---|---|
+| 16 | 12,677 | **0** |
+| 17 | 887 | **0** |
+| 18 | 0 | **0** |
+| 32 | 0 | **0** |
+
+**Wrong reference (saturating instead of wrapping)**, same inputs:
+
+| W | matrices that really overflow | false alarms |
+|---|---|---|
+| 16 | 12,677 | 12,677 |
+| 17 | 887 | 887 |
+
+Every overflowing matrix raised a false alarm, and none of the others did.
+
+**Abstract errors put into C** (W = 18, 20,000 pairs per row):
+
+| Error pattern | Changed | Detected | Missed |
+|---|---|---|---|
+| one element, one random bit flipped | 20,000 | 20,000 | 0 |
+| two elements, one bit flipped in each | 20,000 | 20,000 | 0 |
+| three elements, one bit flipped in each | 20,000 | 20,000 | 0 |
+| four errors +d, -d, -d, +d at the corners of a rectangle | 20,000 | 0 | 20,000 |
+
+The test `test_single_error_detected_and_located` also checks every position and every bit
+flip of several matrices at W = 16 and 18: the flagged row and column are always the right ones.
+
+**Datapath faults at the value level** (W = 18, 20,000 pairs per fault position). These are
+modelled by the values they corrupt, not cycle by cycle, so they are a prediction and not a
+hardware result:
+
+| Fault | Fault positions | Changed outputs | Detected | Missed |
+|---|---|---|---|---|
+| one activation with one bit flipped (affects one row) | 128 | 2,446,608 | 2,446,608 | 0 |
+| a bit stuck in the activation-passing register (many rows) | 192 | 3,383,711 | 3,383,711 | 0 |
+| a bit stuck in a stored weight (one column) | 256 | 2,500,800 | 2,500,800 | 0 |
+
+### 7.3 Why these results
+
+- **No false alarms under wrap-around.** Both sides of the check are the same linear sum, taken
+  mod 2^W. Wrapping removes a multiple of 2^W from a result and from the checksum equally, so
+  nothing changes. This is why overflow alone must not raise an error, and the test at W = 16,
+  with 12,677 really overflowing matrices, shows it on real overflow.
+- **A saturating reference breaks it.** Saturation changes a result by an amount that is not a
+  multiple of 2^W, so the sums disagree. This is the first pitfall in the project plan: a false
+  alarm usually means the reference does not wrap like the hardware, not that the checker is
+  wrong. The 12,677 of 12,677 shows it clearly.
+- **Single, double and triple errors are always caught.** An error pattern escapes only if
+  every affected row sum and every affected column sum is unchanged. With one error in a row,
+  that row's sum changes by a nonzero amount (smaller than 2^W, so it cannot wrap to zero),
+  so it is caught. Two or three errors can cancel inside one row or one column but not in
+  both at once, because that needs every affected row and column to contain at least two
+  errors. The smallest such pattern has four errors at the corners of a rectangle, and the
+  last row of the table shows it going completely undetected. This is the known limit of row
+  and column checksums (Huang and Abraham, 1984).
+- **The datapath faults are caught because they stay inside one row or one column.** A
+  corrupted activation only changes outputs of one row, and a corrupted weight only outputs of
+  one column. Every column (or every row) then holds at most one wrong value, which the
+  checksum sees. The stuck bit in the activation-passing register is the interesting case,
+  because it corrupts several rows at once. It is still always caught: for a fixed stuck value,
+  every error has the same sign (+2^b or -2^b), so the errors in a column cannot cancel each
+  other. This corrects an earlier guess that such faults might rarely escape; the
+  data say they cannot, and the argument says why.
+
+### 7.4 What this predicts for the hardware, and what it does not cover
+
+- **Prediction:** for a single fault inside the array that changes the output, detection
+  coverage should be 100%. If fault injection into the real design gives less, the cause is
+  something this model leaves out, and that is worth finding.
+- **Not covered by this model:** faults in the control logic or the checker itself, several
+  faults in one run, faults that corrupt the inputs A or B *before* the checker takes its
+  copy (the checker would use the same wrong input, so it cannot see it), timing effects, and
+  stuck-at faults in a limited window of cycles. Four simultaneous errors in a rectangle are
+  possible in principle but would need a very specific multi-fault.
+- **Hardware size hint:** the column sums of A are sums of four INT8 values, so they need 10
+  bits (-512 to 508), not 8, in the reference path of the checker.
+
+## 8. Not measured yet
+
+- The checker in hardware: false alarms in simulation, detection of an injected wrong value,
+  latency.
+- Fault injection (bit-flip and stuck-at) into the real design: detection coverage, masked
+  faults and latency per width. The Python prediction above is the number to compare with.
 - Formal proofs (SymbiYosys) of the processing-element behaviour and the handshake.
 - Synthesis area and timing with and without the checker, from a real cell library.
 
-## 8. Limits
+## 9. Limits
 
 - Verilator is 2-state (no X values), so a bug that only shows as an X, for example a register
   without reset, cannot be seen. Every register in the RTL has a synchronous reset.
@@ -302,8 +413,9 @@ drain, so they tend to II as T grows; the steady-state rate is II.
 - Coverage is sampled at the transaction level (the A, B and C the monitor saw), not inside
   each PE.
 - Area numbers so far are from generic gates, not a real cell library.
+- The ABFT results in section 7 are from a Python model, not from the hardware.
 
-## 9. References
+## 10. References
 
 - H. T. Kung, "Why systolic architectures?", *IEEE Computer*, vol. 15, no. 1, 1982.
 - N. P. Jouppi et al., "In-Datacenter Performance Analysis of a Tensor Processing Unit",
@@ -317,3 +429,5 @@ drain, so they tend to II as T grows; the steady-state rate is II.
 - A. Piziali, *Functional Verification Coverage Measurement and Analysis*, Springer, 2004.
 - C. Spear, G. Tumbush, *SystemVerilog for Verification*, 3rd ed., Springer, 2012.
 - IEEE Std 1800-2017, *SystemVerilog*, clause 19 (functional coverage).
+- K.-H. Huang, J. A. Abraham, "Algorithm-Based Fault Tolerance for Matrix Operations",
+  *IEEE Transactions on Computers*, vol. C-33, no. 6, 1984.

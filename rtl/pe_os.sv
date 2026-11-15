@@ -2,8 +2,10 @@
 //
 // The accumulator stays in the PE. Each cycle it adds a_in * b_in.
 // a passes to the right through a_out, b passes down through b_out.
-// clr zeroes the accumulator and both pass-through registers (start of a multiply), so no
-// data from an earlier multiply can leak into the next one.
+// clr zeroes the accumulator at the start of a multiply. The pass-through registers need no
+// clear: the skewed feed schedule has already pushed zeros through all of them when a multiply
+// ends, so nothing from an earlier multiply can leak into the next one (tested with random
+// back-to-back multiplies and stalls).
 // en is the clock enable: when low every register holds its value.
 
 module pe_os #(
@@ -35,15 +37,9 @@ module pe_os #(
             a_out <= '0;
             b_out <= '0;
         end else if (en) begin
-            if (clr) begin
-                acc   <= '0;
-                a_out <= '0;
-                b_out <= '0;
-            end else begin
-                acc   <= acc + W'(prod);   // W'() sign-extends prod, sum wraps mod 2^W
-                a_out <= a_in;
-                b_out <= b_in;
-            end
+            acc   <= clr ? '0 : acc + W'(prod);   // W'() sign-extends prod, sum wraps mod 2^W
+            a_out <= a_in;
+            b_out <= b_in;
         end
     end
 

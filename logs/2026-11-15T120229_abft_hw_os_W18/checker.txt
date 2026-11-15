@@ -1,0 +1,10 @@
+[os W=18] fault-free multiplies: 10000, checks seen: 10000, multiplies whose results overflow: 0, false alarms: 0
+[os W=18] cycles from done to chk_valid: [1]; disagreements with model: 0; protocol problems: 0
+[os W=18] single wrong element, every position and bit: 864 injected, 864 detected, 864 located exactly
+[os W=18] pattern                   tried  detected  differs from model
+[os W=18] 2 random errors             300       300                   0
+[os W=18] 3 random errors             300       300                   0
+[os W=18] 4 random errors             300       300                   0
+[os W=18] 5 random errors             300       300                   0
+[os W=18] 6 random errors             300       300                   0
+[os W=18] rectangle +d -d -d +d       300         0                   0

@@ -1,0 +1,42 @@
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:242  in gpi_load_users                  Loaded entry library: '/usr/lib/x86_64-linux-gnu/libpython3.10.so.1.0'
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:233  in gpi_load_users                  Running entry func 'initialize' from loaded library '/home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb/simulator.cpython-310-x86_64-linux-gnu.so'
+     -.--ns INFO     pygpi                              ..ib/pygpi/embed.cpp:114  in initialize                      Using Python 3.10.19 interpreter at /home/ursula/systolic-abft-checker/.venv/bin/python3
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:74   in gpi_print_registered_impl       GPI: VPI support registered
+     0.00ns INFO     cocotb.initialize                  Seeding Python random module with 12345
+     0.00ns INFO     cocotb.initialize                  Initialized cocotb v2.1.0 from /home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb
+     0.00ns INFO     cocotb.initialize                  Running on Verilator version 5.055 devel
+     0.00ns INFO     cocotb.regression                  Running tests
+     0.00ns INFO     cocotb.regression                  running test_abft_hw.test_no_false_alarms (1/4)
+ 61305.00ns INFO     cocotb.top                         [ws W=18] fault-free multiplies: 300, checks seen: 300, multiplies whose results overflow: 0, false alarms: 0
+ 61305.00ns INFO     cocotb.top                         [ws W=18] cycles from done to chk_valid: [1]; disagreements with model: 0; protocol problems: 0
+ 61305.00ns INFO     cocotb.regression                  test_abft_hw.test_no_false_alarms passed
+ 61305.00ns INFO     cocotb.regression                  running test_abft_hw.test_single_errors (2/4)
+208200.00ns INFO     cocotb.top                         [ws W=18] single wrong element, every position and bit: 864 injected, 864 detected, 816 located exactly
+208200.00ns WARNING  cocotb.regression                  test_abft_hw.test_single_errors failed
+                                                        Traceback (most recent call last):
+                                                          File "/home/ursula/systolic-abft-checker/tb/test_abft_hw.py", line 191, in test_single_errors
+                                                            assert detected == tried and located == tried
+                                                        AssertionError: assert (864 == 864 and 816 == 864)
+208200.00ns INFO     cocotb.regression                  running test_abft_hw.test_multiple_errors (3/4)
+514215.00ns INFO     cocotb.top                         [ws W=18] pattern                   tried  detected  differs from model
+514215.00ns INFO     cocotb.top                         [ws W=18] 2 random errors             300       300                   0
+514215.00ns INFO     cocotb.top                         [ws W=18] 3 random errors             300       300                   0
+514215.00ns INFO     cocotb.top                         [ws W=18] 4 random errors             300       300                   0
+514215.00ns INFO     cocotb.top                         [ws W=18] 5 random errors             300       300                   0
+514215.00ns INFO     cocotb.top                         [ws W=18] 6 random errors             300       300                   0
+514215.00ns INFO     cocotb.top                         [ws W=18] rectangle +d -d -d +d       300         0                   0
+514215.00ns INFO     cocotb.regression                  test_abft_hw.test_multiple_errors passed
+514215.00ns INFO     cocotb.regression                  running test_abft_hw.test_keep_w (4/4)
+516170.00ns INFO     cocotb.top                         [ws W=18] weight reuse (B on the bus is garbage after the first tile): 14 multiplies, false alarms: 0
+516170.00ns INFO     cocotb.regression                  test_abft_hw.test_keep_w passed
+516170.00ns INFO     cocotb.regression                  *******************************************************************************************
+                                                        ** TEST                               STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        *******************************************************************************************
+                                                        ** test_abft_hw.test_no_false_alarms   PASS       61305.00           0.27     229004.77  **
+                                                        ** test_abft_hw.test_single_errors     FAIL      146895.00           0.59     247930.71  **
+                                                        ** test_abft_hw.test_multiple_errors   PASS      306015.00           1.42     215239.31  **
+                                                        ** test_abft_hw.test_keep_w            PASS        1955.00           0.01     216191.04  **
+                                                        *******************************************************************************************
+                                                        ** TESTS=4 PASS=3 FAIL=1 SKIP=0                  516170.00           2.29     225184.23  **
+                                                        *******************************************************************************************
+- (null):0: Verilog $finish

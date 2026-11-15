@@ -24,6 +24,19 @@ def _as_int8_matrix(word):
     return np.array(vals, dtype=np.int64).reshape(N, N)
 
 
+def _find_state(dut):
+    """The FSM state signal: on the control module itself, or inside top's generate block."""
+    for path in ("state", "g_ws.u_ctrl.state", "g_os.u_ctrl.state"):
+        try:
+            node = dut
+            for name in path.split("."):
+                node = getattr(node, name)
+            return node
+        except AttributeError:
+            continue
+    raise AttributeError("no FSM state signal found")
+
+
 @dataclass
 class Transaction:
     A: np.ndarray
@@ -44,6 +57,7 @@ class Monitor:
     async def _run(self):
         dut = self.dut
         W = int(dut.W.value)
+        state_sig = _find_state(dut)
         tr = None
         start_blocked = False
         while True:
@@ -55,7 +69,7 @@ class Monitor:
                 tr.cycles += 1
                 if busy == 1 and stall == 1:
                     tr.stall_cycles += 1
-                    tr.stalled_in.add(int(dut.state.value))
+                    tr.stalled_in.add(int(state_sig.value))
                 if dut.done.value == 1:
                     tr.C = unpack_matrix(dut.c_mat.value.to_unsigned(), W, N)
                     self.callback(tr)

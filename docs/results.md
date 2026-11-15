@@ -1,256 +1,319 @@
 # Results
 
-Every number here names the log file it came from. All runs use W = 18 and seed 12345
-unless stated otherwise. Tool versions are in `docs/tools.md`.
+Every number in this file names the log folder it came from (all in `logs/`). Seed 12345
+unless stated otherwise. Tool versions are in [tools.md](tools.md).
 
-## Verification of the WS array (constrained-random, with back-pressure)
+## Contents
+
+1. [Summary](#1-summary)
+2. [How to reproduce](#2-how-to-reproduce)
+3. [Correctness: random and directed tests](#3-correctness-random-and-directed-tests)
+4. [Can the testbench fail? Mutation tests](#4-can-the-testbench-fail-mutation-tests)
+5. [Accumulator width: 18, 16, 32](#5-accumulator-width-18-16-32)
+6. [Weight-stationary vs output-stationary](#6-weight-stationary-vs-output-stationary)
+7. [Not measured yet](#7-not-measured-yet)
+8. [Limits](#8-limits)
+9. [References](#9-references)
+
+---
+
+## 1. Summary
+
+**What exists:** a 4x4 INT8 systolic array in two versions, weight-stationary (WS) and
+output-stationary (OS), each with control logic, back-pressure (stall), and a parameterized
+accumulator width W. They are checked against a Python reference model.
+
+**Findings so far**
+
+| # | Finding | Evidence |
+|---|---|---|
+| 1 | Both designs are bit-exact with the reference model at W = 18, 16 and 32: 2000 random multiplies each with random stalls, 0 mismatches. | section 3 |
+| 2 | Reachable functional coverage is 100% in all six runs. Unreachable bins are excluded with a written reason. | section 3 |
+| 3 | The testbench catches 6 of 7 deliberately planted bugs. The seventh is a bug that changes nothing (an unneeded hardware step), and removing that step passed every test. | section 4 |
+| 4 | No result of a 4x4 INT8 multiply can overflow at W = 18, so 18 is the smallest safe width. W = 16 is the only tested width where results wrap (2.3% of elements), and the arrays handle it correctly. | section 5 |
+| 5 | For one tile OS is faster (11 vs 16 cycles). With weight reuse WS moves up to 33% less data. With overlapped tiles WS reaches 4 cycles per tile against 11 for OS, so WS is about 2.75 times faster in steady state. | section 6 |
+
+**Not measured yet:** the checksum error detector (ABFT), fault injection, formal proofs,
+real synthesis area and timing. See [section 7](#7-not-measured-yet).
+
+---
+
+## 2. How to reproduce
+
+```bash
+source env.sh          # every new terminal
+pytest                 # 26 tests: all designs and widths, about one minute
+```
+
+Each run writes its own folder in `logs/` with the simulator log, the seed, the tool versions
+and (for random runs) `coverage.txt`. Single files: `pytest tb/test_random.py`,
+`pytest tb/test_reuse.py`, `pytest tb/test_overlap.py`. `NUM_TESTS=50` shortens the random run.
+
+---
+
+## 3. Correctness: random and directed tests
 
 ### Setup
 
-- **DUT:** `systolic_ws_ctrl` (4x4 weight-stationary array plus control), W = 18.
-- **Stimulus** (`tb/driver.py`): 2000 multiplies. Each matrix is one of three kinds:
+- **Designs under test:** `systolic_ws_ctrl` and `systolic_os_ctrl`, W = 18, 16 and 32.
+- **Stimulus** (`tb/driver.py`): 2000 multiplies per run. Each matrix is one of three kinds:
   uniform (80%), extreme (every element -128 or 127, 10%), sparse (about 70% zeros, 10%).
-  Inside "uniform", 20% of elements are taken from a corner list
-  (-128, -127, -1, 0, 1, 126, 127) and the rest are uniform over -128..127.
-- **Back-pressure** (`StallDriver`): for each multiply, one of three stall modes is picked:
-  none, random (stall with probability 0.25 every cycle), or burst (stall bursts of 1 to 8
-  cycles). While `stall` is high the whole array and FSM hold their state.
-- **Checking** (`tb/monitor.py`, `tb/scoreboard.py`): the monitor only watches DUT pins.
-  The scoreboard checks every C against `model/golden.py` bit for bit, and checks that the
-  latency is exactly 16 edges plus one per stalled busy cycle. After start is accepted, the
-  driver puts random garbage on the input buses to check that the DUT latched its inputs.
-- **Coverage** (`tb/func_coverage.py`): 10 coverpoints. Total = average of coverpoints with
-  equal weight, which is the default way SystemVerilog covergroups compute coverage
-  (IEEE 1800-2017, clause 19).
+  In the uniform kind, 20% of elements come from a corner list (-128, -127, -1, 0, 1, 126,
+  127) and the rest are uniform over -128..127.
+- **Back-pressure** (`StallDriver`): for each multiply one stall mode is picked: none,
+  random (stall with probability 0.25 each cycle), or burst (bursts of 1 to 8 cycles). While
+  `stall` is high, every register of the design holds its value.
+- **Checking** (`tb/monitor.py`, `tb/scoreboard.py`): the monitor only watches the pins of
+  the design. The scoreboard checks each C against `model/golden.py` bit for bit, and checks
+  the latency. After start is accepted the driver puts random garbage on the input buses,
+  to check that the design latched its inputs.
+- **Directed tests** (`tb/test_directed.py`): identity matrix, all zeros, all -128 and 127
+  combinations, a checkerboard of extremes, and mixed signs.
+- **Coverage** (`tb/func_coverage.py`): 10 coverpoints; the total is their plain average,
+  which is how SystemVerilog covergroups combine coverpoints by default (IEEE 1800-2017,
+  clause 19).
 
-### Result
+### Results
 
-Log: `logs/2026-11-10T190319_random_W18/` (`sim.log`, `coverage.txt`).
-A second run with the same seed (`logs/2026-11-10T190204_random_W18/`) gave identical
-coverage numbers, so the run is reproducible.
-
-**2000 of 2000 multiplies passed, 0 mismatches** (C and latency).
-
-| Coverpoint | Bins | Hit | Coverage |
-|---|---|---|---|
-| a_value (every INT8 value as an A element) | 256 | 256 | 100% |
-| w_value (every INT8 value as a B element) | 256 | 256 | 100% |
-| sign_a | 3 | 3 | 100% |
-| sign_w | 3 | 3 | 100% |
-| sign_a x sign_w | 9 | 9 | 100% |
-| overflow | 2 | 1 | **50%** |
-| stall (none / load / run / load+run) | 4 | 4 | 100% |
-| start_blocked (start held off by stall) | 2 | 2 | 100% |
-| sign_a x sign_w x stalled | 18 | 18 | 100% |
-| overflow x stalled | 4 | 2 | **50%** |
-| **Total (average)** | | | **90.0%** |
-
-Bins never hit: `overflow = True`, and both `overflow x stalled` bins with overflow = True.
-
-### Checking the testbench itself (mutation test)
-
-A testbench that always passes proves nothing unless it can also fail. Following the idea of
-mutation testing (DeMillo, Lipton and Sayward, 1978), five bugs were planted one at a time in
-a copy of the RTL, and the same random test (300 multiplies) was run on each.
-Logs: `logs/*_mutant_*`.
-
-| Mutant | Planted bug | Caught? | How |
-|---|---|---|---|
-| m1 | PEs ignore stall (`en` always 1) | yes, 165 of 300 | C mismatch |
-| m2 | FSM keeps counting in RUN while stalled | yes, 172 of 300 | C mismatch |
-| m3 | start accepted while stalled | yes | monitor saw 270 of 300 transactions |
-| m4 | skew feeds the wrong column of A | yes, 300 of 300 | C mismatch |
-| m5 | array reads the input bus instead of the latched copy | yes, 300 of 300 | C mismatch |
-
-All 5 were caught. The m1 and m2 counts (about 55%) match the share of multiplies that were
-stalled during RUN at all: in the clean run, 1094 of 2000 (55%) were stalled in RUN.
-A multiply that is never stalled cannot show these bugs.
-
-## Analysis
-
-### Why the design passes
-
-The stall is a single clock enable that freezes every register at once: all PEs, the FSM
-counter and the capture logic. A systolic array works because all cells move in lock-step
-with one global clock (Kung, 1982), and the skew only fixes the *relative* timing between
-cells. If every cell skips the same cycle, the relative timing is unchanged, so a stalled
-cycle has exactly the same effect as a cycle that never happened. That is why C is correct
-for any stall pattern, and why latency grows by exactly one cycle per stall.
-
-The mutants show the other side. m1 (only the FSM stops) and m2 (only the PEs stop) each
-freeze *part* of the design, which breaks the relative timing, and the results are wrong
-in every multiply that was stalled during RUN.
-
-This scheme is simple but has a known cost: one enable signal drives every register, which is
-a very high fanout net. For a 4x4 array this is fine; larger arrays usually use local
-handshakes or buffers instead.
-
-### Why coverage is 90% and not 100%
-
-The two missing bins are **unreachable**, not untested. With W = 18, no result can overflow:
-the largest possible result is 4 x 16384 = 65536 and the smallest is -65024, while an 18-bit
-signed register holds -131072 .. 131071 (see `docs/notes.md`). So `overflow = True` cannot be
-hit by any input. Without these bins, every reachable bin is hit (100%).
-
-Coverage literature treats this case explicitly: a coverage model can contain bins that the
-design can never reach, and they should be marked as excluded with a written reason, not
-"closed" by more random tests (Piziali, 2004). SystemVerilog has `ignore_bins` and
-`illegal_bins` for this (IEEE 1800-2017). `tb/func_coverage.py` now does this: unreachable bins
-are listed with the reason and left out of the percentage, and the raw percentage is printed
-next to it (see the next section).
-
-Overflow behaviour itself is still tested where it can happen: the PE random test feeds
-random 18-bit `psum_in` values, so the PE adder wraps in many of those tests.
-
-### Why stimulus shaping was needed
-
-With plain uniform random input, each value has probability 1/256, so zeros and exact
-corner values are rare. In this run, the "zero" sign bin got 12,740 of 128,000 pairs
-(about 10%), against about 0.4% for pure uniform input. That came from the sparse mode and
-the corner list. This is the usual argument for constrained-random rather than pure random
-stimulus: the distribution is shaped so that interesting cases happen often
-(Spear and Tumbush, 2012).
-
-For the 256-bin value coverpoints, the coupon-collector estimate says about
-256 x H(256) ≈ 1,570 random values are needed to see all 256, which is about 100 matrices.
-2000 multiplies is about 20 times that, so full value coverage was expected.
-
-The stall bins are uneven (none 735, load only 171, run only 511, load+run 583). This is
-expected: LOAD lasts 4 cycles and RUN 11, so a random stall lands in RUN far more often.
-With the random mode (p = 0.25), the chance of no stall in all 11 RUN cycles is
-0.75^11 ≈ 4%, so "load only" comes almost entirely from the burst mode.
-
-### Bugs found
-
-Two bugs were found, both in the testbench, not in the RTL. See `docs/bug_log.md`.
-
-### Limits
-
-- Verilator is 2-state (no X values), so bugs that only show as X (for example a register
-  without reset) cannot be seen here. Every register in the RTL has a synchronous reset.
-- The mutation test uses 5 hand-picked bugs. It shows the testbench can catch these bug
-  types, not that it catches every bug. An automatic mutation tool (for example MCY, which
-  is in the OSS CAD Suite) would give a fuller picture.
-- Coverage is sampled at the transaction level (the A, B and C the monitor saw), not inside
-  each PE.
-
-## Unreachable bins excluded, and the width ablation
-
-The WS array was rerun at three accumulator widths. W = 18 is the main design. W = 16 and
-W = 32 are an ablation: 16 is the only width where results can wrap, 32 is the width real
-accelerators use. 2000 random multiplies each, seed 12345.
-
-| Design | W | Mismatches | Coverage (excluded removed) | Raw coverage | Overflowed elements | Log |
+| Design | W | Random multiplies | Mismatches | Coverage | Raw coverage | Log |
 |---|---|---|---|---|---|---|
-| WS | 18 | 0 / 2000 | 100.0% | 90.0% | 0 of 32000 | `logs/2026-11-10T202741_random_ws_W18` |
-| WS | 16 | 0 / 2000 | 100.0% | 100.0% | 742 of 32000 (2.3%) | `logs/2026-11-10T202744_random_ws_W16` |
-| WS | 32 | 0 / 2000 | 100.0% | 90.0% | 0 of 32000 | `logs/2026-11-10T202746_random_ws_W32` |
-| OS | 18 | 0 / 2000 | 100.0% | 85.0% | 0 of 32000 | `logs/2026-11-10T202748_random_os_W18` |
-| OS | 16 | 0 / 2000 | 100.0% | 95.0% | 827 of 32000 (2.6%) | `logs/2026-11-10T202749_random_os_W16` |
-| OS | 32 | 0 / 2000 | 100.0% | 85.0% | 0 of 32000 | `logs/2026-11-10T202751_random_os_W32` |
+| WS | 18 | 2000 | 0 | 100.0% | 90.0% | `2026-11-15T112111_random_ws_W18` |
+| WS | 16 | 2000 | 0 | 100.0% | 100.0% | `2026-11-15T112113_random_ws_W16` |
+| WS | 32 | 2000 | 0 | 100.0% | 90.0% | `2026-11-15T112115_random_ws_W32` |
+| OS | 18 | 2000 | 0 | 100.0% | 85.0% | `2026-11-15T112117_random_os_W18` |
+| OS | 16 | 2000 | 0 | 100.0% | 95.0% | `2026-11-15T112119_random_os_W16` |
+| OS | 32 | 2000 | 0 | 100.0% | 85.0% | `2026-11-15T112121_random_os_W32` |
 
-What this shows:
+The directed tests also pass for both designs (3 of 3 each, W = 18:
+`2026-11-15T112039_directed_ws_W18`, `2026-11-15T112050_directed_os_W18`).
 
-- **The design is correct at all three widths, including when results wrap.** At W = 16, 742
-  results (WS) and 827 (OS) overflowed, and all were bit-exact with `model/golden.py`, which
-  wraps mod 2^W. This is the first test of the wrap-around behaviour in the full array, and it
-  is the case the checksum has to survive later.
-- **Excluded bins:** at W = 18 and 32 the bins "a result overflows" are excluded with the
-  reason (the largest possible result is 65536, smaller than the register limit). At W = 16
-  they are reachable and were hit, so nothing is excluded and raw coverage is 100%. For the
-  OS design the "stalled during load" bins are also excluded, because OS has no load phase.
-- **The stimulus shaping matters:** in the pre-study, uniform random input made 0.30% of
-  elements overflow at W = 16. Here it is 2.3%, about 8 times more, because of the extreme
-  and corner-value matrices (`tb/driver.py`). Rare cases happen often enough to be tested.
-- **W = 18 and W = 32 behave identically in simulation.** This is expected: with no overflow
-  possible, the extra bits of W = 32 are only copies of the sign. Differences between them
-  can only show up in area (pre-study: 8794 vs 9430 cells) and in fault injection, where
-  flips of those sign-copy bits will mostly be masked. That is measured later.
+**Coverage vs raw coverage.** "Coverage" leaves out bins that no input can ever hit; "raw"
+counts every bin. Each excluded bin is listed with its reason in `coverage.txt` of the run.
+Two kinds are excluded:
 
-## Mutation test for the OS array
+- **"A result overflows"** at W = 18 and 32. The largest result of a 4x4 INT8 multiply is
+  4 x 16384 = 65536 and the smallest is -65024. An 18-bit signed register holds
+  -131072 .. 131071, so no result overflows. At W = 16 the register holds only
+  -32768 .. 32767, the bins are reachable and were hit, so nothing is excluded there.
+- **"Stalled during the load phase"** for OS, which has no load phase.
 
-Same idea as above, two planted bugs, 300 multiplies each (`logs/*_mutant_os_*`):
+Coverage literature says unreachable bins should be excluded with a written reason, not
+"closed" with more random tests (Piziali, 2004); SystemVerilog has `ignore_bins` for this.
 
-| Mutant | Planted bug | Caught? |
-|---|---|---|
-| a | A is fed with a wrong column offset (skew error) | yes, 300 of 300 |
-| b | the clear no longer zeroes the pass-through registers | **no, 0 of 300** |
+### Why the designs pass with stalls
 
-Mutant b is an *equivalent mutant*: at the end of every multiply the skewed schedule has
-already pushed zeros through every register that feeds another PE, so the extra clear changes
-nothing. This is from reading the schedule, not from a formal proof. It means the clear of the
-pass-through registers is redundant hardware (a few multiplexers per PE) that can be removed.
-It is kept for now as a safety margin.
+The stall is one clock enable that freezes every register at once: all PEs, the counter and
+the output capture. A systolic array works because all cells move in lock-step with one clock
+(Kung, 1982), and the input skew only sets the *relative* timing between cells. If every cell
+skips the same cycle, the relative timing does not change, so a stalled cycle behaves like a
+cycle that never happened. That is why C is correct for any stall pattern and the latency grows
+by exactly one cycle per stall. The cost is one enable signal driving every register (a very
+high fanout net). That is fine for 4x4; larger arrays usually use local handshakes.
 
-## WS vs OS
+### Why the stimulus is shaped
 
-Both designs pass the same random and directed tests at W = 18, 16 and 32 (logs above).
-The numbers below for one 4x4 multiply:
+With plain uniform input every value has probability 1/256, so zeros and exact corner values
+are rare. In the first WS W = 18 run (`logs/2026-11-10T190319_random_W18`), the "zero" sign bin
+got 12,740 of 128,000 pairs (about 10%) against about 0.4% for pure uniform input. This is the
+usual argument for constrained-random over pure random stimulus (Spear and Tumbush, 2012).
+For the 256 values of each value coverpoint, the coupon-collector estimate is about
+256 x H(256) = 1,570 random draws, around 100 matrices, so 2000 multiplies is about 20 times
+what is needed. In the same run the stall bins were uneven (none 735, load only 171, run only
+511, load and run 583), as expected: the load phase lasts 4 cycles and the run phase 11, so a
+random stall mostly lands in the run phase.
 
-| | Weight-stationary | Output-stationary | Source |
+### Bugs found while building the testbench
+
+Two, both in the testbench and not in the RTL: an off-by-one in the expected latency and a
+monitor that started too late. See [bug_log.md](bug_log.md).
+
+---
+
+## 4. Can the testbench fail? Mutation tests
+
+A testbench that always passes proves nothing unless it can also fail. Following mutation
+testing (DeMillo, Lipton and Sayward, 1978), a bug is planted in a copy of the RTL and the
+random test is run on it. All logs are in `logs/*_mutant_*` (run on 2026-11-10, 300 multiplies
+each, W = 18).
+
+| Design | Mutant | Planted bug | Caught? | How |
+|---|---|---|---|---|
+| WS | m1 | PEs ignore stall | yes, 165 of 300 | wrong C |
+| WS | m2 | counter keeps running in the run phase while stalled | yes, 172 of 300 | wrong C |
+| WS | m3 | start accepted while stalled | yes | monitor saw 270 of 300 multiplies |
+| WS | m4 | skew feeds the wrong column of A | yes, 300 of 300 | wrong C |
+| WS | m5 | array reads the input bus, not the latched copy | yes, 300 of 300 | wrong C |
+| OS | a | skew feeds the wrong column of A | yes, 300 of 300 | wrong C |
+| OS | b | the clear no longer zeroes the pass-through registers | **no, 0 of 300** | n/a |
+
+- m1 and m2 are caught in about 55% of multiplies. That matches the share of multiplies that
+  were stalled during the run phase: 1094 of 2000 (55%) in the first run. A multiply that is
+  never stalled cannot show these bugs.
+- m3 is not seen as a wrong value but as missing multiplies. Protocol checks catch bugs that
+  comparing answers misses.
+- **OS mutant b is a bug that changes nothing.** At the end of every multiply the skewed
+  schedule has already pushed zeros through every pass-through register, so clearing them is
+  unneeded. This was first only an argument from reading the schedule. To test it, the clear of
+  those registers was **removed from the RTL** (`rtl/pe_os.sv`), and the whole suite was rerun
+  (2000 random multiplies per width, with random stalls, back-to-back): 0 mismatches, in the
+  logs of section 3 (the OS rows were produced after the removal). So the clear was unneeded,
+  and the design should be a few multiplexers per PE smaller (area was not measured). Only the
+  accumulator is cleared now.
+  This is a test result, not a formal proof.
+
+---
+
+## 5. Accumulator width: 18, 16, 32
+
+W = 18 is the main design. W = 16 and 32 are an ablation (a controlled comparison where one
+setting changes): 16 is the only width where results can wrap, 32 is what real accelerators use.
+
+**Why 18.** One output is a sum of K = 4 products of two INT8 numbers. A sum of K such
+products needs about 16 + log2(K) bits, so 18. Real accelerators use 32 bits because their
+dot products are much longer (K in the hundreds or thousands; TPU, Jouppi et al., 2017;
+integer-only inference, Jacob et al., 2018). That reason does not apply to a single 4x4 array.
+
+**Pre-study** (not final results: area is from generic gates).
+
+| W | elements that overflow (1,000,000 random pairs) | cells | flip-flops |
 |---|---|---|---|
-| Cycles from accepting start to done (one tile) | 16 | 11 | measured: the scoreboard checks it on all 2000 multiplies per run, 0 mismatches |
-| Phases | 4 load + 11 run + 1 | 10 run + 1 | RTL |
-| PE utilisation (64 MACs / (16 PEs x cycles)) | 25.0% | 36.4% | computed from the measured cycles |
-| Extra registers per PE | stored weight (8 bit) | none | RTL |
+| 16 | 0.30% | 8280 | 480 |
+| 17 | 0% | 8617 | 492 |
+| 18 | 0% | 8794 | 500 |
+| 20 | 0% | 9042 | 508 |
+| 24 | 0% | 9240 | 524 |
+| 32 | 0% | 9430 | 556 |
 
-### Weight reuse: one B shared by T tiles of A
+Logs: `logs/2026-11-10T182224_overflow_study/`, `logs/2026-11-10T182225_area_sweep/`.
+From W = 16 to 32 the area grows only about 14%, because psum starts at 0 and the top bits are
+always copies of the sign, which Yosys merges. In a design where psum continues from an earlier
+value those bits would really change and cost real area.
 
-Test `tb/test_reuse.py`, W = 18. WS loads B once and skips the load for the other tiles (the B
-given on those tiles is random garbage, and every result still matches `golden.py`). OS streams
-B again for every tile. "Moved" counts INT8 elements that crossed the array boundary, read from
-counters inside the RTL. Logs: `logs/2026-11-10T203629_reuse_ws_W18/reuse.txt`,
-`logs/2026-11-10T203633_reuse_os_W18/reuse.txt`.
+**Simulation at all three widths** (section 3 logs):
+
+- **Wrap-around works.** At W = 16, 742 of 32,000 result elements (WS) and 827 (OS) overflowed
+  in the random run, and all were bit-exact with the reference model, which wraps mod 2^W. This
+  is the first test of wrap-around in the full array, and it is the case the checksum has to
+  survive later.
+- **The stimulus shaping matters.** Pure uniform input overflowed 0.30% of elements at W = 16;
+  the shaped stimulus gives 2.3%, about 8 times more.
+- **W = 18 and 32 behave identically in simulation.** With no overflow possible, the extra bits
+  of W = 32 are copies of the sign. Differences can only show up in area and in fault
+  injection, where flips of those bits are expected to be mostly masked. This will be measured
+  later.
+
+---
+
+## 6. Weight-stationary vs output-stationary
+
+In **WS** each PE keeps one weight and the activations flow past, so the weights have to be
+loaded first (4 cycles). In **OS** each PE keeps its own result and both inputs flow past, so
+there is no load phase.
+
+### 6.1 One tile
+
+| | WS | OS | Source |
+|---|---|---|---|
+| Cycles from accepting start to done | 16 | 11 | measured; checked on all 2000 multiplies of each run |
+| Phases | 4 load, 11 run, 1 done | 10 run, 1 done | RTL |
+| PE utilisation (64 multiply-adds / (16 PEs x cycles)) | 25.0% | 36.4% | computed from the measured cycles |
+| Extra register per PE | 8-bit stored weight | none | RTL |
+
+### 6.2 Weight reuse: one B for T tiles of A (no overlap)
+
+Test `tb/test_reuse.py`, W = 18, logs `2026-11-15T112123_reuse_ws_W18` and
+`2026-11-15T112123_reuse_os_W18` (file `reuse.txt` in each). WS loads B once and skips the load
+for the other tiles (the B given on those tiles is random garbage, and every result still
+matches the reference, so the weights really are reused). OS streams B again for every tile.
+"Moved" counts INT8 elements that crossed the array boundary, read from counters inside the RTL.
 
 | T tiles | WS cycles | OS cycles | WS elements moved | OS elements moved | WS moves |
 |---|---|---|---|---|---|
-| 1 | 16 | 11 | 48 | 48 | 0% less |
+| 1 | 16 | 11 | 48 | 48 | same |
 | 2 | 28 | 22 | 80 | 96 | 17% less |
 | 4 | 52 | 44 | 144 | 192 | 25% less |
 | 8 | 100 | 88 | 272 | 384 | 29% less |
 | 16 | 196 | 176 | 528 | 768 | 31% less |
 
-The formulas fit the measurements exactly: WS cycles = 12T + 4, OS cycles = 11T; WS elements
-= 16 + 32T, OS elements = 48T. As T grows, WS approaches 2/3 of the OS traffic (33% less).
+The measurements fit exact formulas: WS cycles = 12T + 4 and OS cycles = 11T; WS elements =
+16 + 32T and OS elements = 48T. As T grows, WS moves 2/3 of the OS traffic (33% less).
 
-Analysis:
+With tiles run one after another, **OS is still faster in cycles** (176 vs 196 at T = 16). A WS
+tile with weights already loaded takes 12 cycles against 11 for OS, because its result also has
+to travel down to the bottom row, one cycle more than OS needs to finish accumulating.
 
-- **OS is faster here (11 vs 16 cycles) because it has no load phase.** The result stays where
-  it is computed, so nothing has to be preloaded. WS must first shift 4 rows of weights into
-  the grid.
-- **WS wins on memory traffic when the weights are reused, but not on speed.** With reuse, WS
-  moves up to 33% fewer elements than OS (31% at T = 16), because B crosses the boundary once.
-  But OS stays faster in cycles at every T (176 vs 196 at T = 16). A tile with the weights
-  already loaded still takes 12 cycles in WS against 11 in OS: the result has to travel down
-  the column to the bottom row, one cycle more than OS needs to finish accumulating.
-- **Why WS cannot win on speed here:** the tiles run one after another, with no overlap. A real
-  WS array starts loading or feeding the next tile while the last one drains, which hides the
-  fill and drain time. That overlap is not implemented, so the cycle comparison is not the
-  best case for WS. This is the main limit of this comparison. Reuse of weights is also what
-  the dataflow literature gives as the reason for WS (Chen, Emer, Sze, 2016), and the traffic
-  numbers above agree with it.
-- **Utilisation is low for both** (25% and 36%) because the 4x4 array spends many cycles with
-  only some diagonals active (fill and drain). Larger arrays and back-to-back tiles raise it.
+### 6.3 Overlapping tiles (ablation)
 
+The tiles above run strictly one after another. A systolic array can instead start the next
+tile while the previous one is still draining. This ablation turns the overlap on step by step.
+Test `tb/test_overlap.py` drives the bare WS array (`systolic_ws`, no control logic) with 8
+tiles that share one B, weights loaded once. Tile m starts II cycles after tile m-1, where II is
+the initiation interval. Every result is checked against the reference model.
+Logs: `2026-11-15T112345_overlap_W18` (also W = 16 and 32, with identical numbers).
 
-## Detection coverage and false alarms
+| II (cycles between tile starts) | Total cycles for 8 tiles | Cycles per tile | PE utilisation | Tiles correct | Meaning |
+|---|---|---|---|---|---|
+| 11 | 92 | 11.50 | 36.4% | 8 of 8 | no overlap |
+| 8 | 71 | 8.88 | 50.0% | 8 of 8 | |
+| 6 | 57 | 7.12 | 66.7% | 8 of 8 | |
+| 5 | 50 | 6.25 | 80.0% | 8 of 8 | |
+| **4** | **43** | **5.38** | **100.0%** | **8 of 8** | **full overlap** |
+| 3 | 36 | 4.50 | not meaningful | 1 of 8 | two tiles want the same input lane |
 
-Not measured yet. Will be added later.
+Total cycles = 4 (weight load) + 7 x II + 11. Cycles per tile include the one-time load and
+drain, so they tend to II as T grows; the steady-state rate is II.
 
-## Overhead of the checker
+- **The limit is II = N = 4.** Row k of the array is busy with one tile for exactly N cycles, so
+  the next tile can use row k right after. Below that, two tiles need the same row in the same
+  cycle, and the test confirms the results break (only 1 of 8 correct). At II = 4 every PE does
+  a multiply-add every cycle, which is 100% utilisation.
+- **Steady state: WS 4 cycles per tile, WS without overlap 12, OS 11.** For 8 tiles that is 43
+  cycles against 100 (WS, no overlap) and 88 (OS), so overlapped WS is about 2 times faster
+  than OS at 8 tiles and approaches 2.75 times (11 / 4) as T grows.
+- **This changes the conclusion of 6.2.** The earlier result, "OS is faster", was a property of
+  running tiles one after another, not of the dataflow. Once weights are reused *and* tiles
+  overlap, WS wins on both speed and memory traffic. This matches why WS exists in the
+  literature (Chen, Emer and Sze, 2016).
 
-Not measured yet. Will be added later.
+**Caveats:**
 
-## References
+- The overlap is driven by the testbench on the bare array. `systolic_ws_ctrl` does not
+  implement it yet, and stalls during overlap were not tested.
+- OS was not tested with overlap. With its single clear signal it probably cannot overlap
+  without a clear that is staggered per PE, but this is untested.
+- The comparison is for one B and ideal back-to-back tiles. For a single tile OS is faster.
+
+---
+
+## 7. Not measured yet
+
+- The ABFT checksum checker: false alarms, detection of an injected wrong value, latency.
+- Fault injection (bit-flip and stuck-at): detection coverage, masked faults, latency, per width.
+- Formal proofs (SymbiYosys) of the processing-element behaviour and the handshake.
+- Synthesis area and timing with and without the checker, from a real cell library.
+
+## 8. Limits
+
+- Verilator is 2-state (no X values), so a bug that only shows as an X, for example a register
+  without reset, cannot be seen. Every register in the RTL has a synchronous reset.
+- The mutation tests use 7 hand-picked bugs. They show the testbench catches those kinds of
+  bugs, not all. An automatic mutation tool (MCY, in the OSS CAD Suite) would give a fuller
+  picture.
+- Coverage is sampled at the transaction level (the A, B and C the monitor saw), not inside
+  each PE.
+- Area numbers so far are from generic gates, not a real cell library.
+
+## 9. References
 
 - H. T. Kung, "Why systolic architectures?", *IEEE Computer*, vol. 15, no. 1, 1982.
 - N. P. Jouppi et al., "In-Datacenter Performance Analysis of a Tensor Processing Unit",
   *ISCA*, 2017.
 - B. Jacob et al., "Quantization and Training of Neural Networks for Efficient
   Integer-Arithmetic-Only Inference", *CVPR*, 2018.
+- Y.-H. Chen, J. Emer, V. Sze, "Eyeriss: A Spatial Architecture for Energy-Efficient Dataflow
+  for Convolutional Neural Networks", *ISCA*, 2016.
 - R. A. DeMillo, R. J. Lipton, F. G. Sayward, "Hints on Test Data Selection: Help for the
   Practicing Programmer", *IEEE Computer*, vol. 11, no. 4, 1978.
 - A. Piziali, *Functional Verification Coverage Measurement and Analysis*, Springer, 2004.
 - C. Spear, G. Tumbush, *SystemVerilog for Verification*, 3rd ed., Springer, 2012.
 - IEEE Std 1800-2017, *SystemVerilog*, clause 19 (functional coverage).
-- Y.-H. Chen, J. Emer, V. Sze, "Eyeriss: A Spatial Architecture for Energy-Efficient Dataflow for Convolutional Neural Networks", *ISCA*, 2016.

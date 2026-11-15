@@ -63,7 +63,9 @@ What happens:
    The tests check this number for every multiply. Inputs are latched at start, and
    `c_mat` holds the result until the next start.
 
-Utilisation: each PE does useful work for 4 of the 11 RUN cycles.
+Utilisation: each PE does useful work for 4 of the 11 RUN cycles. Running tiles back-to-back
+removes most of this idle time: see the overlap ablation in `results.md`. A tile can start every
+4 cycles, because row k of the array is busy with one tile for exactly 4 cycles.
 
 ## Accumulator width: W = 18
 
@@ -124,3 +126,14 @@ real area.
 
 A side effect for fault injection: at large W, many register bits in simulation do not
 exist after synthesis. Faults injected into those bits test hardware that is not there.
+
+## Output-stationary design, in short
+
+`systolic_os_ctrl` has the same ports as `systolic_ws_ctrl`, so one testbench drives both.
+There is no load phase. A[i][k] and B[k][j] meet in PE[i][j] at cycle t = i + j + k, and each
+PE adds the product into its own accumulator. The accumulators are read directly as the result,
+so `done` comes one cycle after the last multiply-add. A multiply takes 11 cycles (WS: 16).
+
+The accumulator is cleared when `start` is accepted. The pass-through registers are not
+cleared: by the end of a multiply the skewed schedule has already pushed zeros through all of
+them (tested, see `results.md`, section 4).

@@ -1,0 +1,7 @@
+toplevel: pe
+test_module: test_pe
+rtl_dir: /home/ursula/systolic-abft-checker/rtl
+parameters: {'W': 16}
+seed: 12345
+verilator: Verilator 5.055 devel rev v5.054-183-g9040f8666 (mod)
+cocotb: 2.1.0

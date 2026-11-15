@@ -3,7 +3,7 @@
 // PE[i][j] accumulates C[i][j] = sum over k of A[i][k] * B[k][j].
 //   - A enters at the left of row i (a_left[i]) and moves right.
 //   - B enters at the top of column j (b_top[j]) and moves down.
-//   - clr zeroes all accumulators and pass-through registers.
+//   - clr zeroes all accumulators.
 //   - acc_mat holds the accumulators, element [i][j] at index i*N + j.
 //
 // systolic_os_ctrl.sv adds the control logic that applies the input skew.

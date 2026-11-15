@@ -1,5 +1,8 @@
 # Notes
 
+A long story-style explanation of the whole project is in [story/README.md](story/README.md).
+This file keeps the data-flow walk-through and the accumulator-width decision.
+
 ## Data flow of one WS multiply
 
 Source: `logs/2026-11-10T172359_ws_ctrl_W20_waves/` (`dump.vcd`, test `test_identity`,
@@ -59,7 +62,8 @@ What happens:
    the first out (t = 4), and column j comes out j cycles later. Since B = identity, the
    outputs are the rows of A, skewed: C[0][0] = -8 at t = 4, C[3][3] = 7 at t = 10.
 5. **done** is high in the cycle after the last capture. From the clock edge that takes
-   `start` to the cycle where `done` is high is 4 (load) + 11 (run) = 15 cycles.
+   `start` to the cycle where `done` is high is 4 (load) + 11 (run) = 15 cycles after that edge.
+   Counting the accepting edge itself, as the scoreboard and `results.md` do, it is 16 edges.
    The tests check this number for every multiply. Inputs are latched at start, and
    `c_mat` holds the result until the next start.
 
@@ -129,11 +133,30 @@ exist after synthesis. Faults injected into those bits test hardware that is not
 
 ## Output-stationary design, in short
 
-`systolic_os_ctrl` has the same ports as `systolic_ws_ctrl`, so one testbench drives both.
+`systolic_os_ctrl` has the same ports as `systolic_ws_ctrl`, so one testbench drives both. It uses its own PE file (`rtl/pe_os.sv`) because its PE keeps the
+accumulator, while the weight-stationary PE keeps a weight: different registers, so they are not
+the same PE.
 There is no load phase. A[i][k] and B[k][j] meet in PE[i][j] at cycle t = i + j + k, and each
 PE adds the product into its own accumulator. The accumulators are read directly as the result,
-so `done` comes one cycle after the last multiply-add. A multiply takes 11 cycles (WS: 16).
+so `done` comes one cycle after the last multiply-add. A multiply takes 11 edges counting the accepting edge (WS: 16); 10 cycles after the
+accepting edge (WS: 15).
 
 The accumulator is cleared when `start` is accepted. The pass-through registers are not
 cleared: by the end of a multiply the skewed schedule has already pushed zeros through all of
 them (tested, see `results.md`, section 4).
+
+## ABFT checker hardware, in short
+
+`abft_checker` sits next to the array (`top.sv` joins them). When a multiply is accepted it copies
+A and B, then in 4 cycles computes the reference checksums with 8 small multipliers: (column sums
+of A) x B for the columns and A x (row sums of B) for the rows. When `done` is high it adds up the
+rows and columns of C, compares, and one cycle later pulses `chk_valid` with `err_flag`,
+`err_loc_valid` (exactly one row and one column disagree) and the row and column.
+
+A trap worth remembering: in SystemVerilog a slice of a packed array is unsigned even if the array
+is declared signed, so INT8 elements must go through `$signed()` (see `bug_log.md`, entry 3).
+
+In simulation, `top.sv` adds the variable `inj_add` to C, so the testbench can plant a wrong value
+after the array. Results are in `results.md`, section 7.5, and the story is in `story/03-story.md`,
+chapter 17.
+

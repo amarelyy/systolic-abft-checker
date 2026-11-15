@@ -1,0 +1,38 @@
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:242  in gpi_load_users                  Loaded entry library: '/usr/lib/x86_64-linux-gnu/libpython3.10.so.1.0'
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:233  in gpi_load_users                  Running entry func 'initialize' from loaded library '/home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb/simulator.cpython-310-x86_64-linux-gnu.so'
+     -.--ns INFO     pygpi                              ..ib/pygpi/embed.cpp:114  in initialize                      Using Python 3.10.19 interpreter at /home/ursula/systolic-abft-checker/.venv/bin/python3
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:74   in gpi_print_registered_impl       GPI: VPI support registered
+     0.00ns INFO     cocotb.initialize                  Seeding Python random module with 12345
+     0.00ns INFO     cocotb.initialize                  Initialized cocotb v2.1.0 from /home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb
+     0.00ns INFO     cocotb.initialize                  Running on Verilator version 5.055 devel
+     0.00ns INFO     cocotb.regression                  Running tests
+     0.00ns INFO     cocotb.regression                  running test_abft_hw.test_no_false_alarms (1/4)
+1405395.00ns INFO     cocotb.top                         [os W=32] fault-free multiplies: 10000, checks seen: 10000, multiplies whose results overflow: 0, false alarms: 0
+1405395.00ns INFO     cocotb.top                         [os W=32] cycles from done to chk_valid: [1]; disagreements with model: 0; protocol problems: 0
+1405395.00ns INFO     cocotb.regression                  test_abft_hw.test_no_false_alarms passed
+1405395.00ns INFO     cocotb.regression                  running test_abft_hw.test_single_errors (2/4)
+1589730.00ns INFO     cocotb.top                         [os W=32] single wrong element, every position and bit: 1536 injected, 1536 detected, 1536 located exactly
+1589730.00ns INFO     cocotb.regression                  test_abft_hw.test_single_errors passed
+1589730.00ns INFO     cocotb.regression                  running test_abft_hw.test_multiple_errors (3/4)
+1805745.00ns INFO     cocotb.top                         [os W=32] pattern                   tried  detected  differs from model
+1805745.00ns INFO     cocotb.top                         [os W=32] 2 random errors             300       300                   0
+1805745.00ns INFO     cocotb.top                         [os W=32] 3 random errors             300       300                   0
+1805745.00ns INFO     cocotb.top                         [os W=32] 4 random errors             300       300                   0
+1805745.00ns INFO     cocotb.top                         [os W=32] 5 random errors             300       300                   0
+1805745.00ns INFO     cocotb.top                         [os W=32] 6 random errors             300       300                   0
+1805745.00ns INFO     cocotb.top                         [os W=32] rectangle +d -d -d +d       300         0                   0
+1805745.00ns INFO     cocotb.regression                  test_abft_hw.test_multiple_errors passed
+1805745.00ns INFO     cocotb.regression                  running test_abft_hw.test_keep_w (4/4)
+1805745.00ns INFO     cocotb.top                         keep_w applies to the weight-stationary array only; skipped
+1805745.00ns INFO     cocotb.regression                  test_abft_hw.test_keep_w passed
+1805745.00ns INFO     cocotb.regression                  *******************************************************************************************
+                                                        ** TEST                               STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        *******************************************************************************************
+                                                        ** test_abft_hw.test_no_false_alarms   PASS     1405395.00           6.52     215611.54  **
+                                                        ** test_abft_hw.test_single_errors     PASS      184335.00           0.76     241022.42  **
+                                                        ** test_abft_hw.test_multiple_errors   PASS      216015.00           1.04     207234.13  **
+                                                        ** test_abft_hw.test_keep_w            PASS           0.00           0.00          0.00  **
+                                                        *******************************************************************************************
+                                                        ** TESTS=4 PASS=4 FAIL=0 SKIP=0                 1805745.00           8.33     216866.39  **
+                                                        *******************************************************************************************
+- (null):0: Verilog $finish

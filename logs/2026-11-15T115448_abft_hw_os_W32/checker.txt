@@ -1,0 +1,10 @@
+[os W=32] fault-free multiplies: 300, checks seen: 300, multiplies whose results overflow: 0, false alarms: 0
+[os W=32] cycles from done to chk_valid: [1]; disagreements with model: 0; protocol problems: 0
+[os W=32] single wrong element, every position and bit: 1536 injected, 1536 detected, 1536 located exactly
+[os W=32] pattern                   tried  detected  differs from model
+[os W=32] 2 random errors             300       300                   0
+[os W=32] 3 random errors             300       300                   0
+[os W=32] 4 random errors             300       300                   0
+[os W=32] 5 random errors             300       300                   0
+[os W=32] 6 random errors             300       300                   0
+[os W=32] rectangle +d -d -d +d       300         0                   0

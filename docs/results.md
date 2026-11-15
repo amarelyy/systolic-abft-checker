@@ -1,7 +1,10 @@
 # Results
 
 Every number in this file names the log folder it came from (all in `logs/`). Seed 12345
-unless stated otherwise. Tool versions are in [tools.md](tools.md).
+unless stated otherwise. Tool versions are in [tools.md](tools.md). The story of how each result came about, and
+why, is in [story/README.md](story/README.md). Log paths below point to the newest run of each
+kind (the `2026-11-15T1143xx` and `2026-11-15T1144xx` folders); older runs with the same seed
+gave identical coverage and table files for the ones compared.
 
 ## Contents
 
@@ -11,7 +14,7 @@ unless stated otherwise. Tool versions are in [tools.md](tools.md).
 4. [Can the testbench fail? Mutation tests](#4-can-the-testbench-fail-mutation-tests)
 5. [Accumulator width: 18, 16, 32](#5-accumulator-width-18-16-32)
 6. [Weight-stationary vs output-stationary](#6-weight-stationary-vs-output-stationary)
-7. [ABFT checksum prototype (Python)](#7-abft-checksum-prototype-python)
+7. [ABFT checksums: Python prototype and hardware](#7-abft-checksums-python-prototype-and-hardware)
 8. [Not measured yet](#8-not-measured-yet)
 9. [Limits](#9-limits)
 10. [References](#10-references)
@@ -34,10 +37,11 @@ accumulator width W. They are checked against a Python reference model.
 | 4 | No result of a 4x4 INT8 multiply can overflow at W = 18, so 18 is the smallest safe width. W = 16 is the only tested width where results wrap (2.3% of elements), and the arrays handle it correctly. | section 5 |
 | 5 | For one tile OS is faster (11 vs 16 cycles). With weight reuse WS moves up to 33% less data. With overlapped tiles WS reaches 4 cycles per tile against 11 for OS, so WS is about 2.75 times faster in steady state. | section 6 |
 | 6 | The checksum math works in Python: 0 false alarms in 100,000 fault-free matrix pairs at every width, including 12,677 that really overflow at W = 16. A reference that saturates instead of wrapping gives a false alarm on every overflowing matrix. | section 7 |
-| 7 | In the Python model, the checksums detect every single, double and triple output error, and every datapath fault modelled (0 missed of about 8.3 million changed outputs). Four errors in a rectangle can cancel and are never detected. | section 7 |
+| 7 | In the Python model, the checksums detect every single, double and triple output error, and every datapath fault modelled (0 missed of 8,331,119 changed outputs). Four errors in a rectangle can cancel and are never detected. | section 7 |
+| 8 | The checker hardware agrees with the Python model: 0 false alarms in 60,000 fault-free multiplies (4,362 of them really overflow at W = 16), every single wrong element planted in C is detected and located exactly, and the error flag appears 1 cycle after the result. The wrong values were added to C after the array, not injected inside it. | section 7.5 |
 
-**Not measured yet:** the checker in hardware, fault injection in the real design, formal
-proofs, real synthesis area and timing. See [section 8](#8-not-measured-yet).
+**Not measured yet:** fault injection inside the real array, formal proofs, real synthesis area
+and timing. See [section 8](#8-not-measured-yet).
 
 ---
 
@@ -45,12 +49,12 @@ proofs, real synthesis area and timing. See [section 8](#8-not-measured-yet).
 
 ```bash
 source env.sh          # every new terminal
-pytest                 # 36 tests: all designs and widths, about one minute
+pytest                 # 42 tests: all designs and widths, about one minute
 ```
 
 Each run writes its own folder in `logs/` with the simulator log, the seed, the tool versions
 and (for random runs) `coverage.txt`. Single files: `pytest tb/test_random.py`,
-`pytest tb/test_reuse.py`, `pytest tb/test_overlap.py`, `pytest tb/test_abft_model.py`. The checksum study is
+`pytest tb/test_reuse.py`, `pytest tb/test_overlap.py`, `pytest tb/test_abft_model.py`, `pytest tb/test_abft_hw.py`. The checksum study is
 `python model/abft_study.py`. `NUM_TESTS=50` shortens the random run.
 
 ---
@@ -81,15 +85,15 @@ and (for random runs) `coverage.txt`. Single files: `pytest tb/test_random.py`,
 
 | Design | W | Random multiplies | Mismatches | Coverage | Raw coverage | Log |
 |---|---|---|---|---|---|---|
-| WS | 18 | 2000 | 0 | 100.0% | 90.0% | `2026-11-15T112111_random_ws_W18` |
-| WS | 16 | 2000 | 0 | 100.0% | 100.0% | `2026-11-15T112113_random_ws_W16` |
-| WS | 32 | 2000 | 0 | 100.0% | 90.0% | `2026-11-15T112115_random_ws_W32` |
-| OS | 18 | 2000 | 0 | 100.0% | 85.0% | `2026-11-15T112117_random_os_W18` |
-| OS | 16 | 2000 | 0 | 100.0% | 95.0% | `2026-11-15T112119_random_os_W16` |
-| OS | 32 | 2000 | 0 | 100.0% | 85.0% | `2026-11-15T112121_random_os_W32` |
+| WS | 18 | 2000 | 0 | 100.0% | 90.0% | `2026-11-15T114401_random_ws_W18` |
+| WS | 16 | 2000 | 0 | 100.0% | 100.0% | `2026-11-15T114403_random_ws_W16` |
+| WS | 32 | 2000 | 0 | 100.0% | 90.0% | `2026-11-15T114405_random_ws_W32` |
+| OS | 18 | 2000 | 0 | 100.0% | 85.0% | `2026-11-15T114407_random_os_W18` |
+| OS | 16 | 2000 | 0 | 100.0% | 95.0% | `2026-11-15T114408_random_os_W16` |
+| OS | 32 | 2000 | 0 | 100.0% | 85.0% | `2026-11-15T114410_random_os_W32` |
 
 The directed tests also pass for both designs (3 of 3 each, W = 18:
-`2026-11-15T112039_directed_ws_W18`, `2026-11-15T112050_directed_os_W18`).
+`2026-11-15T114321_directed_ws_W18`, `2026-11-15T114332_directed_os_W18`).
 
 **Coverage vs raw coverage.** "Coverage" leaves out bins that no input can ever hit; "raw"
 counts every bin. Each excluded bin is listed with its reason in `coverage.txt` of the run.
@@ -118,7 +122,7 @@ high fanout net). That is fine for 4x4; larger arrays usually use local handshak
 
 With plain uniform input every value has probability 1/256, so zeros and exact corner values
 are rare. In the first WS W = 18 run (`logs/2026-11-10T190319_random_W18`), the "zero" sign bin
-got 12,740 of 128,000 pairs (about 10%) against about 0.4% for pure uniform input. This is the
+got 12,740 of 128,000 multiplied (A, B) pairs (about 10%; 128,000 = 2000 multiplies x 64 products) against about 0.4% for pure uniform input. This is the
 usual argument for constrained-random over pure random stimulus (Spear and Tumbush, 2012).
 For the 256 values of each value coverpoint, the coupon-collector estimate is about
 256 x H(256) = 1,570 random draws, around 100 matrices, so 2000 multiplies is about 20 times
@@ -138,7 +142,10 @@ monitor that started too late. See [bug_log.md](bug_log.md).
 A testbench that always passes proves nothing unless it can also fail. Following mutation
 testing (DeMillo, Lipton and Sayward, 1978), a bug is planted in a copy of the RTL and the
 random test is run on it. All logs are in `logs/*_mutant_*` (run on 2026-11-10, 300 multiplies
-each, W = 18).
+each, W = 18). The mutated RTL copies were kept in a temporary folder (see `rtl_dir` in each
+`run_info.txt`) and are not in the repo, so these seven runs cannot be re-created from the repo
+today; only their logs survive. An early version of the m3 mutant was built wrongly and rebuilt;
+the log shown is of the final one. Why each result came out as it did: [story chapter 9](story/03-story.md#chapter-9-mutation-tests-of-the-testbench).
 
 | Design | Mutant | Planted bug | Caught? | How |
 |---|---|---|---|---|
@@ -200,7 +207,7 @@ value those bits would really change and cost real area.
   is the first test of wrap-around in the full array, and it is the case the checksum has to
   survive later.
 - **The stimulus shaping matters.** Pure uniform input overflowed 0.30% of elements at W = 16;
-  the shaped stimulus gives 2.3%, about 8 times more.
+  the shaped stimulus gives 2.3% for WS (742 of 32,000) and 2.6% for OS (827 of 32,000), about 8 times more.
 - **W = 18 and 32 behave identically in simulation.** With no overflow possible, the extra bits
   of W = 32 are copies of the sign. Differences can only show up in area and in fault
   injection, where flips of those bits are expected to be mostly masked. This will be measured
@@ -218,15 +225,15 @@ there is no load phase.
 
 | | WS | OS | Source |
 |---|---|---|---|
-| Cycles from accepting start to done | 16 | 11 | measured; checked on all 2000 multiplies of each run |
+| Edges from accepting start to done (accepting edge counted) | 16 | 11 | measured; checked on all 2000 multiplies of each run. notes.md counts the cycles after the accepting edge, which is 15 and 10 |
 | Phases | 4 load, 11 run, 1 done | 10 run, 1 done | RTL |
 | PE utilisation (64 multiply-adds / (16 PEs x cycles)) | 25.0% | 36.4% | computed from the measured cycles |
 | Extra register per PE | 8-bit stored weight | none | RTL |
 
 ### 6.2 Weight reuse: one B for T tiles of A (no overlap)
 
-Test `tb/test_reuse.py`, W = 18, logs `2026-11-15T112123_reuse_ws_W18` and
-`2026-11-15T112123_reuse_os_W18` (file `reuse.txt` in each). WS loads B once and skips the load
+Test `tb/test_reuse.py`, W = 18, logs `2026-11-15T114412_reuse_ws_W18` and
+`2026-11-15T114412_reuse_os_W18` (file `reuse.txt` in each). WS loads B once and skips the load
 for the other tiles (the B given on those tiles is random garbage, and every result still
 matches the reference, so the weights really are reused). OS streams B again for every tile.
 "Moved" counts INT8 elements that crossed the array boundary, read from counters inside the RTL.
@@ -253,7 +260,7 @@ tile while the previous one is still draining. This ablation turns the overlap o
 Test `tb/test_overlap.py` drives the bare WS array (`systolic_ws`, no control logic) with 8
 tiles that share one B, weights loaded once. Tile m starts II cycles after tile m-1, where II is
 the initiation interval. Every result is checked against the reference model.
-Logs: `2026-11-15T112345_overlap_W18` (also W = 16 and 32, with identical numbers).
+Logs: `2026-11-15T114341_overlap_W18` (also W = 16 and 32, with identical numbers).
 
 | II (cycles between tile starts) | Total cycles for 8 tiles | Cycles per tile | PE utilisation | Tiles correct | Meaning |
 |---|---|---|---|---|---|
@@ -289,7 +296,7 @@ drain, so they tend to II as T grows; the steady-state rate is II.
 
 ---
 
-## 7. ABFT checksum prototype (Python)
+## 7. ABFT checksums: Python prototype and hardware
 
 Before building any checker hardware, the checksum math was written and tested in Python
 (`model/abft.py`). This model is also what the hardware checker will be compared against.
@@ -394,10 +401,60 @@ hardware result:
 - **Hardware size hint:** the column sums of A are sums of four INT8 values, so they need 10
   bits (-512 to 508), not 8, in the reference path of the checker.
 
+### 7.5 The checker in hardware
+
+Design: `rtl/abft_checker.sv` and `rtl/top.sv` (one top for both dataflows, parameter `DATAFLOW`).
+The checker keeps its own copy of A and B, computes the reference checksums over 4 cycles with a
+small multiply-accumulate unit (8 multipliers), sums the rows and columns of C when `done` is
+high, and reports one cycle later. Tests: `tb/test_abft_hw.py` (4 tests x 2 dataflows x 3
+widths). The wrong value is added to C by a simulation-only variable in `top.sv`, **after** the
+array, so these are faults at the output, not faults inside the array.
+
+Logs: `logs/2026-11-15T1157xx_abft_hw_<ws|os>_W<18|16|32>/checker.txt`, seed 12345.
+
+| Design | W | Fault-free multiplies | really overflow | False alarms | Single errors detected / located |
+|---|---|---|---|---|---|
+| WS | 18 | 10,000 | 0 | **0** | 864 / 864 |
+| WS | 16 | 10,000 | 2,165 | **0** | 768 / 768 |
+| WS | 32 | 10,000 | 0 | **0** | 1,536 / 1,536 |
+| OS | 18 | 10,000 | 0 | **0** | 864 / 864 |
+| OS | 16 | 10,000 | 2,197 | **0** | 768 / 768 |
+| OS | 32 | 10,000 | 0 | **0** | 1,536 / 1,536 |
+
+- **Multiple errors** (300 patterns each, identical in all six runs): 2, 3, 4, 5 and 6 random
+  wrong elements detected 300 of 300; the cancelling rectangle (+d, -d, -d, +d) detected 0 of 300.
+  The hardware agreed with `model/abft.py` in every single case.
+- **Latency:** the error flag is visible exactly 1 cycle after `done` in all 60,000 multiplies.
+- **Weight reuse** (WS): 14 multiplies per run with garbage on the B bus after the first tile,
+  0 false alarms.
+- **Assertion** that the reference is ready before the result: never fired.
+
+**The first run failed.** All four tests failed: every multiply raised a false alarm, and no
+error was located (`logs/2026-11-15T115400_abft_hw_ws_W18`, kept). Cause: in SystemVerilog an
+element taken from a packed array is unsigned even if the array is declared signed, so negative
+INT8 values were added as large positive numbers in the reference sums. The Python model does not
+have this problem, which is why the model was a useful answer key. Fix: `$signed()` on every use.
+See [bug_log.md](bug_log.md).
+
+**Can the tests fail?** Four planted bugs in the checker (`logs/*_mutant_chk_*`, 300 multiplies,
+W = 18, WS): row checks ignored, `keep_w` ignored, reference stops one cycle early, row
+comparison skips the top bit. All four were caught.
+
+**Why these results.** The checker does the same linear sums as the model, so it agrees with it
+and survives wrap-around (section 7.3). The rectangle cancels all its row and column sums, so it
+is never seen. The 1-cycle delay is the register that holds the result.
+
+**What this does not show.** No fault has been injected inside the array. The Python prediction of
+100% detection for faults inside the array (section 7.4) is therefore still a prediction, and
+masked faults, the effect of width on them, and the area and speed cost are not measured yet.
+
 ## 8. Not measured yet
 
-- The checker in hardware: false alarms in simulation, detection of an injected wrong value,
-  latency.
+See also the plain-English view of what is solid and what is risky in
+[story/02-how-is-it-looking.md](story/02-how-is-it-looking.md).
+
+- Faults injected *inside* the array (not only added to the finished result C), tested against
+  the checker hardware.
 - Fault injection (bit-flip and stuck-at) into the real design: detection coverage, masked
   faults and latency per width. The Python prediction above is the number to compare with.
 - Formal proofs (SymbiYosys) of the processing-element behaviour and the handshake.
@@ -407,13 +464,17 @@ hardware result:
 
 - Verilator is 2-state (no X values), so a bug that only shows as an X, for example a register
   without reset, cannot be seen. Every register in the RTL has a synchronous reset.
-- The mutation tests use 7 hand-picked bugs. They show the testbench catches those kinds of
+- The mutation tests use 11 hand-picked bugs (7 on the arrays, 4 on the checker). They show the testbench catches those kinds of
   bugs, not all. An automatic mutation tool (MCY, in the OSS CAD Suite) would give a fuller
   picture.
 - Coverage is sampled at the transaction level (the A, B and C the monitor saw), not inside
   each PE.
 - Area numbers so far are from generic gates, not a real cell library.
-- The ABFT results in section 7 are from a Python model, not from the hardware.
+- The ABFT hardware results in section 7.5 add wrong values to C after the array. Faults inside
+  the array have not been injected yet.
+- Only seed 12345 was used for the results above; other seeds were not run.
+- The width ablation at W = 32 will contain register bits that synthesis removes (sign copies);
+  fault-injection results there must separate real bits from these ghost bits (not measured yet).
 
 ## 10. References
 

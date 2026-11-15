@@ -142,11 +142,13 @@ module abft_checker #(
     end
 
 `ifndef SYNTHESIS
+`ifndef NO_RTL_ASSERT        // fault-injection runs switch these checks off
     // The references must be ready before the array finishes.
     ref_before_result : assert property (
         @(posedge clk) disable iff (!rst_n)
         c_valid |-> ref_ready
     ) else $error("abft_checker: result arrived before the reference checksums were ready");
+`endif
 `endif
 
 endmodule

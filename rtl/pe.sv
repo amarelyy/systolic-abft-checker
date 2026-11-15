@@ -54,6 +54,7 @@ module pe #(
     end
 
 `ifndef SYNTHESIS
+`ifndef NO_RTL_ASSERT        // fault-injection runs switch these checks off
     // psum_out == psum_in + a*w, one cycle later.
     // The right side is written independently of psum_next on purpose: all operands are
     // signed, so they are sign-extended to W bits and the product is taken mod 2^W.
@@ -62,6 +63,7 @@ module pe #(
         $past(rst_n) && $past(en) |->
             psum_out == W'($past(psum_in) + $past(a_in) * $past(w))
     ) else $error("pe: psum_out=%0d, expected psum_in + a*w", psum_out);
+`endif
 `endif
 
 endmodule

@@ -1,0 +1,50 @@
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:242  in gpi_load_users                  Loaded entry library: '/usr/lib/x86_64-linux-gnu/libpython3.10.so.1.0'
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:233  in gpi_load_users                  Running entry func 'initialize' from loaded library '/home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb/simulator.cpython-310-x86_64-linux-gnu.so'
+     -.--ns INFO     pygpi                              ..ib/pygpi/embed.cpp:114  in initialize                      Using Python 3.10.19 interpreter at /home/ursula/systolic-abft-checker/.venv/bin/python3
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:74   in gpi_print_registered_impl       GPI: VPI support registered
+     0.00ns INFO     cocotb.initialize                  Seeding Python random module with 12345
+     0.00ns INFO     cocotb.initialize                  Initialized cocotb v2.1.0 from /home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb
+     0.00ns INFO     cocotb.initialize                  Running on Verilator version 5.055 devel
+     0.00ns INFO     cocotb.regression                  Running tests
+     0.00ns INFO     cocotb.regression                  running test_injection.test_known_flip (1/2)
+  2565.00ns INFO     cocotb.top                         [ws W=18] cycles that changed C: [8, 9, 10, 11]; labels: {'masked': 11, 'detected': 4}
+  2565.00ns INFO     cocotb.regression                  test_injection.test_known_flip passed
+  2565.00ns INFO     cocotb.regression                  running test_injection.test_campaign (2/2)
+257580.00ns INFO     cocotb.top                         
+                                                        Fault injection campaign, design = ws, W = 18, 500 flips, 500 stuck-at, 500 fault-free, no stalls
+                                                        
+                                                        By fault kind (coverage = detected / (detected + missed); masked faults excluded)
+                                                          group                  injected  masked  detected  missed  coverage  masked %
+                                                          flip                        500     337       101      62     62.0%     67.4%
+                                                          stuck                       500     329        91      80     53.2%     65.8%
+                                                        
+                                                        By register class
+                                                          group                  injected  masked  detected  missed  coverage  masked %
+                                                          flip / a                    159     133        11      15     42.3%     83.6%
+                                                          flip / acc                  172     129        18      25     41.9%     75.0%
+                                                          flip / w                    169      75        72      22     76.6%     44.4%
+                                                          stuck / a                   164     119        13      32     28.9%     72.6%
+                                                          stuck / acc                 169     108        36      25     59.0%     63.9%
+                                                          stuck / w                   167     102        42      23     64.6%     61.1%
+                                                        
+                                                        Fault-free multiplies: 500, flagged: 0  -> false alarm rate 0.0000
+                                                        All injections: 1000, masked 666, detected 192, missed 142, flag_without_change 0
+                                                        Detection coverage = 192/334 = 57.49%   (false alarm rate 0.0000, same table)
+                                                        Detection latency (cycles from result valid to error flag): 1 in every run (asserted in run_multiply)
+                                                        Faults that changed exactly one element: 122, checker located the element: 122
+                                                        Changed elements per injection (how many outputs one fault corrupted): 1: 122, 2: 54, 3: 47, 4: 103, 6: 8
+                                                        Checker hardware disagrees with model/abft.py in 142 of 1500 multiplies
+257580.00ns WARNING  cocotb.regression                  test_injection.test_campaign failed
+                                                        Traceback (most recent call last):
+                                                          File "/home/ursula/systolic-abft-checker/tb/test_injection.py", line 204, in test_campaign
+                                                            assert disagree == 0
+                                                        AssertionError: assert 142 == 0
+257580.00ns INFO     cocotb.regression                  ****************************************************************************************
+                                                        ** TEST                            STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        ****************************************************************************************
+                                                        ** test_injection.test_known_flip   PASS        2565.00           0.00     565073.44  **
+                                                        ** test_injection.test_campaign     FAIL      255015.00           0.43     597216.30  **
+                                                        ****************************************************************************************
+                                                        ** TESTS=2 PASS=1 FAIL=1 SKIP=0               257580.00           0.43     596014.51  **
+                                                        ****************************************************************************************
+- (null):0: Verilog $finish

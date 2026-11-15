@@ -1,0 +1,8 @@
+design = os, W = 18, one B shared by T tiles of A
+
+  T  cycles  A read  B read C written total moved
+  1      11      16      16        16          48
+  2      22      32      32        32          96
+  4      44      64      64        64         192
+  8      88     128     128       128         384
+ 16     176     256     256       256         768

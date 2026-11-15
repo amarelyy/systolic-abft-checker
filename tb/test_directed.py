@@ -27,6 +27,7 @@ async def reset(dut):
     cocotb.start_soon(Clock(dut.clk, 10, unit="ns").start())
     dut.rst_n.value = 0
     dut.stall.value = 0
+    dut.keep_w.value = 0
     dut.start.value = 0
     dut.a_mat.value = 0
     dut.b_mat.value = 0

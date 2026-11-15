@@ -23,6 +23,9 @@ module systolic_os_ctrl #(
     input  logic                  rst_n,
     input  logic                  stall,
     input  logic                  start,     // ignored while busy or stalled
+    /* verilator lint_off UNUSEDSIGNAL */
+    input  logic                  keep_w,    // not used: OS has no stored weights
+    /* verilator lint_on UNUSEDSIGNAL */
     input  logic [N*N-1:0][7:0]   a_mat,
     input  logic [N*N-1:0][7:0]   b_mat,
     output logic                  busy,
@@ -95,5 +98,26 @@ module systolic_os_ctrl #(
             end
         end
     end
+
+`ifndef SYNTHESIS
+    // Simulation-only traffic counters (same meaning as in systolic_ws_ctrl.sv).
+    int cnt_a, cnt_b, cnt_c;
+    always_ff @(posedge clk) begin
+        int da, db;
+        if (!rst_n) begin
+            cnt_a <= 0;
+            cnt_b <= 0;
+            cnt_c <= 0;
+        end else if (!stall && state == RUN) begin
+            da = 0;
+            db = 0;
+            for (int i = 0; i < N; i++) if (int'(cnt) >= i && int'(cnt) < i + N) da++;
+            for (int j = 0; j < N; j++) if (int'(cnt) >= j && int'(cnt) < j + N) db++;
+            cnt_a <= cnt_a + da;
+            cnt_b <= cnt_b + db;
+            if (int'(cnt) == LAST_T) cnt_c <= cnt_c + N*N;   // all results are read at the end
+        end
+    end
+`endif
 
 endmodule

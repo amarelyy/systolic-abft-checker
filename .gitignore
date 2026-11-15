@@ -6,3 +6,5 @@ sim_build/
 .codesight/
 .agent/
 docs/
+.vscode/browse.vc.db*
+

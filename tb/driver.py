@@ -41,6 +41,7 @@ class InputDriver:
     def __init__(self, dut):
         self.dut = dut
         dut.start.value = 0
+        dut.keep_w.value = 0
         dut.a_mat.value = 0
         dut.b_mat.value = 0
 

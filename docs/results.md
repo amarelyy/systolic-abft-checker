@@ -189,26 +189,46 @@ The numbers below for one 4x4 multiply:
 
 | | Weight-stationary | Output-stationary | Source |
 |---|---|---|---|
-| Cycles from accepting start to done | 16 | 11 | measured: the scoreboard checks it on all 2000 multiplies per run, 0 mismatches |
+| Cycles from accepting start to done (one tile) | 16 | 11 | measured: the scoreboard checks it on all 2000 multiplies per run, 0 mismatches |
 | Phases | 4 load + 11 run + 1 | 10 run + 1 | RTL |
 | PE utilisation (64 MACs / (16 PEs x cycles)) | 25.0% | 36.4% | computed from the measured cycles |
-| INT8 elements moved for one tile (A + B + C) | 48 | 48 | counted from the schedule, not a simulator output |
 | Extra registers per PE | stored weight (8 bit) | none | RTL |
+
+### Weight reuse: one B shared by T tiles of A
+
+Test `tb/test_reuse.py`, W = 18. WS loads B once and skips the load for the other tiles (the B
+given on those tiles is random garbage, and every result still matches `golden.py`). OS streams
+B again for every tile. "Moved" counts INT8 elements that crossed the array boundary, read from
+counters inside the RTL. Logs: `logs/2026-11-10T203629_reuse_ws_W18/reuse.txt`,
+`logs/2026-11-10T203633_reuse_os_W18/reuse.txt`.
+
+| T tiles | WS cycles | OS cycles | WS elements moved | OS elements moved | WS moves |
+|---|---|---|---|---|---|
+| 1 | 16 | 11 | 48 | 48 | 0% less |
+| 2 | 28 | 22 | 80 | 96 | 17% less |
+| 4 | 52 | 44 | 144 | 192 | 25% less |
+| 8 | 100 | 88 | 272 | 384 | 29% less |
+| 16 | 196 | 176 | 528 | 768 | 31% less |
+
+The formulas fit the measurements exactly: WS cycles = 12T + 4, OS cycles = 11T; WS elements
+= 16 + 32T, OS elements = 48T. As T grows, WS approaches 2/3 of the OS traffic (33% less).
 
 Analysis:
 
 - **OS is faster here (11 vs 16 cycles) because it has no load phase.** The result stays where
   it is computed, so nothing has to be preloaded. WS must first shift 4 rows of weights into
   the grid.
-- **WS only wins when the weights are reused.** The 4 load cycles are paid once, and then
-  many activation tiles can stream through the same weights. This testbench loads new weights
-  for every multiply, so it never gets that benefit. Because of this, the comparison above
-  favours OS by construction. Dataflow comparisons need a workload with reuse to be fair
-  (Chen, Emer, Sze, 2016). A reuse workload (one B, many A) will be added later.
-- **Memory traffic is equal for one tile** (A, B and C each cross the boundary once). They
-  differ for many tiles: with one B shared by T tiles of A, WS moves 16 + 32T elements and
-  OS moves 48T. These two formulas are counted by hand, so treat them as expected, not
-  measured, until a reuse run exists.
+- **WS wins on memory traffic when the weights are reused, but not on speed.** With reuse, WS
+  moves up to 33% fewer elements than OS (31% at T = 16), because B crosses the boundary once.
+  But OS stays faster in cycles at every T (176 vs 196 at T = 16). A tile with the weights
+  already loaded still takes 12 cycles in WS against 11 in OS: the result has to travel down
+  the column to the bottom row, one cycle more than OS needs to finish accumulating.
+- **Why WS cannot win on speed here:** the tiles run one after another, with no overlap. A real
+  WS array starts loading or feeding the next tile while the last one drains, which hides the
+  fill and drain time. That overlap is not implemented, so the cycle comparison is not the
+  best case for WS. This is the main limit of this comparison. Reuse of weights is also what
+  the dataflow literature gives as the reason for WS (Chen, Emer, Sze, 2016), and the traffic
+  numbers above agree with it.
 - **Utilisation is low for both** (25% and 36%) because the 4x4 array spends many cycles with
   only some diagonals active (fill and drain). Larger arrays and back-to-back tiles raise it.
 

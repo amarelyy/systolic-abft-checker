@@ -12,6 +12,10 @@
 //   done pulses for one cycle after the last C value is captured.
 //   c_mat holds the result until the next start.
 //
+// keep_w: when high at start, the weight load is skipped and the weights already in the
+// array are used (b_mat is ignored). Use it only after a multiply that loaded the same B.
+// A multiply with keep_w takes 3N - 1 edges instead of 4N.
+//
 // Back-pressure: while stall is high, the whole datapath and the FSM hold their state
 // (the PEs get en = 0), so a stalled cycle changes nothing. start is only accepted in IDLE
 // when stall is low; the sender keeps start high until busy goes high.
@@ -25,6 +29,7 @@ module systolic_ws_ctrl #(
     input  logic                  rst_n,
     input  logic                  stall,
     input  logic                  start,     // ignored while busy or stalled
+    input  logic                  keep_w,    // skip the weight load, reuse the loaded B
     input  logic [N*N-1:0][7:0]   a_mat,
     input  logic [N*N-1:0][7:0]   b_mat,
     output logic                  busy,
@@ -85,10 +90,14 @@ module systolic_ws_ctrl #(
             if (!stall) begin
                 case (state)
                     IDLE: if (start) begin
-                        a_q   <= a_mat;
-                        b_q   <= b_mat;
-                        cnt   <= '0;
-                        state <= LOAD;
+                        a_q <= a_mat;
+                        cnt <= '0;
+                        if (keep_w) begin
+                            state <= RUN;
+                        end else begin
+                            b_q   <= b_mat;
+                            state <= LOAD;
+                        end
                     end
                     LOAD: if (int'(cnt) == N-1) begin
                         cnt   <= '0;
@@ -114,5 +123,29 @@ module systolic_ws_ctrl #(
             end
         end
     end
+
+`ifndef SYNTHESIS
+    // Simulation-only traffic counters: INT8 elements that cross the array boundary.
+    // cnt_a: activations fed in, cnt_b: weights fed in, cnt_c: results captured.
+    int cnt_a, cnt_b, cnt_c;
+    always_ff @(posedge clk) begin
+        int da, dc;
+        if (!rst_n) begin
+            cnt_a <= 0;
+            cnt_b <= 0;
+            cnt_c <= 0;
+        end else if (!stall) begin
+            if (state == LOAD) cnt_b <= cnt_b + N;      // one row of B per load cycle
+            if (state == RUN) begin
+                da = 0;
+                dc = 0;
+                for (int k = 0; k < N; k++) if (int'(cnt) >= k && int'(cnt) < k + N) da++;
+                for (int j = 0; j < N; j++) if (int'(cnt) >= j + N && int'(cnt) < j + 2*N) dc++;
+                cnt_a <= cnt_a + da;
+                cnt_c <= cnt_c + dc;
+            end
+        end
+    end
+`endif
 
 endmodule

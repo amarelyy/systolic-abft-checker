@@ -160,3 +160,17 @@ In simulation, `top.sv` adds the variable `inj_add` to C, so the testbench can p
 after the array. Results are in `results.md`, section 7.5, and the story is in `story/03-story.md`,
 chapter 17.
 
+## Fault injection, in short
+
+`tb/injector.py` reaches into the running design (`dut.g_ws.u_ctrl.u_array.g_row[k].g_col[j].u_pe`)
+and changes a register from the testbench: a *flip* XORs one bit once at a chosen cycle, a *stuck*
+fault forces one bit for a window of cycles. The multiply then finishes, and the classifier
+compares the output with the golden model and the checker's flag: masked, detected or missed.
+Cycle 0 is the first falling clock edge after the edge that accepted start. Targets are listed in
+`tb/targets.py`. Per-injection CSV files are in `results/`; the story is chapter 18 of
+`story/03-story.md` and the numbers are in `results.md`, section 7.6.
+
+Two things worth remembering: injection runs are built without the RTL assertions (macro
+`NO_RTL_ASSERT`), because a flipped register fires them; and the W = 16 and W = 32 runs use the
+same random draws, so they are one sample seen twice.
+

@@ -44,12 +44,14 @@ module pe_os #(
     end
 
 `ifndef SYNTHESIS
+`ifndef NO_RTL_ASSERT        // fault-injection runs switch these checks off
     // acc == previous acc + a*b, unless the previous cycle was a clear or a stall.
     a_mac : assert property (
         @(posedge clk) disable iff (!rst_n)
         $past(rst_n) && $past(en) && !$past(clr) |->
             acc == W'($past(acc) + $past(a_in) * $past(b_in))
     ) else $error("pe_os: acc=%0d, expected acc + a*b", acc);
+`endif
 `endif
 
 endmodule

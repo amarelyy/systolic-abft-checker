@@ -14,7 +14,7 @@ gave identical coverage and table files for the ones compared.
 4. [Can the testbench fail? Mutation tests](#4-can-the-testbench-fail-mutation-tests)
 5. [Accumulator width: 18, 16, 32](#5-accumulator-width-18-16-32)
 6. [Weight-stationary vs output-stationary](#6-weight-stationary-vs-output-stationary)
-7. [ABFT checksums: Python prototype and hardware](#7-abft-checksums-python-prototype-and-hardware)
+7. [ABFT checksums: Python prototype, hardware and fault injection](#7-abft-checksums-python-prototype-hardware-and-fault-injection)
 8. [Not measured yet](#8-not-measured-yet)
 9. [Limits](#9-limits)
 10. [References](#10-references)
@@ -39,9 +39,10 @@ accumulator width W. They are checked against a Python reference model.
 | 6 | The checksum math works in Python: 0 false alarms in 100,000 fault-free matrix pairs at every width, including 12,677 that really overflow at W = 16. A reference that saturates instead of wrapping gives a false alarm on every overflowing matrix. | section 7 |
 | 7 | In the Python model, the checksums detect every single, double and triple output error, and every datapath fault modelled (0 missed of 8,331,119 changed outputs). Four errors in a rectangle can cancel and are never detected. | section 7 |
 | 8 | The checker hardware agrees with the Python model: 0 false alarms in 60,000 fault-free multiplies (4,362 of them really overflow at W = 16), every single wrong element planted in C is detected and located exactly, and the error flag appears 1 cycle after the result. The wrong values were added to C after the array, not injected inside it. | section 7.5 |
+| 9 | Fault injection inside the array (12,000 injections: bit flips and stuck-at faults in the registers of every PE, both dataflows, three widths): **0 missed**. 4,828 faults changed the output and all 4,828 were detected (95% upper bound on the miss rate: 0.062%); the other 7,172 were masked (changed nothing). 1,967 single faults corrupted two or more outputs and were all detected, including 62 that hit several rows and columns at once. False alarm rate 0 of 6,000 fault-free runs. A deliberately weak checker made the same campaign report 57.5% coverage, so the campaign can show misses. | section 7.6 |
 
-**Not measured yet:** fault injection inside the real array, formal proofs, real synthesis area
-and timing. See [section 8](#8-not-measured-yet).
+**Not measured yet:** faults in the control logic or the checker itself, faults while the array is
+stalled, formal proofs, real synthesis area and timing. See [section 8](#8-not-measured-yet).
 
 ---
 
@@ -49,12 +50,12 @@ and timing. See [section 8](#8-not-measured-yet).
 
 ```bash
 source env.sh          # every new terminal
-pytest                 # 42 tests: all designs and widths, about one minute
+pytest                 # 48 tests: all designs and widths, about one minute
 ```
 
 Each run writes its own folder in `logs/` with the simulator log, the seed, the tool versions
 and (for random runs) `coverage.txt`. Single files: `pytest tb/test_random.py`,
-`pytest tb/test_reuse.py`, `pytest tb/test_overlap.py`, `pytest tb/test_abft_model.py`, `pytest tb/test_abft_hw.py`. The checksum study is
+`pytest tb/test_reuse.py`, `pytest tb/test_overlap.py`, `pytest tb/test_abft_model.py`, `pytest tb/test_abft_hw.py`, `pytest tb/test_injection.py` (`CAMP_N=100` makes it quick). The checksum study is
 `python model/abft_study.py`. `NUM_TESTS=50` shortens the random run.
 
 ---
@@ -210,8 +211,9 @@ value those bits would really change and cost real area.
   the shaped stimulus gives 2.3% for WS (742 of 32,000) and 2.6% for OS (827 of 32,000), about 8 times more.
 - **W = 18 and 32 behave identically in simulation.** With no overflow possible, the extra bits
   of W = 32 are copies of the sign. Differences can only show up in area and in fault
-  injection, where flips of those bits are expected to be mostly masked. This will be measured
-  later.
+  injection. The fault-injection campaign tested the guess that flips of those bits would be
+  mostly masked, and the guess was **wrong**: they were not masked more than other bits
+  (section 7.6).
 
 ---
 
@@ -296,7 +298,7 @@ drain, so they tend to II as T grows; the steady-state rate is II.
 
 ---
 
-## 7. ABFT checksums: Python prototype and hardware
+## 7. ABFT checksums: Python prototype, hardware and fault injection
 
 Before building any checker hardware, the checksum math was written and tested in Python
 (`model/abft.py`). This model is also what the hardware checker will be compared against.
@@ -448,13 +450,142 @@ is never seen. The 1-cycle delay is the register that holds the result.
 100% detection for faults inside the array (section 7.4) is therefore still a prediction, and
 masked faults, the effect of width on them, and the area and speed cost are not measured yet.
 
+### 7.6 Fault injection inside the array
+
+**What was done.** For each design (WS, OS) and width (18, 16, 32), 3,000 multiplies were run:
+1,000 with a **bit flip** (one bit of one register flipped once, a soft error), 1,000 with a
+**stuck-at fault** (one bit forced to 0 or 1 for 1 to 8 cycles) and 1,000 **fault-free**. Targets
+are the registers of all 16 PEs: the accumulator (`psum_out` in WS, `acc` in OS), the activation
+pass-through register `a_out`, and the weight register `w` (WS) or the pass-through register
+`b_out` (OS). The register, the bit and the cycle are chosen at random (cycle: any cycle of the
+multiply), with the same shaped random matrices as before, seed 12345, no stalls. The testbench
+writes the register from outside (`tb/injector.py`, `tb/targets.py`, `tb/test_injection.py`).
+
+**Classifier** (as in the project plan): *masked* = the output C did not change; *detected* = C
+changed and the checker raised the error flag; *missed* = C changed and the flag stayed low.
+Detection coverage = detected / (detected + missed); masked faults are left out of the
+denominator and reported separately. Coverage and false alarm rate are always in the same table.
+
+**Does the classifier work?** `test_known_flip` flips bit 5 of one register where the answer is
+known in advance. WS, `psum_out` of PE[3][0]: that register holds C[i][0] in exactly 4 cycles, one
+per row, and a flip there must change only that element by +-32. It did, at cycles 8, 9, 10 and 11
+only; the other 11 cycles were masked; each of the 4 was detected and located. OS, `acc` of
+PE[0][0]: the accumulator keeps the flip, so all 10 cycles changed C[0][0] by +-32, all detected.
+
+**Results** (log folders `logs/2026-11-15T1213xx_injection_*` and `...T1214xx_*`; one CSV row per
+injection in `results/injection_<design>_W<W>.csv`, summaries in `results/campaign_*.txt`):
+
+| Design | W | Injected | Masked | Detected | Missed | Coverage | Masked | False alarms (fault-free) |
+|---|---|---|---|---|---|---|---|---|
+| WS | 18 | 2000 | 1358 | 642 | **0** | 100.0% | 67.9% | 0 of 1000 |
+| WS | 16 | 2000 | 1361 | 639 | **0** | 100.0% | 68.1% | 0 of 1000 |
+| WS | 32 | 2000 | 1361 | 639 | **0** | 100.0% | 68.1% | 0 of 1000 |
+| OS | 18 | 2000 | 1012 | 988 | **0** | 100.0% | 50.6% | 0 of 1000 |
+| OS | 16 | 2000 | 1040 | 960 | **0** | 100.0% | 52.0% | 0 of 1000 |
+| OS | 32 | 2000 | 1040 | 960 | **0** | 100.0% | 52.0% | 0 of 1000 |
+
+Logs: `2026-11-15T121357_injection_ws_W18`, `T121400_..._ws_W16`, `T121408_..._ws_W32`,
+`T121412_..._os_W18`, `T121413_..._os_W16`, `T121417_..._os_W32`. The label `flag_without_change`
+(flag raised although C did not change) never occurred. The checker hardware agreed with
+`model/abft.py` in all 18,000 multiplies. Detection latency is 1 cycle in every run.
+
+**Pooled:** 12,000 injections, 7,172 masked, 4,828 detected, 0 missed. WS: 68.0% masked, OS: 51.5%
+masked. With 0 misses in 4,828 changed outputs, the 95% upper bound on the true miss rate is about
+3 / 4,828 = 0.062% (the "rule of three").
+
+**By register, W = 18** (flips and stuck-at kept apart; coverage is 100% in every row):
+
+| Design | Fault | Register | Injected | Masked | Detected |
+|---|---|---|---|---|---|
+| WS | flip | accumulator `psum_out` | 329 | 239 (72.6%) | 90 |
+| WS | flip | activation `a_out` | 370 | 313 (84.6%) | 57 |
+| WS | flip | weight `w` | 301 | 146 (48.5%) | 155 |
+| WS | stuck | accumulator | 332 | 202 (60.8%) | 130 |
+| WS | stuck | activation | 341 | 253 (74.2%) | 88 |
+| WS | stuck | weight | 327 | 205 (62.7%) | 122 |
+| OS | flip | accumulator `acc` | 353 | **0 (0.0%)** | 353 |
+| OS | flip | activation `a_out` | 319 | 230 (72.1%) | 89 |
+| OS | flip | `b_out` | 328 | 235 (71.6%) | 93 |
+| OS | stuck | accumulator | 317 | 110 (34.7%) | 207 |
+| OS | stuck | activation | 353 | 235 (66.6%) | 118 |
+| OS | stuck | `b_out` | 330 | 202 (61.2%) | 128 |
+
+**How many outputs one fault corrupts** (pooled over widths, only faults that changed C):
+WS: 1 element 734 times, 2: 354, 3: 268, 4: 529, 6: 26, 8: 2, 9: 7. OS: 1 element 2,127 times, 2:
+417, 3: 364. In every run, whenever exactly one element was wrong, the checker located it (734 of
+734 in WS, 2,127 of 2,127 in OS). In total 1,967 faults corrupted two or more elements and **all
+1,967 were detected**; 62 of them corrupted elements in more than one row **and** more than one
+column, which is the pattern class where cancellation would be possible, and all 62 were detected.
+
+**Ghost bits at W = 32** (accumulator bits 18 to 31 only copy the sign bit; a synthesized chip
+would merge them into one flip-flop):
+
+| Design | Bits | Injected | Masked | Detected |
+|---|---|---|---|---|
+| WS | ghost (18 to 31) | 302 | 210 (69.5%) | 92 |
+| WS | real (0 to 17) | 391 | 263 (67.3%) | 128 |
+| OS | ghost | 332 | 65 (19.6%) | 267 |
+| OS | real | 362 | 55 (15.2%) | 307 |
+
+**Why these results (hypotheses, each with its status):**
+
+- **Coverage 100%: predicted by the Python model and confirmed.** Section 7.3 said that any fault
+  confined to one row or column leaves at most one wrong value per column or row, which the
+  checksums see, and that stuck-at errors have the same sign and cannot cancel. All 12,000
+  injections agree. The 62 faults that hit several rows and columns are the strongest test of the
+  cancellation argument, but 62 is a small sample. **TESTED, scope: single faults in PE registers.**
+- **Masked faults are mostly timing.** A WS accumulator register holds a value that ends up in
+  C for only 4 of the 15 cycles of a multiply (27%), and 27.4% of the WS accumulator flips
+  changed C (90 of 329). A WS activation register is useful for 4 of 15 cycles and 4 of the 16
+  PEs (the last column) have nobody downstream, so about 20% is expected; 15.4% changed (57 of
+  370). The OS accumulator keeps a flip until the end, so 0% were masked, as the known-flip test
+  showed. This is a back-of-envelope match, not a proof: the small gap for the activation register
+  may be due to zero weights (hypothesis, **UNTESTED**).
+- **WS masks more than OS (68.0% against 51.5%).** WS registers hold each value only briefly, so a
+  random hit usually finds nothing to corrupt; OS accumulators live for the whole multiply.
+  **Consistent with the table above, not tested separately.** This is not the same as WS being
+  "more fault tolerant": a masked fault is one that did no harm in this run.
+- **The ghost-bit guess was wrong.** Section 5 said flips of the sign-copy bits were expected to
+  be mostly masked. They were not: 69.5% against 67.3% for real bits in WS, 19.6% against 15.2%
+  in OS. Reason: in the simulated design each ghost bit is a real register bit that feeds the
+  adder, so flipping it changes the sum by a power of two that is not a multiple of 2^W, and
+  the error reaches C. The somewhat higher masked rate for OS ghost bits is within about two
+  standard errors (**UNTESTED**; the likely cause is stuck-at values that equal the sign).
+  What would change on a real chip (one merged flip-flop, so a hit flips all the copies) is
+  **UNTESTED**; the checker would still see a nonzero change.
+- **W = 16 and W = 32 are not independent runs.** Their fault lists are identical in kind,
+  register and cycle for all 3,000 rows (checked in the CSV files), because the same seed gives the
+  same random draws for both. Treat the two as one sample seen twice. W = 18 draws differently.
+- **Why 1-cycle latency:** the error flag is a register loaded when the result is valid.
+  This is a design property, not something the faults change.
+- **The built-in assertion fired on the first injected flip.** The PE contains a simulation-only
+  check `psum_out == psum_in + a*w`; flipping `psum_out` broke it and stopped the simulation
+  (`logs/2026-11-15T121304_injection_ws_W18`). It shows that such an assertion can detect a
+  corrupted register in simulation, but it is not hardware and was switched off for the campaign
+  (macro `NO_RTL_ASSERT`). Verilator checks these assertions even without `--assert`, so
+  dropping the flag was not enough (see [bug_log.md](bug_log.md), entry 5).
+
+**Can the campaign show misses?** The same campaign was run on a deliberately weak checker that
+only watches row 0 and column 0 (`logs/2026-11-15T121559_injection_ws_W18_mutant_weak_checker`,
+500 of each kind, WS, W = 18): 142 faults missed, coverage 57.5%. The real checker has 0 misses
+on the same kind of campaign, so the "0 missed" above is a result and not an artifact.
+
+**What this does not show.** The campaign injects one fault at a time, only into PE registers, with
+no stalls and one seed. Not covered: faults in the control logic or counters (they could make
+the array compute the wrong thing in a way that is still consistent), faults in the checker (its
+reference path, its copies of A and B), the cancelling rectangle in hardware (it needs a
+multi-fault), and faults that hit the inputs before the checker copies them. A masked fault is not
+the same as a harmless one in a longer computation.
+
 ## 8. Not measured yet
 
 See also the plain-English view of what is solid and what is risky in
 [story/02-how-is-it-looking.md](story/02-how-is-it-looking.md).
 
-- Faults injected *inside* the array (not only added to the finished result C), tested against
-  the checker hardware.
+- Faults in the control logic (the state machine, the counters) and in the checker itself.
+- Faults while the array is stalled, and several faults at once (the campaign injects one fault per
+  multiply, without stalls).
+- Other random seeds (only seed 12345 was used).
 - Fault injection (bit-flip and stuck-at) into the real design: detection coverage, masked
   faults and latency per width. The Python prediction above is the number to compare with.
 - Formal proofs (SymbiYosys) of the processing-element behaviour and the handshake.
@@ -470,11 +601,11 @@ See also the plain-English view of what is solid and what is risky in
 - Coverage is sampled at the transaction level (the A, B and C the monitor saw), not inside
   each PE.
 - Area numbers so far are from generic gates, not a real cell library.
-- The ABFT hardware results in section 7.5 add wrong values to C after the array. Faults inside
-  the array have not been injected yet.
+- The ABFT hardware results in section 7.5 add wrong values to C after the array. Section 7.6
+  injects into PE registers only, one fault at a time, no stalls, one seed.
 - Only seed 12345 was used for the results above; other seeds were not run.
 - The width ablation at W = 32 will contain register bits that synthesis removes (sign copies);
-  fault-injection results there must separate real bits from these ghost bits (not measured yet).
+  fault-injection results there are reported separately for real and ghost bits (section 7.6).
 
 ## 10. References
 

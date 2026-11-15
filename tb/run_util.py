@@ -32,8 +32,13 @@ def _version(cmd):
 
 
 def run_cocotb(toplevel, sources, test_module, tag, parameters=None, seed=None, waves=False,
-               testcase=None):
-    """Build and run one cocotb test module, and return the log folder."""
+               testcase=None, assertions=True):
+    """Build and run one cocotb test module, and return the log folder.
+
+    assertions=False builds without --assert. Fault-injection runs need that: the SystemVerilog
+    assertions in the RTL check that the design is correct, so an injected fault would fire them
+    and stop the simulation.
+    """
     parameters = parameters or {}
     seed = int(os.environ.get("SEED", seed if seed is not None else DEFAULT_SEED))
     stamp = datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S")
@@ -41,7 +46,7 @@ def run_cocotb(toplevel, sources, test_module, tag, parameters=None, seed=None, 
     log_dir.mkdir(parents=True)
 
     param_str = "_".join(f"{k}{v}" for k, v in parameters.items())
-    build_dir = ROOT / "sim_build" / f"{toplevel}_{param_str}"
+    build_dir = ROOT / "sim_build" / f"{toplevel}_{param_str}{'' if assertions else '_noassert'}"
 
     import cocotb
     (log_dir / "run_info.txt").write_text(
@@ -49,6 +54,7 @@ def run_cocotb(toplevel, sources, test_module, tag, parameters=None, seed=None, 
         f"test_module: {test_module}\n"
         f"rtl_dir: {RTL}\n"
         f"parameters: {parameters}\n"
+        f"assertions: {assertions}\n"
         f"seed: {seed}\n"
         f"verilator: {_version(['verilator', '--version'])}\n"
         f"cocotb: {cocotb.__version__}\n"
@@ -59,7 +65,8 @@ def run_cocotb(toplevel, sources, test_module, tag, parameters=None, seed=None, 
         sources=[RTL / s for s in sources],
         hdl_toplevel=toplevel,
         parameters=parameters,
-        build_args=["--assert", "-Wall"],
+        build_args=(["--assert"] if assertions else []) + ["-Wall"],
+        defines={} if assertions else {"NO_RTL_ASSERT": 1},
         build_dir=build_dir,
         waves=waves,
         always=True,

@@ -1,0 +1,27 @@
+# SymbiYosys: protocol properties of the ABFT checker (no arithmetic, the result is free):
+#   the check is reported exactly one cycle after the result, and a located error implies the
+#   error flag. Real input width (8 bits). Bounded proof, depth 9.
+# The arithmetic properties (no false alarm for every A and B, every single wrong element
+# located) did not finish: see checker_algebra_attempt.sby.
+# Run:   cd formal && sby -f checker_props.sby
+[tasks]
+proto proto
+cover cover
+
+[options]
+mode bmc
+depth 9
+cover: mode cover
+
+[engines]
+smtbmc bitwuzla
+
+[script]
+read_verilog -formal -sv -DSYNTHESIS abft_checker.sv checker_formal.sv
+chparam -set IW 8 checker_formal
+chparam -set MODE 2 checker_formal
+prep -top checker_formal
+
+[files]
+../rtl/abft_checker.sv
+checker_formal.sv

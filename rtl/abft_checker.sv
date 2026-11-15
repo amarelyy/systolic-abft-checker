@@ -9,7 +9,7 @@
 // A and B. B is only replaced when keep_w is low, matching the weight-stationary array that
 // keeps its weights. A small vector-MAC unit (N multipliers for the columns and N for the
 // rows) then computes the references over N cycles while the array is still working.
-// colsum(A) and rowsum(B) are sums of N INT8 values, so they need 8 + log2(N) bits.
+// colsum(A) and rowsum(B) are sums of N input elements, so they need IW + log2(N) bits.
 //
 // Check: when c_valid is high, c_mat holds the finished result. The sums of c_mat are compared
 // with the references, and one cycle later chk_valid pulses with the result:
@@ -21,16 +21,17 @@
 // The checker is not stalled: stall only freezes the array, and the checker waits for c_valid.
 
 module abft_checker #(
-    parameter int N = 4,
-    parameter int W = 18
+    parameter int N  = 4,
+    parameter int W  = 18,
+    parameter int IW = 8             // width of the input elements (INT8); formal proofs use less
 ) (
     input  logic                  clk,
     input  logic                  rst_n,
 
     input  logic                  load,       // a multiply was accepted: copy A and B
     input  logic                  keep_w,     // with load: keep the stored B
-    input  logic [N*N-1:0][7:0]   a_mat,
-    input  logic [N*N-1:0][7:0]   b_mat,
+    input  logic [N*N-1:0][IW-1:0] a_mat,
+    input  logic [N*N-1:0][IW-1:0] b_mat,
 
     input  logic                  c_valid,    // c_mat is the finished result
     input  logic [N*N-1:0][W-1:0] c_mat,
@@ -42,12 +43,12 @@ module abft_checker #(
     output logic [$clog2(N)-1:0]  err_col
 );
 
-    localparam int SW = 8 + $clog2(N);        // width of a sum of N INT8 values
+    localparam int SW = IW + $clog2(N);       // width of a sum of N input elements
     localparam int KW = $clog2(N);
 
     // Elements picked out of a packed array are unsigned in SystemVerilog, even if the array is
     // declared signed, so every use of an INT8 element below goes through $signed().
-    logic [N*N-1:0][7:0]  a_q, b_q;            // own copies of A and B
+    logic [N*N-1:0][IW-1:0] a_q, b_q;          // own copies of A and B
     logic signed [SW-1:0] colsum_a [N];        // colsum_a[k] = sum over i of A[i][k]
     logic signed [SW-1:0] rowsum_b [N];        // rowsum_b[k] = sum over j of B[k][j]
 
@@ -82,8 +83,8 @@ module abft_checker #(
     end
 
     // Reference checksums: one k per cycle, N cycles after load.
-    logic signed [SW+7:0] p_col [N];
-    logic signed [SW+7:0] p_row [N];
+    logic signed [SW+IW-1:0] p_col [N];
+    logic signed [SW+IW-1:0] p_row [N];
     always_comb begin
         for (int x = 0; x < N; x++) begin
             p_col[x] = colsum_a[ref_k] * $signed(b_q[int'(ref_k)*N + x]);

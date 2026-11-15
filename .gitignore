@@ -8,3 +8,11 @@ sim_build/
 docs/
 .vscode/browse.vc.db*
 
+formal/pe_props_*/
+formal/handshake_*/
+formal/checker_props_*/
+formal/checker_algebra_attempt_*/
+formal/pe_props/
+formal/handshake/
+formal/checker_props/
+formal/checker_algebra_attempt/

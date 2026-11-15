@@ -1,0 +1,35 @@
+ABFT prototype study, N = 4, seed 12345, numpy 2.2.6
+
+Part 1: checksum identity without wrap-around, 100 random matrix pairs
+  column identity holds for all 100: True
+  row identity holds for all 100:    True
+
+Part 2: false alarms with wrap-around mod 2^W (fault-free runs, 100000 pairs per W)
+    W   matrices that overflow   false alarms (wrap)
+   16                    12677                     0
+   17                      887                     0
+   18                        0                     0
+   32                        0                     0
+
+  Same check, but the reference saturates instead of wrapping (a wrong reference):
+    W   matrices that overflow  false alarms (saturate)
+   16                    12677                    12677
+   17                      887                      887
+
+Part 3: abstract errors in the output C (W = 18, 20000 pairs per row of the table)
+  error pattern                                         changed  detected  missed
+  one element, one random bit flipped                     20000     20000       0
+  two elements, one random bit flipped in each            20000     20000       0
+  three elements, one random bit flipped in each          20000     20000       0
+  four errors +d, -d, -d, +d at the corners of a rectangle    20000         0   20000
+
+Part 4: datapath faults at the value level (W = 18, 20000 pairs per fault position)
+  A fault is modelled by the values it corrupts, not cycle by cycle.
+  'a-token': one activation A[i][k] is wrong from column c0 onwards (affects row i).
+  'a-stuck': a stuck bit in the register that passes activations along row k, so every
+             activation of column k is forced from column c0 onwards (affects many rows).
+  'w-stuck': a stuck bit in a stored weight B[k][j] (affects column j).
+  fault       locations x values   changed  detected   missed
+  a-token                128 x 1   2446608   2446608        0
+  a-stuck                192 x 1   3383711   3383711        0
+  w-stuck                256 x 1   2500800   2500800        0

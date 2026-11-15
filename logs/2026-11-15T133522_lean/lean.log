@@ -1,0 +1,7 @@
+'Abft.no_false_alarm_col' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Abft.no_false_alarm_row' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Abft.single_error_located' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Abft.detect_row_pattern' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Abft.detect_col_pattern' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Abft.colsum_range' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Abft.product_range' depends on axioms: [propext, Classical.choice, Quot.sound]

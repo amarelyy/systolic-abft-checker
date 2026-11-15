@@ -40,10 +40,11 @@ accumulator width W. They are checked against a Python reference model.
 | 7 | In the Python model, the checksums detect every single, double and triple output error, and every datapath fault modelled (0 missed of 8,331,119 changed outputs). Four errors in a rectangle can cancel and are never detected. | section 7 |
 | 8 | The checker hardware agrees with the Python model: 0 false alarms in 60,000 fault-free multiplies (4,362 of them really overflow at W = 16), every single wrong element planted in C is detected and located exactly, and the error flag appears 1 cycle after the result. The wrong values were added to C after the array, not injected inside it. | section 7.5 |
 | 9 | Fault injection inside the array (12,000 injections: bit flips and stuck-at faults in the registers of every PE, both dataflows, three widths): **0 missed**. 4,828 faults changed the output and all 4,828 were detected (95% upper bound on the miss rate: 0.062%); the other 7,172 were masked (changed nothing). 1,967 single faults corrupted two or more outputs and were all detected, including 62 that hit several rows and columns at once. False alarm rate 0 of 6,000 fault-free runs. A deliberately weak checker made the same campaign report 57.5% coverage, so the campaign can show misses. | section 7.6 |
-| 10 | Formal proofs (SymbiYosys): both PE types are proven correct for every input at W = 16, 18 and 32 (unbounded, by induction); both controls obey the handshake and finish after exactly 16 / 12 (WS, with / without weight reuse) and 11 (OS) clock edges, proven for 40 cycles with free inputs and stalls; the checker reports exactly one cycle after the result. 18 of 18 proof tasks pass, and 6 deliberately broken designs are all rejected. The proof that the checker's **arithmetic** is right for every A and B did **not finish** (all solvers ran out of time, even with 2-bit inputs). | section 7.7 |
+| 10 | Formal proofs (SymbiYosys): both PE types are proven correct for every input at W = 16, 18 and 32 (unbounded, by induction); both controls obey the handshake and finish after exactly 16 / 12 (WS, with / without weight reuse) and 11 (OS) clock edges, proven for 40 cycles with free inputs and stalls; the checker reports exactly one cycle after the result. 18 of 18 proof tasks pass, and 6 deliberately broken designs are all rejected. The proof that the checker's **arithmetic** is right for every A and B did **not finish** with those solvers (they ran out of time, even with 2-bit inputs). | section 7.7 |
+| 11 | That arithmetic proof was then done in the **Lean** theorem prover, on a model of the checker's equations: for every A, B and every width, the checker raises no false alarm; every single wrong element is detected and located exactly; any error pattern inside one row or one column is detected. 7 theorems, 0 `sorry`, only Lean's standard axioms. The link between the model and the RTL is by reading, not machine-checked. | section 7.8 |
 
 **Not measured yet:** faults in the control logic or the checker itself, faults while the array is
-stalled, a formal proof of the checker's arithmetic, real synthesis area and timing. See [section 8](#8-not-measured-yet).
+stalled, a machine-checked link between the RTL and the Lean model, real synthesis area and timing. See [section 8](#8-not-measured-yet).
 
 ---
 
@@ -636,8 +637,8 @@ equal (the sum of column sums times B, against the sum of all products). That ki
 known to be hard for SAT and SMT solvers. **UNTESTED.** (2) My first guess was that the golden
 product was being computed with 27-bit multipliers, because Verilog sizes a product by the whole
 expression. I rewrote the property with exact-width products and it made no difference, so
-that guess was **wrong**. What this means: there is no formal proof of the checker's arithmetic.
-The evidence we have is the linear-algebra argument (section 7.1), the Python study (100,000 pairs
+that guess was **wrong**. What this means: there was no formal proof of the checker's arithmetic from these solvers (it was done later in
+Lean, section 7.8). The evidence we had is the linear-algebra argument (section 7.1), the Python study (100,000 pairs
 per width, 0 false alarms, section 7.2), and the hardware runs (60,000 fault-free multiplies, 0
 false alarms, section 7.5, and 12,000 injections, 0 missed, section 7.6). Those are strong but not a
 proof.
@@ -654,6 +655,57 @@ proof.
 - The checker RTL got a new parameter `IW` (input element width, default 8) for the attempts above.
   The default changes nothing; the lint is clean and all 48 simulation tests pass.
 
+### 7.8 The checker's arithmetic, proven in Lean
+
+The SMT solvers of section 7.7 could not show that two adder trees summed in a different order are
+equal. A proof assistant does this differently: instead of translating everything into bits and
+searching, it works with the algebra itself (sums, products, remainders), as a person would on
+paper, and a small trusted program checks every step.
+
+**What was done.** `lean/AbftChecker.lean` (Lean 4.35.0, no extra libraries) is a model of the
+checker's equations for the 4 x 4 array: sums taken one wrapped addition at a time modulo
+m (the hardware uses m = 2^W); the reference checksums accumulate `colsum(A)[k] x B[k][j]` and
+`A[i][k] x rowsum(B)[k]` for k = 0 to 3, each product wrapped. `lean/check.sh` checks it and saves the
+log: `logs/2026-11-15T133522_lean/summary.txt` (exit code 0, 0 uses of `sorry`, and every theorem
+depends only on Lean's three standard axioms `propext`, `Classical.choice`, `Quot.sound`).
+
+**Theorems (all proven):**
+
+| Theorem | What it says, for every A, B (any integers, so also INT8) and every modulus m |
+|---|---|
+| `no_false_alarm_col`, `no_false_alarm_row` | If the array output is the true product modulo m, every column checksum and every row checksum agrees: **no false alarm**. |
+| `single_error_located` | If exactly one element of the output is wrong by an amount that is not a multiple of m, then the column checksum disagrees **exactly in that element's column** and the row checksum **exactly in its row**, and nowhere else. So the flag is raised and the location is exact. |
+| `detect_row_pattern`, `detect_col_pattern` | If the errors lie inside one row (or one column), with at least one element wrong by a non-multiple of m, some column (or row) checksum disagrees, so it is **detected**, however many elements are wrong. This is the formal version of "a corrupted activation or weight is always seen" from section 7.3. |
+| `colsum_range`, `product_range` | For INT8 inputs the column sum of A is in -512 to 511 (fits the checker's 10 bits) and its product with an INT8 value is within -131072 to 131071 (fits 18 bits), so the model's assumption that nothing is truncated is true. |
+
+Because m is a free variable, these hold for **every width W at once** (m = 2^W), unlike the
+solver runs, which were for one width.
+
+**Sanity checks inside the file** (concrete examples, evaluated by Lean): the hypotheses can be
+satisfied (all-ones inputs, output all 4); a single +1 error at row 2, column 1 makes column 1 and
+row 2 disagree and no other column or row; an error of exactly m (= 2^18, a full wrap) is **not**
+seen, which shows why the condition "not a multiple of m" is needed; and four errors at the corners
+of a rectangle (+1, -1, -1, +1) are **not** seen in any row or column, which reproduces the known
+limit of row and column checksums (Huang and Abraham, 1984) in the model.
+
+**Why this worked when the solvers did not (hypothesis).** The identity is plain algebra
+(distributing a sum over a sum, and remainders of sums), which a proof assistant handles
+symbolically. A solver that translates to bits has to rediscover the algebra by search. The
+success shows the symbolic route works; why the solvers stalled is still an **UNTESTED** hypothesis.
+
+**What this proof is not.**
+
+- It proves a **model** of the RTL, not the RTL. The link between `rtl/abft_checker.sv` and the Lean
+  functions (`outCol`, `refCol`, ...) is by reading the two side by side. It is supported by the
+  simulation (60,000 fault-free multiplies, 12,000 injections, and 18,000 multiplies where the
+  hardware agreed with the Python model), but it is not machine-checked.
+- It assumes the array output is the true product mod m. That is covered by the processing-element
+  proofs (section 7.7) and the simulation, not here.
+- It is stated for N = 4 (sums written out). It says nothing about the checker's timing, its
+  handshake or its error-location encoding (`err_row`, `err_col`); the protocol part is proven in
+  section 7.7. That "exactly one disagreeing column and row" turns into the right `err_row` and
+  `err_col` is seen by reading the RTL, and was checked by the single-error tests.
+
 ## 8. Not measured yet
 
 See also the plain-English view of what is solid and what is risky in
@@ -665,8 +717,8 @@ See also the plain-English view of what is solid and what is risky in
 - Other random seeds (only seed 12345 was used).
 - Fault injection (bit-flip and stuck-at) into the real design: detection coverage, masked
   faults and latency per width. The Python prediction above is the number to compare with.
-- A formal proof that the checker's arithmetic is right for every A and B (section 7.7: tried, did
-  not finish).
+- A machine-checked link between the checker RTL and the Lean model of its arithmetic (section 7.8:
+  the model is proven, the link is by reading).
 - Synthesis area and timing with and without the checker, from a real cell library.
 
 ## 9. Limits
@@ -683,7 +735,8 @@ See also the plain-English view of what is solid and what is risky in
   injects into PE registers only, one fault at a time, no stalls, one seed.
 - Only seed 12345 was used for the results above; other seeds were not run.
 - The formal proofs of the controls are bounded (40 cycles), not unbounded, and all proofs assume the
-  design starts from reset. The checker's arithmetic is not proven formally (section 7.7).
+  design starts from reset. The checker's arithmetic is proven on a Lean model, not on the RTL
+  itself (section 7.8).
 - The width ablation at W = 32 will contain register bits that synthesis removes (sign copies);
   fault-injection results there are reported separately for real and ghost bits (section 7.6).
 

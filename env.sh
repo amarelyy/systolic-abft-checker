@@ -7,6 +7,9 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$OSS_CAD_SUITE/environment"
 source "$REPO_ROOT/.venv/bin/activate"
 
+# Lean (theorem prover), installed with elan, if present.
+[ -d "$HOME/.elan/bin" ] && export PATH="$HOME/.elan/bin:$PATH"
+
 # ~/.bashrc sources ROS Humble, whose PYTHONPATH packages break pytest and cocotb.
 unset PYTHONPATH
 

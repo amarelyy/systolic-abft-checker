@@ -27,6 +27,7 @@ installed in `~/tools/oss-cad-suite`.
 | Bitwuzla | 0.9.1 | Formal solver |
 | Boolector | 3.2.4 | Formal solver |
 | Yices | 2.7.0 | Formal solver |
+| Lean 4 (theorem prover, via elan 4.2.4) | v4.35.0 (commit eb6cafb) | Machine-checked proof of the checker algebra (`lean/`) |
 | GTKWave (chosen waveform viewer) | v4.0.0-prealpha (e40ba79) | Waveform debugging |
 
 ## Python (project venv, `.venv/`)
@@ -75,3 +76,18 @@ cd <repo>
 /usr/bin/python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 ```
+
+## Lean (theorem prover)
+
+Installed in `~/.elan` (about 3 GB), outside the repo, with elan, the Lean version manager:
+
+```bash
+curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o elan-init.sh
+sh elan-init.sh -y --no-modify-path --default-toolchain none
+~/.elan/bin/elan toolchain install stable      # installed Lean 4.35.0 on 2026-11-15
+~/.elan/bin/elan default stable
+```
+
+`source env.sh` adds it to PATH if it is installed. Check the proofs with `lean/check.sh`.
+No Mathlib is needed: `grind` and `omega` in Lean's core prove the identities.
+

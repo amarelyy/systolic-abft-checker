@@ -183,3 +183,11 @@ and saves the result in `logs/`. The proof of the checker's arithmetic (`checker
 did not finish. Remember: Yosys cannot read the `assert property` blocks in the RTL, so formal runs
 define `SYNTHESIS`; and the PE proofs are unbounded while the control proofs are bounded.
 
+## Lean proof of the checker algebra, in short
+
+`lean/AbftChecker.lean` models the checker's sums (one wrapped addition at a time, modulo m) and
+proves, for every A, B and every m: no false alarm; a single wrong element gives exactly one wrong
+column and one wrong row (its own); an error pattern inside one row or column is always detected;
+and the checker's intermediate values fit their bit widths for INT8 inputs. Run `lean/check.sh` after
+`source env.sh`. It is a proof of a model, not of the RTL. Lean is installed in `~/.elan`.
+

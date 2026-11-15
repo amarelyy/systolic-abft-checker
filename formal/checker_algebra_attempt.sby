@@ -1,0 +1,36 @@
+# NOT SOLVED. Attempts to prove, for every A and B, that the ABFT checker raises no false alarm
+# (fa_*) and detects and locates every single wrong element (loc_*). Every task below ran out of
+# time (120 to 580 seconds, bitwuzla, boolector and yices) even with 2-bit input elements, so
+# there is no result. The identity needs the solver to show that two adder trees with a
+# different order of summation are equal, which is hard for SAT-based solvers. Kept so the
+# attempt can be repeated with another solver or more time.
+# Run a task (it may run until the limit):  timeout 300 sby -f checker_algebra_attempt.sby fa_iw2
+[tasks]
+fa_iw2 fa iw2
+loc_iw2 loc iw2
+fa_iw3 fa iw3
+loc_iw3 loc iw3
+fa_iw4 fa iw4
+loc_iw4 loc iw4
+fa_iw8 fa iw8
+loc_iw8 loc iw8
+
+[options]
+mode bmc
+depth 9
+
+[engines]
+smtbmc bitwuzla
+
+[script]
+read_verilog -formal -sv -DSYNTHESIS abft_checker.sv checker_formal.sv
+iw2: chparam -set IW 2 checker_formal
+iw3: chparam -set IW 3 checker_formal
+iw4: chparam -set IW 4 checker_formal
+iw8: chparam -set IW 8 checker_formal
+loc: chparam -set MODE 1 checker_formal
+prep -top checker_formal
+
+[files]
+../rtl/abft_checker.sv
+checker_formal.sv

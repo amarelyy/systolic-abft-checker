@@ -1,0 +1,68 @@
+SBY 13:13:04 [handshake_cover_os] Removing directory '/home/ursula/systolic-abft-checker/formal/handshake_cover_os'.
+SBY 13:13:04 [handshake_cover_os] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/pe.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_cover_os/src/pe.sv'.
+SBY 13:13:04 [handshake_cover_os] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/systolic_ws.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_cover_os/src/systolic_ws.sv'.
+SBY 13:13:04 [handshake_cover_os] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/systolic_ws_ctrl.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_cover_os/src/systolic_ws_ctrl.sv'.
+SBY 13:13:04 [handshake_cover_os] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/pe_os.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_cover_os/src/pe_os.sv'.
+SBY 13:13:04 [handshake_cover_os] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/systolic_os.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_cover_os/src/systolic_os.sv'.
+SBY 13:13:04 [handshake_cover_os] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/systolic_os_ctrl.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_cover_os/src/systolic_os_ctrl.sv'.
+SBY 13:13:04 [handshake_cover_os] Copy '/home/ursula/systolic-abft-checker/formal/ctrl_formal.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_cover_os/src/ctrl_formal.sv'.
+SBY 13:13:04 [handshake_cover_os] engine_0: smtbmc boolector
+SBY 13:13:04 [handshake_cover_os] base: starting process "cd handshake_cover_os/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY 13:13:04 [handshake_cover_os] base: Warning: Replacing memory \psum_v with list of registers. See systolic_ws.sv:52
+SBY 13:13:04 [handshake_cover_os] base: Warning: Replacing memory \w_v with list of registers. See systolic_ws.sv:51
+SBY 13:13:04 [handshake_cover_os] base: Warning: Replacing memory \a_h with list of registers. See systolic_ws.sv:32
+SBY 13:13:04 [handshake_cover_os] base: Warning: Replacing memory \b_v with list of registers. See systolic_os.sv:47
+SBY 13:13:04 [handshake_cover_os] base: Warning: Replacing memory \a_h with list of registers. See systolic_os.sv:29
+SBY 13:13:04 [handshake_cover_os] base: Warning: Replacing memory \b_v with list of registers. See systolic_os.sv:39
+SBY 13:13:04 [handshake_cover_os] base: finished (returncode=0)
+SBY 13:13:04 [handshake_cover_os] prep: starting process "cd handshake_cover_os/model; yosys -ql design_prep.log design_prep.ys"
+SBY 13:13:04 [handshake_cover_os] prep: finished (returncode=0)
+SBY 13:13:04 [handshake_cover_os] smt2: starting process "cd handshake_cover_os/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY 13:13:04 [handshake_cover_os] smt2: finished (returncode=0)
+SBY 13:13:04 [handshake_cover_os] engine_0: starting process "cd handshake_cover_os; yosys-smtbmc -s boolector --presat --unroll -c --noprogress -t 40  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2"
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Solver: boolector
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Reached cover statement in step 3 at ctrl_formal: ctrl_formal.sv:86.9-86.44 (_witness_.check_ctrl_formal_sv_86_cover_571)
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 4..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 5..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 6..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 7..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 8..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 9..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 10..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 11..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 12..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 13..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Reached cover statement in step 13 at ctrl_formal: ctrl_formal.sv:85.9-85.35 (_witness_.check_ctrl_formal_sv_85_cover_569)
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace1.vcd
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace1_tb.v
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace1.smtc
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace1.yw
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 13..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 14..
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Reached cover statement in step 14 at ctrl_formal: ctrl_formal.sv:87.9-87.54 (_witness_.check_ctrl_formal_sv_87_cover_574)
+SBY 13:13:04 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace2.vcd
+SBY 13:13:05 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace2_tb.v
+SBY 13:13:05 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace2.smtc
+SBY 13:13:05 [handshake_cover_os] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace2.yw
+SBY 13:13:05 [handshake_cover_os] engine_0: ##   0:00:00  Status: passed
+SBY 13:13:05 [handshake_cover_os] engine_0: finished (returncode=0)
+SBY 13:13:05 [handshake_cover_os] engine_0: Status returned by engine: pass
+SBY 13:13:05 [handshake_cover_os] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 13:13:05 [handshake_cover_os] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:01 (1)
+SBY 13:13:05 [handshake_cover_os] summary: engine_0 (smtbmc boolector) returned pass
+SBY 13:13:05 [handshake_cover_os] summary: cover trace: handshake_cover_os/engine_0/trace0.vcd
+SBY 13:13:05 [handshake_cover_os] summary:   reached cover statement ctrl_formal._witness_.check_ctrl_formal_sv_86_cover_571 at ctrl_formal.sv:86.9-86.44 step 3
+SBY 13:13:05 [handshake_cover_os] summary: cover trace: handshake_cover_os/engine_0/trace1.vcd
+SBY 13:13:05 [handshake_cover_os] summary:   reached cover statement ctrl_formal._witness_.check_ctrl_formal_sv_85_cover_569 at ctrl_formal.sv:85.9-85.35 step 13
+SBY 13:13:05 [handshake_cover_os] summary: cover trace: handshake_cover_os/engine_0/trace2.vcd
+SBY 13:13:05 [handshake_cover_os] summary:   reached cover statement ctrl_formal._witness_.check_ctrl_formal_sv_87_cover_574 at ctrl_formal.sv:87.9-87.54 step 14
+SBY 13:13:05 [handshake_cover_os] DONE (PASS, rc=0)

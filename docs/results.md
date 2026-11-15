@@ -14,7 +14,7 @@ gave identical coverage and table files for the ones compared.
 4. [Can the testbench fail? Mutation tests](#4-can-the-testbench-fail-mutation-tests)
 5. [Accumulator width: 18, 16, 32](#5-accumulator-width-18-16-32)
 6. [Weight-stationary vs output-stationary](#6-weight-stationary-vs-output-stationary)
-7. [ABFT checksums: Python prototype, hardware and fault injection](#7-abft-checksums-python-prototype-hardware-and-fault-injection)
+7. [ABFT checksums: Python prototype, hardware, fault injection and formal proofs](#7-abft-checksums-python-prototype-hardware-fault-injection-and-formal-proofs)
 8. [Not measured yet](#8-not-measured-yet)
 9. [Limits](#9-limits)
 10. [References](#10-references)
@@ -40,9 +40,10 @@ accumulator width W. They are checked against a Python reference model.
 | 7 | In the Python model, the checksums detect every single, double and triple output error, and every datapath fault modelled (0 missed of 8,331,119 changed outputs). Four errors in a rectangle can cancel and are never detected. | section 7 |
 | 8 | The checker hardware agrees with the Python model: 0 false alarms in 60,000 fault-free multiplies (4,362 of them really overflow at W = 16), every single wrong element planted in C is detected and located exactly, and the error flag appears 1 cycle after the result. The wrong values were added to C after the array, not injected inside it. | section 7.5 |
 | 9 | Fault injection inside the array (12,000 injections: bit flips and stuck-at faults in the registers of every PE, both dataflows, three widths): **0 missed**. 4,828 faults changed the output and all 4,828 were detected (95% upper bound on the miss rate: 0.062%); the other 7,172 were masked (changed nothing). 1,967 single faults corrupted two or more outputs and were all detected, including 62 that hit several rows and columns at once. False alarm rate 0 of 6,000 fault-free runs. A deliberately weak checker made the same campaign report 57.5% coverage, so the campaign can show misses. | section 7.6 |
+| 10 | Formal proofs (SymbiYosys): both PE types are proven correct for every input at W = 16, 18 and 32 (unbounded, by induction); both controls obey the handshake and finish after exactly 16 / 12 (WS, with / without weight reuse) and 11 (OS) clock edges, proven for 40 cycles with free inputs and stalls; the checker reports exactly one cycle after the result. 18 of 18 proof tasks pass, and 6 deliberately broken designs are all rejected. The proof that the checker's **arithmetic** is right for every A and B did **not finish** (all solvers ran out of time, even with 2-bit inputs). | section 7.7 |
 
 **Not measured yet:** faults in the control logic or the checker itself, faults while the array is
-stalled, formal proofs, real synthesis area and timing. See [section 8](#8-not-measured-yet).
+stalled, a formal proof of the checker's arithmetic, real synthesis area and timing. See [section 8](#8-not-measured-yet).
 
 ---
 
@@ -298,7 +299,7 @@ drain, so they tend to II as T grows; the steady-state rate is II.
 
 ---
 
-## 7. ABFT checksums: Python prototype, hardware and fault injection
+## 7. ABFT checksums: Python prototype, hardware, fault injection and formal proofs
 
 Before building any checker hardware, the checksum math was written and tested in Python
 (`model/abft.py`). This model is also what the hardware checker will be compared against.
@@ -577,6 +578,82 @@ reference path, its copies of A and B), the cancelling rectangle in hardware (it
 multi-fault), and faults that hit the inputs before the checker copies them. A masked fault is not
 the same as a harmless one in a longer computation.
 
+### 7.7 Formal proofs
+
+A simulation shows that the design works for the cases it tried. A **formal proof** asks a program
+(a solver) to look at *all* inputs at once. Here SymbiYosys with the Yosys front end and the
+solvers yices, boolector and bitwuzla was used (versions in [tools.md](tools.md)). The properties
+are written in separate wrapper files in `formal/` (the RTL is not changed for them), and the
+inputs are completely free: any value, any cycle, any stall pattern.
+
+Run all: `source env.sh && formal/run_all.sh`. Log: `logs/2026-11-15T131225_formal/summary.txt`
+(18 of 18 tasks pass; per-task logs next to it).
+
+| Proof (file) | What is proven | Kind | Result |
+|---|---|---|---|
+| WS processing element (`pe_props.sby`) | `psum_out` = (`psum_in` + a x w) mod 2^W, computed in a wider integer; the activation passes through unchanged; the weight changes only when `load_w` is high and then takes `w_in`; with `en` low every register holds; reset gives zero | **unbounded** (k-induction), W = 16, 18, 32 | PASS x 3 |
+| OS processing element (`pe_props.sby`) | the same for `acc` with `clr` (clear) and the two pass-through registers, which need no clear | **unbounded**, W = 16, 18, 32 | PASS x 3 |
+| Both controls (`handshake.sby`) | busy starts only when start is accepted, and an accepted start does start it; busy ends only together with the `done` pulse; `done` is a one-cycle pulse; a stalled cycle freezes the control; `done` comes after **exactly** 15 (WS), 11 (WS with `keep_w`) or 10 (OS) non-stalled edges after the accepting edge, which is 16, 12 and 11 edges counting the accepting edge | **bounded**, 40 cycles, W = 16, 18, 32 | PASS x 6 |
+| Checker protocol (`checker_props.sby`) | the check is reported exactly one cycle after the result, and a located error implies the error flag; the input elements have the real width of 8 bits | bounded, 9 cycles | PASS |
+| Cover checks (all files) | each scenario is reachable (a multiply that finishes, a stall in the middle of a multiply, a nonzero accumulation), so the proofs are not vacuous | cover | PASS x 5 |
+
+**Can the proofs fail?** Six designs were deliberately broken (copies of the RTL in a temporary
+folder, not saved in the repo) and the proofs were run on them. All were rejected, at the property
+that should catch them:
+
+| Broken design | Rejected by |
+|---|---|
+| WS PE adds one extra to every sum | the multiply-accumulate property |
+| WS PE overwrites its weight on every cycle | the "weight changes only on `load_w`" property |
+| WS control finishes one cycle early | the exact-timing property (`done` after exactly 15 edges) |
+| OS control ignores stall | the exact-timing property |
+| checker never reports | the one-cycle report property |
+| checker claims a location although no error exists | the "located implies flagged" property |
+
+**A finding by the tool itself.** The first proof of the WS control **failed**. The counterexample
+the solver printed had `keep_w` high when start was accepted, and `done` came after 11 edges
+instead of 15. That is the weight-reuse path (it skips the 4-cycle weight load), which is documented
+in the RTL header and was measured in simulation (chapter 12). The design was right; my property
+had forgotten the case. After the property was fixed to expect 11 when `keep_w` was high at accept,
+all proofs passed (bug log entry 6). The solver found a case the first version of my specification
+did not cover.
+
+**What is not proven: the checker's arithmetic.** The strongest statements would be: *for every A and
+B* the checker raises no false alarm, and *for every single wrong element* it raises the flag and
+reports exactly its row and column. These were tried (`checker_algebra_attempt.sby`) and **did not
+finish**:
+
+| Attempt | Result |
+|---|---|
+| 8-bit inputs, any timing, W = 18, bitwuzla | no answer in 580 s |
+| 8-bit inputs, fixed timing, W = 18, bitwuzla, boolector, yices | no answer in 270 s each |
+| 3-bit and 4-bit inputs, W = 10, bitwuzla | no answer in 200 s and 150 s |
+| 2-bit inputs, W = 10, bitwuzla | no answer in 120 s |
+| ABC engine | stopped at once: "design contains x or z bits" (not pursued) |
+
+Why? Two hypotheses. (1) The proof has to show that two adder trees summed in a different order are
+equal (the sum of column sums times B, against the sum of all products). That kind of equivalence is
+known to be hard for SAT and SMT solvers. **UNTESTED.** (2) My first guess was that the golden
+product was being computed with 27-bit multipliers, because Verilog sizes a product by the whole
+expression. I rewrote the property with exact-width products and it made no difference, so
+that guess was **wrong**. What this means: there is no formal proof of the checker's arithmetic.
+The evidence we have is the linear-algebra argument (section 7.1), the Python study (100,000 pairs
+per width, 0 false alarms, section 7.2), and the hardware runs (60,000 fault-free multiplies, 0
+false alarms, section 7.5, and 12,000 injections, 0 missed, section 7.6). Those are strong but not a
+proof.
+
+**Limits and assumptions of the proofs.**
+
+- PE proofs are unbounded; control and checker proofs are **bounded** (40 and 9 cycles). A stall
+  pattern that lasts longer than the bound is not covered (the logic does not depend on how long
+  the stall lasts, but that is an argument, not a proof).
+- Everything starts from reset. The wrapper files are mine; a property I forgot to write is not
+  checked.
+- The SystemVerilog assertions inside the RTL cannot be read by Yosys and were skipped (macro
+  `SYNTHESIS`); the properties in `formal/*.sv` are separate and re-state the same ideas.
+- The checker RTL got a new parameter `IW` (input element width, default 8) for the attempts above.
+  The default changes nothing; the lint is clean and all 48 simulation tests pass.
+
 ## 8. Not measured yet
 
 See also the plain-English view of what is solid and what is risky in
@@ -588,7 +665,8 @@ See also the plain-English view of what is solid and what is risky in
 - Other random seeds (only seed 12345 was used).
 - Fault injection (bit-flip and stuck-at) into the real design: detection coverage, masked
   faults and latency per width. The Python prediction above is the number to compare with.
-- Formal proofs (SymbiYosys) of the processing-element behaviour and the handshake.
+- A formal proof that the checker's arithmetic is right for every A and B (section 7.7: tried, did
+  not finish).
 - Synthesis area and timing with and without the checker, from a real cell library.
 
 ## 9. Limits
@@ -604,6 +682,8 @@ See also the plain-English view of what is solid and what is risky in
 - The ABFT hardware results in section 7.5 add wrong values to C after the array. Section 7.6
   injects into PE registers only, one fault at a time, no stalls, one seed.
 - Only seed 12345 was used for the results above; other seeds were not run.
+- The formal proofs of the controls are bounded (40 cycles), not unbounded, and all proofs assume the
+  design starts from reset. The checker's arithmetic is not proven formally (section 7.7).
 - The width ablation at W = 32 will contain register bits that synthesis removes (sign copies);
   fault-injection results there are reported separately for real and ghost bits (section 7.6).
 

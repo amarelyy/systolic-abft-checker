@@ -1,0 +1,112 @@
+SBY 13:12:26 [handshake_ws_w16] Removing directory '/home/ursula/systolic-abft-checker/formal/handshake_ws_w16'.
+SBY 13:12:26 [handshake_ws_w16] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/pe.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_ws_w16/src/pe.sv'.
+SBY 13:12:26 [handshake_ws_w16] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/systolic_ws.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_ws_w16/src/systolic_ws.sv'.
+SBY 13:12:26 [handshake_ws_w16] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/systolic_ws_ctrl.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_ws_w16/src/systolic_ws_ctrl.sv'.
+SBY 13:12:26 [handshake_ws_w16] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/pe_os.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_ws_w16/src/pe_os.sv'.
+SBY 13:12:26 [handshake_ws_w16] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/systolic_os.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_ws_w16/src/systolic_os.sv'.
+SBY 13:12:26 [handshake_ws_w16] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/systolic_os_ctrl.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_ws_w16/src/systolic_os_ctrl.sv'.
+SBY 13:12:26 [handshake_ws_w16] Copy '/home/ursula/systolic-abft-checker/formal/ctrl_formal.sv' to '/home/ursula/systolic-abft-checker/formal/handshake_ws_w16/src/ctrl_formal.sv'.
+SBY 13:12:26 [handshake_ws_w16] engine_0: smtbmc boolector
+SBY 13:12:26 [handshake_ws_w16] base: starting process "cd handshake_ws_w16/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY 13:12:26 [handshake_ws_w16] base: Warning: Replacing memory \psum_v with list of registers. See systolic_ws.sv:52
+SBY 13:12:26 [handshake_ws_w16] base: Warning: Replacing memory \w_v with list of registers. See systolic_ws.sv:51
+SBY 13:12:26 [handshake_ws_w16] base: Warning: Replacing memory \a_h with list of registers. See systolic_ws.sv:32
+SBY 13:12:26 [handshake_ws_w16] base: Warning: Replacing memory \b_v with list of registers. See systolic_os.sv:47
+SBY 13:12:26 [handshake_ws_w16] base: Warning: Replacing memory \a_h with list of registers. See systolic_os.sv:29
+SBY 13:12:26 [handshake_ws_w16] base: Warning: Replacing memory \psum_v with list of registers. See systolic_ws.sv:44
+SBY 13:12:26 [handshake_ws_w16] base: Warning: Replacing memory \w_v with list of registers. See systolic_ws.sv:40
+SBY 13:12:27 [handshake_ws_w16] base: finished (returncode=0)
+SBY 13:12:27 [handshake_ws_w16] prep: starting process "cd handshake_ws_w16/model; yosys -ql design_prep.log design_prep.ys"
+SBY 13:12:27 [handshake_ws_w16] prep: finished (returncode=0)
+SBY 13:12:27 [handshake_ws_w16] smt2: starting process "cd handshake_ws_w16/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY 13:12:27 [handshake_ws_w16] smt2: finished (returncode=0)
+SBY 13:12:27 [handshake_ws_w16] engine_0: starting process "cd handshake_ws_w16; yosys-smtbmc -s boolector --presat --unroll --noprogress -t 40  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Solver: boolector
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 3..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 3..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 4..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 4..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 5..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 5..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 6..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 6..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 7..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 7..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 8..
+SBY 13:12:27 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 8..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 9..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 9..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 10..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 10..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 11..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 11..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assumptions in step 12..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:00  Checking assertions in step 12..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assumptions in step 13..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assertions in step 13..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assumptions in step 14..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assertions in step 14..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assumptions in step 15..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assertions in step 15..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assumptions in step 16..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assertions in step 16..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assumptions in step 17..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assertions in step 17..
+SBY 13:12:28 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assumptions in step 18..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assertions in step 18..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assumptions in step 19..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assertions in step 19..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assumptions in step 20..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:01  Checking assertions in step 20..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assumptions in step 21..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assertions in step 21..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assumptions in step 22..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assertions in step 22..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assumptions in step 23..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assertions in step 23..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assumptions in step 24..
+SBY 13:12:29 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assertions in step 24..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assumptions in step 25..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assertions in step 25..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assumptions in step 26..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:02  Checking assertions in step 26..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:03  Checking assumptions in step 27..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:03  Checking assertions in step 27..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:03  Checking assumptions in step 28..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:03  Checking assertions in step 28..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:03  Checking assumptions in step 29..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:03  Checking assertions in step 29..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:03  Checking assumptions in step 30..
+SBY 13:12:30 [handshake_ws_w16] engine_0: ##   0:00:03  Checking assertions in step 30..
+SBY 13:12:31 [handshake_ws_w16] engine_0: ##   0:00:03  Checking assumptions in step 31..
+SBY 13:12:31 [handshake_ws_w16] engine_0: ##   0:00:03  Checking assertions in step 31..
+SBY 13:12:31 [handshake_ws_w16] engine_0: ##   0:00:03  Checking assumptions in step 32..
+SBY 13:12:31 [handshake_ws_w16] engine_0: ##   0:00:04  Checking assertions in step 32..
+SBY 13:12:31 [handshake_ws_w16] engine_0: ##   0:00:04  Checking assumptions in step 33..
+SBY 13:12:31 [handshake_ws_w16] engine_0: ##   0:00:04  Checking assertions in step 33..
+SBY 13:12:31 [handshake_ws_w16] engine_0: ##   0:00:04  Checking assumptions in step 34..
+SBY 13:12:31 [handshake_ws_w16] engine_0: ##   0:00:04  Checking assertions in step 34..
+SBY 13:12:31 [handshake_ws_w16] engine_0: ##   0:00:04  Checking assumptions in step 35..
+SBY 13:12:32 [handshake_ws_w16] engine_0: ##   0:00:04  Checking assertions in step 35..
+SBY 13:12:32 [handshake_ws_w16] engine_0: ##   0:00:04  Checking assumptions in step 36..
+SBY 13:12:32 [handshake_ws_w16] engine_0: ##   0:00:04  Checking assertions in step 36..
+SBY 13:12:32 [handshake_ws_w16] engine_0: ##   0:00:05  Checking assumptions in step 37..
+SBY 13:12:32 [handshake_ws_w16] engine_0: ##   0:00:05  Checking assertions in step 37..
+SBY 13:12:32 [handshake_ws_w16] engine_0: ##   0:00:05  Checking assumptions in step 38..
+SBY 13:12:32 [handshake_ws_w16] engine_0: ##   0:00:05  Checking assertions in step 38..
+SBY 13:12:32 [handshake_ws_w16] engine_0: ##   0:00:05  Checking assumptions in step 39..
+SBY 13:12:33 [handshake_ws_w16] engine_0: ##   0:00:05  Checking assertions in step 39..
+SBY 13:12:33 [handshake_ws_w16] engine_0: ##   0:00:05  Status: passed
+SBY 13:12:33 [handshake_ws_w16] engine_0: finished (returncode=0)
+SBY 13:12:33 [handshake_ws_w16] engine_0: Status returned by engine: pass
+SBY 13:12:33 [handshake_ws_w16] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:06 (6)
+SBY 13:12:33 [handshake_ws_w16] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:07 (7)
+SBY 13:12:33 [handshake_ws_w16] summary: engine_0 (smtbmc boolector) returned pass
+SBY 13:12:33 [handshake_ws_w16] summary: engine_0 did not produce any traces
+SBY 13:12:33 [handshake_ws_w16] DONE (PASS, rc=0)

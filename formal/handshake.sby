@@ -1,1 +1,37 @@
-# handshake.sby: SymbiYosys config for the top-level handshake. Placeholder, will be added later.
+# SymbiYosys: handshake and timing of the two array controls, bounded proof.
+# Run all:   cd formal && sby -f handshake.sby
+[tasks]
+ws_w18 ws w18
+ws_w16 ws w16
+ws_w32 ws w32
+os_w18 os w18
+os_w16 os w16
+os_w32 os w32
+cover_ws cover ws w18
+cover_os cover os w18
+
+[options]
+mode bmc
+depth 40
+cover: mode cover
+cover: depth 40
+
+[engines]
+smtbmc boolector
+
+[script]
+read_verilog -formal -sv -DSYNTHESIS pe.sv systolic_ws.sv systolic_ws_ctrl.sv pe_os.sv systolic_os.sv systolic_os_ctrl.sv ctrl_formal.sv
+w16: chparam -set W 16 ctrl_formal
+w18: chparam -set W 18 ctrl_formal
+w32: chparam -set W 32 ctrl_formal
+os: chparam -set OS 1 ctrl_formal
+prep -top ctrl_formal
+
+[files]
+../rtl/pe.sv
+../rtl/systolic_ws.sv
+../rtl/systolic_ws_ctrl.sv
+../rtl/pe_os.sv
+../rtl/systolic_os.sv
+../rtl/systolic_os_ctrl.sv
+ctrl_formal.sv

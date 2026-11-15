@@ -1,0 +1,9 @@
+WS overlap ablation, W = 18, 8 tiles sharing one B, weights loaded once
+
+ II  cycles  per tile  PE util   correct  note
+  3      36      4.50      n/a    1/8  lane collision
+  4      43      5.38   100.0%    8/8  full overlap
+  5      50      6.25    80.0%    8/8  
+  6      57      7.12    66.7%    8/8  
+  8      71      8.88    50.0%    8/8  
+ 11      92     11.50    36.4%    8/8  no overlap

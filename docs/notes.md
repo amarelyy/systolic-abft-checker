@@ -174,3 +174,12 @@ Two things worth remembering: injection runs are built without the RTL assertion
 `NO_RTL_ASSERT`), because a flipped register fires them; and the W = 16 and W = 32 runs use the
 same random draws, so they are one sample seen twice.
 
+## Formal proofs, in short
+
+`formal/` has SymbiYosys files (`pe_props.sby`, `handshake.sby`, `checker_props.sby`) and wrapper
+modules (`pe_formal.sv`, `pe_os_formal.sv`, `ctrl_formal.sv`, `checker_formal.sv`) that hold the
+properties; the RTL is not touched. `formal/run_all.sh` runs everything that is expected to finish
+and saves the result in `logs/`. The proof of the checker's arithmetic (`checker_algebra_attempt.sby`)
+did not finish. Remember: Yosys cannot read the `assert property` blocks in the RTL, so formal runs
+define `SYNTHESIS`; and the PE proofs are unbounded while the control proofs are bounded.
+

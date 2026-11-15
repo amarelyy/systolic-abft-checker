@@ -1,1 +1,36 @@
-# pe_props.sby: SymbiYosys config for the PE properties. Placeholder, will be added later.
+# SymbiYosys: properties of both processing elements, for W = 16, 18 and 32.
+# Run all:   cd formal && sby -f pe_props.sby
+[tasks]
+ws_w16 ws w16
+ws_w18 ws w18
+ws_w32 ws w32
+os_w16 os w16
+os_w18 os w18
+os_w32 os w32
+cover_ws cover ws w18
+cover_os cover os w18
+
+[options]
+cover: mode cover
+cover: depth 10
+~cover: mode prove
+~cover: depth 6
+
+[engines]
+cover: smtbmc yices
+~cover: smtbmc yices
+
+[script]
+ws: read_verilog -formal -sv -DSYNTHESIS pe.sv pe_formal.sv
+os: read_verilog -formal -sv -DSYNTHESIS pe_os.sv pe_os_formal.sv
+w16: chparam -set W 16 pe_formal pe_os_formal
+w18: chparam -set W 18 pe_formal pe_os_formal
+w32: chparam -set W 32 pe_formal pe_os_formal
+ws: prep -top pe_formal
+os: prep -top pe_os_formal
+
+[files]
+../rtl/pe.sv
+../rtl/pe_os.sv
+pe_formal.sv
+pe_os_formal.sv

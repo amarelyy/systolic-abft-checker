@@ -1,0 +1,6 @@
+Yosys 0.70+368 (git sha1 7cf88aca6, Release, Clang /usr/bin/clang++ 21.1.8)
+SBY v0.70-9-g79fc9ed
+z3: Z3 version 4.15.5 - 64 bit
+boolector: 3.2.4
+yices: Yices 2.7.0
+bitwuzla: 0.9.1

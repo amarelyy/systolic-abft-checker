@@ -4429,7 +4429,7 @@ idx,group,faults,target,kind,done,done_cycle,ref_ready,chk_seen,changed,n_wrong,
 4427,stall,stuck:pe[0][0].psum_out[11]@9,pe[0][0].psum_out,stuck,1,17,1,1,1,1,1,detected
 4428,fsm,flip:ctrl.cnt[2]@4,ctrl.cnt,flip,1,11,1,1,1,16,1,detected
 4429,stall,flip:pe[1][2].a_out[6]@9,pe[1][2].a_out,flip,1,17,1,1,1,1,1,detected
-4430,checker,stuck:chk.ref_ready[0]@14,chk.ref_ready,stuck,1,15,0,1,0,0,0,masked
+4430,checker,stuck:chk.ref_ready[0]@14,chk.ref_ready,stuck,1,15,0,1,0,0,1,flag_without_change
 4431,stall,flip:pe[3][0].psum_out[12]@0,pe[3][0].psum_out,flip,1,22,1,1,0,0,0,masked
 4432,fsm,flip:ctrl.cnt[1]@0,ctrl.cnt,flip,1,13,1,1,1,12,1,detected
 4433,free_stall,,,,1,18,1,1,0,0,0,masked

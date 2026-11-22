@@ -5371,7 +5371,7 @@ idx,group,faults,target,kind,done,done_cycle,ref_ready,chk_seen,changed,n_wrong,
 5369,checker,flip:chk.ref_col[36]@8,chk.ref_col,flip,1,10,1,1,0,0,1,flag_without_change
 5370,checker,flip:chk.b_q[93]@9,chk.b_q,flip,1,10,1,1,0,0,0,masked
 5371,checker,flip:chk.ref_row[57]@0,chk.ref_row,flip,1,10,1,1,0,0,1,flag_without_change
-5372,checker,stuck:chk.ref_ready[0]@6,chk.ref_ready,stuck,1,10,0,1,0,0,0,masked
+5372,checker,stuck:chk.ref_ready[0]@6,chk.ref_ready,stuck,1,10,0,1,0,0,1,flag_without_change
 5373,stall,flip:pe[0][2].a_out[6]@9,pe[0][2].a_out,flip,1,13,1,1,1,1,1,detected
 5374,fsm,stuck:ctrl.state[0]@0,ctrl.state,stuck,1,10,1,1,0,0,0,masked
 5375,checker,stuck:chk.ref_row[110]@3,chk.ref_row,stuck,1,10,1,1,0,0,1,flag_without_change
@@ -5522,7 +5522,7 @@ idx,group,faults,target,kind,done,done_cycle,ref_ready,chk_seen,changed,n_wrong,
 5520,free_stall,,,,1,11,1,1,0,0,0,masked
 5521,control,flip:ctrl.a_q[32]@4,ctrl.a_q,flip,1,10,1,1,0,0,0,masked
 5522,stall,stuck:pe[3][0].b_out[4]@0,pe[3][0].b_out,stuck,1,14,1,1,0,0,0,masked
-5523,checker,flip:chk.ref_ready[0]@4,chk.ref_ready,flip,1,10,0,1,0,0,0,masked
+5523,checker,flip:chk.ref_ready[0]@4,chk.ref_ready,flip,1,10,0,1,0,0,1,flag_without_change
 5524,control,flip:ctrl.b_q[101]@10,ctrl.b_q,flip,1,10,1,1,0,0,0,masked
 5525,checker,stuck:chk.b_q[2]@3,chk.b_q,stuck,1,10,1,1,0,0,0,masked
 5526,double,stuck:pe[2][1].b_out[0]@7 + flip:pe[0][3].a_out[7]@3,pe[2][1].b_out,stuck,1,10,1,1,1,1,1,detected

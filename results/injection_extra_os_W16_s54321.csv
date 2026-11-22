@@ -1986,7 +1986,7 @@ idx,group,faults,target,kind,done,done_cycle,ref_ready,chk_seen,changed,n_wrong,
 1984,stall,flip:pe[3][2].b_out[3]@1,pe[3][2].b_out,flip,1,18,1,1,0,0,0,masked
 1985,control,flip:ctrl.b_q[19]@4,ctrl.b_q,flip,1,10,1,1,0,0,0,masked
 1986,checker,stuck:chk.a_q[120]@4,chk.a_q,stuck,1,10,1,1,0,0,0,masked
-1987,checker,flip:chk.ref_ready[0]@6,chk.ref_ready,flip,1,10,0,1,0,0,0,masked
+1987,checker,flip:chk.ref_ready[0]@6,chk.ref_ready,flip,1,10,0,1,0,0,1,flag_without_change
 1988,stall,flip:pe[1][2].acc[11]@4,pe[1][2].acc,flip,1,11,1,1,1,1,1,detected
 1989,free_stall,,,,1,15,1,1,0,0,0,masked
 1990,free_stall,,,,1,12,1,1,0,0,0,masked

@@ -13,7 +13,8 @@
 //
 // Check: when c_valid is high, c_mat holds the finished result. The sums of c_mat are compared
 // with the references, and one cycle later chk_valid pulses with the result:
-//   err_flag       some column or row checksum disagrees
+//   err_flag       some column or row checksum disagrees, or the result came before the
+//                  reference checksums were ready (the check could not be done)
 //   err_loc_valid  exactly one row and one column disagree (a single wrong element)
 //   err_row/col    index of that row and column, only meaningful when err_loc_valid is high
 // err_flag and err_loc_valid hold their value until the next multiply is accepted.
@@ -132,8 +133,10 @@ module abft_checker #(
             end
 
             if (c_valid) begin
-                err_flag      <= (|bad_col) | (|bad_row);
-                err_loc_valid <= $onehot(bad_col) && $onehot(bad_row);
+                // A result that arrives before the references are ready cannot be checked
+                // (only possible if the control misbehaves): report it as an error.
+                err_flag      <= (|bad_col) | (|bad_row) | !ref_ready;
+                err_loc_valid <= $onehot(bad_col) && $onehot(bad_row) && ref_ready;
                 for (int x = 0; x < N; x++) begin
                     if (bad_row[x]) err_row <= KW'(x);
                     if (bad_col[x]) err_col <= KW'(x);

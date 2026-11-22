@@ -3,7 +3,7 @@ Extra fault injection, design = ws, W = 18, seed = 54321, 1000 per group, every 
   group            n              masked            detected              missed           no_result flag_without_change  coverage
   control       1000                 791                 206                   0                   3                   0    100.0%
   fsm           1000                 548                 276                   0                 176                   0    100.0%
-  checker       1000                 661                   0                   0                   0                 339       n/a
+  checker       1000                 657                   0                   0                   0                 343       n/a
   stall         1000                 648                 352                   0                   0                   0    100.0%
   double        1000                 424                 576                   0                   0                   0    100.0%
   free_stall    1000                1000                   0                   0                   0                   0       n/a
@@ -34,7 +34,7 @@ Checker faults by register
   chk.err_row          7                   7                   0                   0                   0                   0
   chk.ref_col        181                  48                   0                   0                   0                 133
   chk.ref_k            8                   7                   0                   0                   0                   1
-  chk.ref_ready        6                   6                   0                   0                   0                   0
+  chk.ref_ready        6                   2                   0                   0                   0                   4
   chk.ref_row        186                  55                   0                   0                   0                 131
   chk.ref_run          1                   0                   0                   0                   0                   1
 

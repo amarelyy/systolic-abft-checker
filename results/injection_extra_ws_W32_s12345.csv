@@ -5394,7 +5394,7 @@ idx,group,faults,target,kind,done,done_cycle,ref_ready,chk_seen,changed,n_wrong,
 5392,control,stuck:ctrl.a_q[95]@3,ctrl.a_q,stuck,1,15,1,1,0,0,0,masked
 5393,fsm,stuck:ctrl.cnt[3]@8,ctrl.cnt,stuck,1,23,1,1,0,0,0,masked
 5394,double,flip:pe[1][2].a_out[0]@7 + flip:pe[0][2].a_out[4]@13,pe[1][2].a_out,flip,1,15,1,1,0,0,0,masked
-5395,checker,stuck:chk.ref_ready[0]@13,chk.ref_ready,stuck,1,15,0,1,0,0,0,masked
+5395,checker,stuck:chk.ref_ready[0]@13,chk.ref_ready,stuck,1,15,0,1,0,0,1,flag_without_change
 5396,double,flip:pe[2][3].w[6]@14 + stuck:pe[3][2].w[4]@3,pe[2][3].w,flip,1,15,1,1,1,4,1,detected
 5397,control,stuck:ctrl.a_q[70]@2,ctrl.a_q,stuck,1,15,1,1,1,4,1,detected
 5398,control,stuck:ctrl.c_mat[419]@11,ctrl.c_mat,stuck,1,15,1,1,0,0,0,masked

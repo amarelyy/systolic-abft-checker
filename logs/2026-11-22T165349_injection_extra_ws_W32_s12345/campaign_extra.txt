@@ -1,0 +1,44 @@
+Extra fault injection, design = ws, W = 32, seed = 12345, 1000 per group, every multiply from a reset
+
+  group            n              masked            detected              missed           no_result flag_without_change  coverage
+  control       1000                 809                 190                   0                   1                   0    100.0%
+  fsm           1000                 538                 302                   0                 160                   0    100.0%
+  checker       1000                 567                   0                   0                   0                 433       n/a
+  stall         1000                 646                 354                   0                   0                   0    100.0%
+  double        1000                 453                 547                   0                   0                   0    100.0%
+  free_stall    1000                1000                   0                   0                   0                   0       n/a
+  (coverage = detected / (detected + missed); masked faults excluded)
+
+Control faults by register
+  register             n              masked            detected              missed           no_result flag_without_change
+  ctrl.a_q           137                  90                  47                   0                   0                   0
+  ctrl.b_q           173                 151                  22                   0                   0                   0
+  ctrl.c_mat         686                 565                 121                   0                   0                   0
+  ctrl.cnt             2                   2                   0                   0                   0                   0
+  ctrl.done            1                   1                   0                   0                   0                   0
+  ctrl.state           1                   0                   0                   0                   1                   0
+
+Control-state faults by register
+  register             n              masked            detected              missed           no_result flag_without_change
+  ctrl.cnt           569                 286                 283                   0                   0                   0
+  ctrl.done          161                 161                   0                   0                   0                   0
+  ctrl.state         270                  91                  19                   0                 160                   0
+
+Checker faults by register
+  register             n              masked            detected              missed           no_result flag_without_change
+  chk.a_q            245                 212                   0                   0                   0                  33
+  chk.b_q            230                 206                   0                   0                   0                  24
+  chk.chk_valid        4                   4                   0                   0                   0                   0
+  chk.err_col          3                   3                   0                   0                   0                   0
+  chk.err_flag         3                   3                   0                   0                   0                   0
+  chk.err_loc_valid     2                   2                   0                   0                   0                   0
+  chk.err_row          4                   4                   0                   0                   0                   0
+  chk.ref_col        242                  59                   0                   0                   0                 183
+  chk.ref_k            4                   4                   0                   0                   0                   0
+  chk.ref_ready        1                   0                   0                   0                   0                   1
+  chk.ref_row        261                  69                   0                   0                   0                 192
+  chk.ref_run          1                   1                   0                   0                   0                   0
+
+Fault-free with stalls: 1000, flagged: 0
+Checker hardware disagrees with model/abft.py (healthy-checker groups): 0
+Control-state faults where done still came at the nominal cycle: 328, at another cycle: 512

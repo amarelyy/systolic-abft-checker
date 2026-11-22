@@ -3,7 +3,7 @@ Extra fault injection, design = ws, W = 16, seed = 12345, 1000 per group, every 
   group            n              masked            detected              missed           no_result flag_without_change  coverage
   control       1000                 807                 193                   0                   0                   0    100.0%
   fsm           1000                 554                 274                   0                 172                   0    100.0%
-  checker       1000                 678                   0                   0                   0                 322       n/a
+  checker       1000                 675                   0                   0                   0                 325       n/a
   stall         1000                 646                 354                   0                   0                   0    100.0%
   double        1000                 436                 564                   0                   0                   0    100.0%
   free_stall    1000                1000                   0                   0                   0                   0       n/a
@@ -35,7 +35,7 @@ Checker faults by register
   chk.err_row          2                   2                   0                   0                   0                   0
   chk.ref_col        169                  38                   0                   0                   0                 131
   chk.ref_k            7                   5                   0                   0                   0                   2
-  chk.ref_ready        5                   5                   0                   0                   0                   0
+  chk.ref_ready        5                   2                   0                   0                   0                   3
   chk.ref_row        160                  42                   0                   0                   0                 118
   chk.ref_run          4                   1                   0                   0                   0                   3
 

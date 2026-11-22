@@ -1,0 +1,359 @@
+SBY 16:51:48 [checker_props_cover] Removing directory '/home/ursula/systolic-abft-checker/formal/checker_props_cover'.
+SBY 16:51:48 [checker_props_cover] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/abft_checker.sv' to '/home/ursula/systolic-abft-checker/formal/checker_props_cover/src/abft_checker.sv'.
+SBY 16:51:48 [checker_props_cover] Copy '/home/ursula/systolic-abft-checker/formal/checker_formal.sv' to '/home/ursula/systolic-abft-checker/formal/checker_props_cover/src/checker_formal.sv'.
+SBY 16:51:48 [checker_props_cover] engine_0: smtbmc bitwuzla
+SBY 16:51:48 [checker_props_cover] base: starting process "cd checker_props_cover/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY 16:51:48 [checker_props_cover] base: Warning: Replacing memory \p_row with list of registers. See abft_checker.sv:92
+SBY 16:51:48 [checker_props_cover] base: Warning: Replacing memory \p_col with list of registers. See abft_checker.sv:91
+SBY 16:51:48 [checker_props_cover] base: Warning: Replacing memory \rowsum_b with list of registers. See abft_checker.sv:69, abft_checker.sv:66
+SBY 16:51:48 [checker_props_cover] base: Warning: Replacing memory \colsum_a with list of registers. See abft_checker.sv:68, abft_checker.sv:65
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [9] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [8] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [7] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [6] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [5] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [4] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [3] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [2] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [1] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [0] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [19] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [18] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [17] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [16] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [15] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [14] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [13] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [12] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [11] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [10] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [29] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [28] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [27] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [26] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [25] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [24] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [23] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [22] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [21] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [20] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [39] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [38] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [37] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [36] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [35] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [34] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [33] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [32] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [31] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [30] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [49] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [48] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [47] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [46] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [45] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [44] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [43] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [42] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [41] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [40] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [59] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [58] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [57] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [56] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [55] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [54] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [53] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [52] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [51] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [50] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [69] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [68] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [67] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [66] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [65] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [64] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [63] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [62] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [61] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [60] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [79] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [78] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [77] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [76] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [75] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [74] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [73] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [72] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [71] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [70] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [89] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [88] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [87] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [86] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [85] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [84] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [83] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [82] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [81] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [80] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [99] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [98] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [97] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [96] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [95] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [94] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [93] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [92] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [91] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [90] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [109] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [108] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [107] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [106] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [105] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [104] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [103] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [102] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [101] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [100] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [119] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [118] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [117] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [116] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [115] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [114] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [113] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [112] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [111] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [110] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [129] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [128] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [127] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [126] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [125] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [124] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [123] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [122] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [121] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [120] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [139] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [138] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [137] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [136] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [135] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [134] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [133] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [132] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [131] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [130] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [149] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [148] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [147] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [146] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [145] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [144] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [143] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [142] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [141] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [140] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [159] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [158] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [157] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [156] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [155] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [154] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [153] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [152] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [151] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: Warning: Wire checker_formal.\c_mat [150] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] base: finished (returncode=0)
+SBY 16:51:48 [checker_props_cover] prep: starting process "cd checker_props_cover/model; yosys -ql design_prep.log design_prep.ys"
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [159] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [158] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [157] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [156] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [155] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [154] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [153] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [152] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [151] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [150] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [149] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [148] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [147] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [146] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [145] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [144] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [143] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [142] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [141] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [140] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [139] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [138] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [137] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [136] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [135] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [134] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [133] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [132] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [131] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [130] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [129] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [128] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [127] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [126] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [125] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [124] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [123] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [122] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [121] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [120] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [119] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [118] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [117] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [116] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [115] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [114] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [113] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [112] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [111] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [110] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [109] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [108] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [107] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [106] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [105] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [104] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [103] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [102] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [101] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [100] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [99] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [98] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [97] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [96] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [95] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [94] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [93] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [92] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [91] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [90] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [89] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [88] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [87] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [86] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [85] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [84] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [83] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [82] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [81] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [80] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [79] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [78] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [77] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [76] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [75] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [74] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [73] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [72] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [71] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [70] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [69] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [68] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [67] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [66] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [65] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [64] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [63] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [62] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [61] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [60] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [59] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [58] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [57] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [56] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [55] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [54] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [53] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [52] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [51] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [50] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [49] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [48] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [47] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [46] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [45] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [44] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [43] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [42] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [41] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [40] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [39] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [38] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [37] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [36] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [35] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [34] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [33] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [32] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [31] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [30] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [29] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [28] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [27] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [26] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [25] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [24] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [23] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [22] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [21] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [20] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [19] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [18] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [17] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [16] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [15] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [14] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [13] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [12] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [11] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [10] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [9] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [8] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [7] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [6] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [5] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [4] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [3] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [2] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [1] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: Warning: Wire checker_formal.\c_mat [0] is used but has no driver.
+SBY 16:51:48 [checker_props_cover] prep: finished (returncode=0)
+SBY 16:51:48 [checker_props_cover] smt2: starting process "cd checker_props_cover/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY 16:51:48 [checker_props_cover] smt2: finished (returncode=0)
+SBY 16:51:48 [checker_props_cover] engine_0: starting process "cd checker_props_cover; yosys-smtbmc -s bitwuzla --presat --unroll -c --noprogress -t 9  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2"
+SBY 16:51:48 [checker_props_cover] engine_0: ##   0:00:00  Solver: bitwuzla
+SBY 16:51:48 [checker_props_cover] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 16:51:48 [checker_props_cover] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 16:51:48 [checker_props_cover] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 16:51:48 [checker_props_cover] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 16:51:49 [checker_props_cover] engine_0: ##   0:00:00  Checking cover reachability in step 4..
+SBY 16:51:49 [checker_props_cover] engine_0: ##   0:00:00  Checking cover reachability in step 5..
+SBY 16:51:49 [checker_props_cover] engine_0: ##   0:00:00  Checking cover reachability in step 6..
+SBY 16:51:49 [checker_props_cover] engine_0: ##   0:00:00  Checking cover reachability in step 7..
+SBY 16:51:49 [checker_props_cover] engine_0: ##   0:00:00  Checking cover reachability in step 8..
+SBY 16:51:49 [checker_props_cover] engine_0: ##   0:00:00  Reached cover statement in step 8 at checker_formal: checker_formal.sv:105.27-105.58 (_witness_.check_checker_formal_sv_105_cover_1983)
+SBY 16:51:49 [checker_props_cover] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 16:51:49 [checker_props_cover] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 16:51:49 [checker_props_cover] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 16:51:49 [checker_props_cover] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 16:51:49 [checker_props_cover] engine_0: ##   0:00:00  Status: passed
+SBY 16:51:49 [checker_props_cover] engine_0: finished (returncode=0)
+SBY 16:51:49 [checker_props_cover] engine_0: Status returned by engine: pass
+SBY 16:51:49 [checker_props_cover] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 16:51:49 [checker_props_cover] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 16:51:49 [checker_props_cover] summary: engine_0 (smtbmc bitwuzla) returned pass
+SBY 16:51:49 [checker_props_cover] summary: cover trace: checker_props_cover/engine_0/trace0.vcd
+SBY 16:51:49 [checker_props_cover] summary:   reached cover statement checker_formal._witness_.check_checker_formal_sv_105_cover_1983 at checker_formal.sv:105.27-105.58 step 8
+SBY 16:51:49 [checker_props_cover] DONE (PASS, rc=0)

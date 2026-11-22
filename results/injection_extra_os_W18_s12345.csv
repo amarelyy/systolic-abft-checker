@@ -3914,7 +3914,7 @@ idx,group,faults,target,kind,done,done_cycle,ref_ready,chk_seen,changed,n_wrong,
 3912,free_stall,,,,1,15,1,1,0,0,0,masked
 3913,double,stuck:pe[1][2].b_out[2]@5 + stuck:pe[1][0].a_out[4]@3,pe[1][2].b_out,stuck,1,10,1,1,1,5,1,detected
 3914,checker,flip:chk.a_q[25]@2,chk.a_q,flip,1,10,1,1,0,0,1,flag_without_change
-3915,fsm,flip:ctrl.cnt[3]@0,ctrl.cnt,flip,1,2,0,1,1,8,0,missed
+3915,fsm,flip:ctrl.cnt[3]@0,ctrl.cnt,flip,1,2,0,1,1,8,1,detected
 3916,control,flip:ctrl.a_q[47]@10,ctrl.a_q,flip,1,10,1,1,0,0,0,masked
 3917,double,flip:pe[0][0].acc[13]@9 + flip:pe[1][2].a_out[7]@1,pe[0][0].acc,flip,1,10,1,1,1,1,1,detected
 3918,free_stall,,,,1,14,1,1,0,0,0,masked

@@ -2,7 +2,7 @@ Extra fault injection, design = os, W = 18, seed = 12345, 1000 per group, every 
 
   group            n              masked            detected              missed           no_result flag_without_change  coverage
   control       1000                 710                 287                   0                   3                   0    100.0%
-  fsm           1000                 370                 419                   1                 210                   0     99.8%
+  fsm           1000                 370                 420                   0                 210                   0    100.0%
   checker       1000                 641                   0                   0                   0                 359       n/a
   stall         1000                 522                 478                   0                   0                   0    100.0%
   double        1000                 273                 727                   0                   0                   0    100.0%
@@ -19,7 +19,7 @@ Control faults by register
 
 Control-state faults by register
   register             n              masked            detected              missed           no_result flag_without_change
-  ctrl.cnt           574                 154                 419                   1                   0                   0
+  ctrl.cnt           574                 154                 420                   0                   0                   0
   ctrl.done          131                 131                   0                   0                   0                   0
   ctrl.state         295                  85                   0                   0                 210                   0
 

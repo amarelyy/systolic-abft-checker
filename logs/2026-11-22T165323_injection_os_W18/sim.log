@@ -1,0 +1,46 @@
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:242  in gpi_load_users                  Loaded entry library: '/usr/lib/x86_64-linux-gnu/libpython3.10.so.1.0'
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:233  in gpi_load_users                  Running entry func 'initialize' from loaded library '/home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb/simulator.cpython-310-x86_64-linux-gnu.so'
+     -.--ns INFO     pygpi                              ..ib/pygpi/embed.cpp:114  in initialize                      Using Python 3.10.19 interpreter at /home/ursula/systolic-abft-checker/.venv/bin/python3
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:74   in gpi_print_registered_impl       GPI: VPI support registered
+     0.00ns INFO     cocotb.initialize                  Seeding Python random module with 12345
+     0.00ns INFO     cocotb.initialize                  Initialized cocotb v2.1.0 from /home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb
+     0.00ns INFO     cocotb.initialize                  Running on Verilator version 5.055 devel
+     0.00ns INFO     cocotb.regression                  Running tests
+     0.00ns INFO     cocotb.regression                  running test_injection.test_known_flip (1/2)
+  1215.00ns INFO     cocotb.top                         [os W=18] cycles that changed C: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; labels: {'detected': 10}
+  1215.00ns INFO     cocotb.regression                  test_injection.test_known_flip passed
+  1215.00ns INFO     cocotb.regression                  running test_injection.test_campaign (2/2)
+361230.00ns INFO     cocotb.top                         
+                                                        Fault injection campaign, design = os, W = 18, 1000 flips, 1000 stuck-at, 1000 fault-free, no stalls
+                                                        
+                                                        By fault kind (coverage = detected / (detected + missed); masked faults excluded)
+                                                          group                  injected  masked  detected  missed  coverage  masked %
+                                                          flip                       1000     465       535       0    100.0%     46.5%
+                                                          stuck                      1000     547       453       0    100.0%     54.7%
+                                                        
+                                                        By register class
+                                                          group                  injected  masked  detected  missed  coverage  masked %
+                                                          flip / a                    319     230        89       0    100.0%     72.1%
+                                                          flip / acc                  353       0       353       0    100.0%      0.0%
+                                                          flip / b                    328     235        93       0    100.0%     71.6%
+                                                          stuck / a                   353     235       118       0    100.0%     66.6%
+                                                          stuck / acc                 317     110       207       0    100.0%     34.7%
+                                                          stuck / b                   330     202       128       0    100.0%     61.2%
+                                                        
+                                                        Fault-free multiplies: 1000, flagged: 0  -> false alarm rate 0.0000
+                                                        All injections: 2000, masked 1012, detected 988, missed 0, flag_without_change 0
+                                                        Detection coverage = 988/988 = 100.00%   (false alarm rate 0.0000, same table)
+                                                        Detection latency (cycles from result valid to error flag): 1 in every run (asserted in run_multiply)
+                                                        Faults that changed exactly one element: 717, checker located the element: 717
+                                                        Changed elements per injection (how many outputs one fault corrupted): 1: 717, 2: 153, 3: 118
+                                                        Checker hardware disagrees with model/abft.py in 0 of 3000 multiplies
+361230.00ns INFO     cocotb.regression                  test_injection.test_campaign passed
+361230.00ns INFO     cocotb.regression                  ****************************************************************************************
+                                                        ** TEST                            STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        ****************************************************************************************
+                                                        ** test_injection.test_known_flip   PASS        1215.00           0.00     402115.49  **
+                                                        ** test_injection.test_campaign     PASS      360015.00           0.71     504783.10  **
+                                                        ****************************************************************************************
+                                                        ** TESTS=2 PASS=2 FAIL=0 SKIP=0               361230.00           0.72     503996.60  **
+                                                        ****************************************************************************************
+- (null):0: Verilog $finish

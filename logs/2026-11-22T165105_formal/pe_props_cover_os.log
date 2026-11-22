@@ -1,0 +1,33 @@
+SBY 16:51:07 [pe_props_cover_os] Removing directory '/home/ursula/systolic-abft-checker/formal/pe_props_cover_os'.
+SBY 16:51:07 [pe_props_cover_os] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/pe.sv' to '/home/ursula/systolic-abft-checker/formal/pe_props_cover_os/src/pe.sv'.
+SBY 16:51:07 [pe_props_cover_os] Copy '/home/ursula/systolic-abft-checker/formal/../rtl/pe_os.sv' to '/home/ursula/systolic-abft-checker/formal/pe_props_cover_os/src/pe_os.sv'.
+SBY 16:51:07 [pe_props_cover_os] Copy '/home/ursula/systolic-abft-checker/formal/pe_formal.sv' to '/home/ursula/systolic-abft-checker/formal/pe_props_cover_os/src/pe_formal.sv'.
+SBY 16:51:07 [pe_props_cover_os] Copy '/home/ursula/systolic-abft-checker/formal/pe_os_formal.sv' to '/home/ursula/systolic-abft-checker/formal/pe_props_cover_os/src/pe_os_formal.sv'.
+SBY 16:51:07 [pe_props_cover_os] engine_0: smtbmc yices
+SBY 16:51:07 [pe_props_cover_os] base: starting process "cd pe_props_cover_os/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY 16:51:07 [pe_props_cover_os] base: Warning: Selection "pe_formal" did not match any module.
+SBY 16:51:07 [pe_props_cover_os] base: finished (returncode=0)
+SBY 16:51:07 [pe_props_cover_os] prep: starting process "cd pe_props_cover_os/model; yosys -ql design_prep.log design_prep.ys"
+SBY 16:51:07 [pe_props_cover_os] prep: finished (returncode=0)
+SBY 16:51:07 [pe_props_cover_os] smt2: starting process "cd pe_props_cover_os/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY 16:51:07 [pe_props_cover_os] smt2: finished (returncode=0)
+SBY 16:51:07 [pe_props_cover_os] engine_0: starting process "cd pe_props_cover_os; yosys-smtbmc -s yices --presat --unroll -c --noprogress -t 10  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2"
+SBY 16:51:07 [pe_props_cover_os] engine_0: ##   0:00:00  Solver: yices
+SBY 16:51:07 [pe_props_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 16:51:07 [pe_props_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 16:51:07 [pe_props_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 16:51:07 [pe_props_cover_os] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 16:51:07 [pe_props_cover_os] engine_0: ##   0:00:00  Reached cover statement in step 3 at pe_os_formal: pe_os_formal.sv:48.27-48.102 (_witness_.check_pe_os_formal_sv_48_cover_126)
+SBY 16:51:07 [pe_props_cover_os] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 16:51:07 [pe_props_cover_os] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 16:51:07 [pe_props_cover_os] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 16:51:07 [pe_props_cover_os] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 16:51:07 [pe_props_cover_os] engine_0: ##   0:00:00  Status: passed
+SBY 16:51:07 [pe_props_cover_os] engine_0: finished (returncode=0)
+SBY 16:51:07 [pe_props_cover_os] engine_0: Status returned by engine: pass
+SBY 16:51:07 [pe_props_cover_os] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 16:51:07 [pe_props_cover_os] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 16:51:07 [pe_props_cover_os] summary: engine_0 (smtbmc yices) returned pass
+SBY 16:51:07 [pe_props_cover_os] summary: cover trace: pe_props_cover_os/engine_0/trace0.vcd
+SBY 16:51:07 [pe_props_cover_os] summary:   reached cover statement pe_os_formal._witness_.check_pe_os_formal_sv_48_cover_126 at pe_os_formal.sv:48.27-48.102 step 3
+SBY 16:51:07 [pe_props_cover_os] DONE (PASS, rc=0)

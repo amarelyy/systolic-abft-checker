@@ -4116,7 +4116,7 @@ idx,group,faults,target,kind,done,done_cycle,ref_ready,chk_seen,changed,n_wrong,
 4114,checker,flip:chk.a_q[13]@5,chk.a_q,flip,1,10,1,1,0,0,0,masked
 4115,checker,flip:chk.b_q[121]@8,chk.b_q,flip,1,10,1,1,0,0,0,masked
 4116,double,stuck:pe[3][3].a_out[3]@1 + stuck:pe[2][0].a_out[1]@2,pe[3][3].a_out,stuck,1,10,1,1,1,3,1,detected
-4117,checker,stuck:chk.ref_ready[0]@8,chk.ref_ready,stuck,1,10,0,1,0,0,0,masked
+4117,checker,stuck:chk.ref_ready[0]@8,chk.ref_ready,stuck,1,10,0,1,0,0,1,flag_without_change
 4118,control,flip:ctrl.a_q[126]@1,ctrl.a_q,flip,1,10,1,1,1,4,1,detected
 4119,checker,flip:chk.ref_col[2]@8,chk.ref_col,flip,1,10,1,1,0,0,1,flag_without_change
 4120,stall,flip:pe[1][0].b_out[5]@8,pe[1][0].b_out,flip,1,13,1,1,0,0,0,masked

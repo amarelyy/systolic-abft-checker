@@ -3570,7 +3570,7 @@ idx,group,faults,target,kind,done,done_cycle,ref_ready,chk_seen,changed,n_wrong,
 3568,control,flip:ctrl.c_mat[233]@10,ctrl.c_mat,flip,1,15,1,1,0,0,0,masked
 3569,stall,stuck:pe[1][3].a_out[6]@10,pe[1][3].a_out,stuck,1,19,1,1,0,0,0,masked
 3570,free_stall,,,,1,17,1,1,0,0,0,masked
-3571,checker,flip:chk.ref_ready[0]@5,chk.ref_ready,flip,1,15,0,1,0,0,0,masked
+3571,checker,flip:chk.ref_ready[0]@5,chk.ref_ready,flip,1,15,0,1,0,0,1,flag_without_change
 3572,control,flip:ctrl.b_q[31]@4,ctrl.b_q,flip,1,15,1,1,0,0,0,masked
 3573,free_stall,,,,1,21,1,1,0,0,0,masked
 3574,control,stuck:ctrl.a_q[81]@9,ctrl.a_q,stuck,1,15,1,1,0,0,0,masked
@@ -3774,7 +3774,7 @@ idx,group,faults,target,kind,done,done_cycle,ref_ready,chk_seen,changed,n_wrong,
 3772,free_stall,,,,1,27,1,1,0,0,0,masked
 3773,stall,stuck:pe[3][3].a_out[3]@0,pe[3][3].a_out,stuck,1,18,1,1,0,0,0,masked
 3774,stall,stuck:pe[1][1].a_out[1]@8,pe[1][1].a_out,stuck,1,16,1,1,1,6,1,detected
-3775,checker,flip:chk.ref_ready[0]@7,chk.ref_ready,flip,1,15,0,1,0,0,0,masked
+3775,checker,flip:chk.ref_ready[0]@7,chk.ref_ready,flip,1,15,0,1,0,0,1,flag_without_change
 3776,control,stuck:ctrl.c_mat[166]@13,ctrl.c_mat,stuck,1,15,1,1,1,1,1,detected
 3777,free_stall,,,,1,22,1,1,0,0,0,masked
 3778,control,flip:ctrl.a_q[23]@13,ctrl.a_q,flip,1,15,1,1,0,0,0,masked
@@ -4517,7 +4517,7 @@ idx,group,faults,target,kind,done,done_cycle,ref_ready,chk_seen,changed,n_wrong,
 4515,fsm,flip:ctrl.state[1]@0,ctrl.state,flip,0,,,0,,,0,no_result
 4516,stall,stuck:pe[0][3].w[5]@1,pe[0][3].w,stuck,1,23,1,1,1,4,1,detected
 4517,stall,stuck:pe[1][3].w[5]@12,pe[1][3].w,stuck,1,20,1,1,1,1,1,detected
-4518,checker,flip:chk.ref_ready[0]@5,chk.ref_ready,flip,1,15,0,1,0,0,0,masked
+4518,checker,flip:chk.ref_ready[0]@5,chk.ref_ready,flip,1,15,0,1,0,0,1,flag_without_change
 4519,fsm,stuck:ctrl.state[1]@8,ctrl.state,stuck,0,,,0,,,0,no_result
 4520,stall,stuck:pe[0][0].psum_out[8]@0,pe[0][0].psum_out,stuck,1,20,1,1,0,0,0,masked
 4521,checker,stuck:chk.b_q[37]@13,chk.b_q,stuck,1,15,1,1,0,0,0,masked

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Checks the Lean proofs of the checker algebra and saves the result under logs/.
-# Needs Lean (installed with elan in ~/.elan; see docs/tools.md). Run:  lean/check.sh
+# Needs Lean 4 (installed with elan in ~/.elan; the version is in lean/lean-toolchain). Run:  lean/check.sh
 set -u
 cd "$(dirname "$0")"
 ROOT="$(cd .. && pwd)"

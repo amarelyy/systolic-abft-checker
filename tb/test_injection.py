@@ -40,6 +40,7 @@ from targets import targets
 
 N = 4
 CAMP_N = int(os.environ.get("CAMP_N", 1000))
+SEEDS = [12345, 54321]            # the second seed gives a second, independent set of random faults
 SOURCES = ["pe.sv", "systolic_ws.sv", "systolic_ws_ctrl.sv", "pe_os.sv", "systolic_os.sv",
            "systolic_os_ctrl.sv", "abft_checker.sv", "top.sv"]
 DESIGNS_TOP = {"ws": 0, "os": 1}
@@ -150,7 +151,8 @@ async def test_campaign(dut):
         w.writerows(rows)
     out = ROOT / "results"
     out.mkdir(exist_ok=True)
-    shutil.copy("injection.csv", out / f"injection_{design}_W{W}.csv")
+    suffix = "" if os.environ.get("CAMP_SEED", "12345") == "12345" else f"_s{os.environ['CAMP_SEED']}"
+    shutil.copy("injection.csv", out / f"injection_{design}_W{W}{suffix}.csv")
 
     lines = [f"Fault injection campaign, design = {design}, W = {W}, {CAMP_N} flips, {CAMP_N} stuck-at, "
              f"{CAMP_N} fault-free, no stalls", ""]
@@ -199,15 +201,17 @@ async def test_campaign(dut):
     lines.append(f"Checker hardware disagrees with model/abft.py in {disagree} of {len(rows)} multiplies")
     text = "\n".join(lines)
     Path("campaign.txt").write_text(text + "\n")
-    shutil.copy("campaign.txt", out / f"campaign_{design}_W{W}.txt")
+    shutil.copy("campaign.txt", out / f"campaign_{design}_W{W}{suffix}.txt")
     dut._log.info("\n" + text)
     assert disagree == 0
     assert flagged == 0, "false alarm on a fault-free multiply"
     assert c["flag_without_change"] == 0
 
 
+@pytest.mark.parametrize("seed", SEEDS)
 @pytest.mark.parametrize("W", WIDTHS)
 @pytest.mark.parametrize("design", DESIGNS_TOP)
-def test_injection_runner(design, W):
-    run_cocotb("top", SOURCES, "test_injection", f"injection_{design}_W{W}",
-               parameters={"W": W, "DATAFLOW": DESIGNS_TOP[design]}, assertions=False)
+def test_injection_runner(design, W, seed):
+    tag = f"injection_{design}_W{W}" + ("" if seed == 12345 else f"_s{seed}")
+    run_cocotb("top", SOURCES, "test_injection", tag,
+               parameters={"W": W, "DATAFLOW": DESIGNS_TOP[design]}, seed=seed, assertions=False)

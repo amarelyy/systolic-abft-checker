@@ -12,13 +12,18 @@ Classifier (labels as in the project plan, plus one guard label):
   masked              the output C did not change and the error flag stayed low
   detected            C changed and the error flag went high
   missed              C changed and the error flag stayed low
-  flag_without_change C did not change but the error flag went high (should never happen)
+  flag_without_change C did not change but the error flag went high (a false alarm; with a
+                      healthy checker this never happens, with a fault in the checker it can)
+  no_result           the control never produced `done` (the array hung); the checker only looks at
+                      data, so it cannot see this
 """
 
 from dataclasses import dataclass
 
+import random
+
 import numpy as np
-from cocotb.triggers import FallingEdge, RisingEdge
+from cocotb.triggers import ClockCycles, FallingEdge, RisingEdge
 
 from mat_util import pack_matrix, unpack_matrix
 
@@ -46,9 +51,9 @@ def classify(changed, flagged):
 def _apply(handle, fault, c):
     """Apply the fault to its register if cycle c is inside its window."""
     if fault.kind == "flip" and c == fault.cycle:
-        handle.value = handle.value.to_unsigned() ^ (1 << fault.bit)
+        handle.value = int(handle.value) ^ (1 << fault.bit)      # int() also works for 1-bit signals
     elif fault.kind == "stuck" and fault.cycle <= c < fault.cycle + fault.length:
-        word = handle.value.to_unsigned()
+        word = int(handle.value)
         word = (word | (1 << fault.bit)) if fault.value else (word & ~(1 << fault.bit))
         handle.value = word
 
@@ -92,3 +97,65 @@ async def run_multiply(dut, design, A, B, W, fault=None, handles=None):
         "row": int(dut.err_row.value),
         "col": int(dut.err_col.value),
     }
+
+
+async def reset(dut):
+    """Reset the design (two cycles), so every injection starts from a clean state."""
+    dut.stall.value = 0
+    dut.start.value = 0
+    dut.rst_n.value = 0
+    await ClockCycles(dut.clk, 2)
+    dut.rst_n.value = 1
+    await FallingEdge(dut.clk)
+
+
+async def run_multiply_ext(dut, design, A, B, W, faults=(), handles=None, stall_p=0.0,
+                           timeout=80):
+    """One multiply from a fresh reset, with any number of faults and optional random stalls.
+
+    Returns a dict; `done` is False if the control never finished within `timeout` cycles.
+    Cycle c is counted as in run_multiply. A fault is applied at every falling edge of its window.
+    """
+    await reset(dut)
+    live = []
+    for f in faults:
+        key = f.target.name
+        if handles is not None and key in handles:
+            live.append((f, handles[key]))
+        else:
+            h = f.target.handle(dut)
+            if handles is not None:
+                handles[key] = h
+            live.append((f, h))
+
+    dut.keep_w.value = 0
+    dut.a_mat.value = pack_matrix(A)
+    dut.b_mat.value = pack_matrix(B)
+    dut.start.value = 1
+    await RisingEdge(dut.clk)               # the edge that accepts start
+    await FallingEdge(dut.clk)              # cycle 0
+    dut.start.value = 0
+
+    out = {"done": False, "done_cycle": None, "C": None, "chk_seen": False, "flag": 0,
+           "loc_valid": 0, "row": 0, "col": 0}
+    for c in range(timeout):
+        for f, h in live:
+            _apply(h, f, c)
+        if stall_p:
+            dut.stall.value = int(random.random() < stall_p)
+        await FallingEdge(dut.clk)
+        if dut.done.value == 1:
+            out["done"], out["done_cycle"] = True, c + 1
+            out["C"] = unpack_matrix(dut.c_mat.value.to_unsigned(), W, N)
+            out["ref_ready"] = int(dut.u_chk.ref_ready.value)       # was the reference finished?
+            out["ref_col"] = int(dut.u_chk.ref_col.value)
+            out["ref_row"] = int(dut.u_chk.ref_row.value)
+            break
+    dut.stall.value = 0
+    if out["done"]:
+        await FallingEdge(dut.clk)          # the checker reports one cycle after done
+        out["chk_seen"] = dut.chk_valid.value == 1
+        out["flag"] = int(dut.err_flag.value)
+        out["loc_valid"] = int(dut.err_loc_valid.value)
+        out["row"], out["col"] = int(dut.err_row.value), int(dut.err_col.value)
+    return out

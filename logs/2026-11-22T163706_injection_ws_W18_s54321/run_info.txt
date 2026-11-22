@@ -1,0 +1,8 @@
+toplevel: top
+test_module: test_injection
+rtl_dir: /home/ursula/systolic-abft-checker/rtl
+parameters: {'W': 18, 'DATAFLOW': 0}
+assertions: False
+seed: 54321
+verilator: Verilator 5.055 devel rev v5.054-183-g9040f8666 (mod)
+cocotb: 2.1.0

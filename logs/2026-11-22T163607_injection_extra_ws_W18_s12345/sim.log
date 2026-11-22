@@ -1,0 +1,26 @@
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:242  in gpi_load_users                  Loaded entry library: '/usr/lib/x86_64-linux-gnu/libpython3.10.so.1.0'
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:233  in gpi_load_users                  Running entry func 'initialize' from loaded library '/home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb/simulator.cpython-310-x86_64-linux-gnu.so'
+     -.--ns INFO     pygpi                              ..ib/pygpi/embed.cpp:114  in initialize                      Using Python 3.10.19 interpreter at /home/ursula/systolic-abft-checker/.venv/bin/python3
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:74   in gpi_print_registered_impl       GPI: VPI support registered
+     0.00ns INFO     cocotb.initialize                  Seeding Python random module with 12345
+     0.00ns INFO     cocotb.initialize                  Initialized cocotb v2.1.0 from /home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb
+     0.00ns INFO     cocotb.initialize                  Running on Verilator version 5.055 devel
+     0.00ns INFO     cocotb.regression                  Running tests
+     0.00ns INFO     cocotb.regression                  running test_injection_extra.test_extra (1/1)
+ 14995.00ns WARNING  cocotb.regression                  test_injection_extra.test_extra failed
+                                                        Traceback (most recent call last):
+                                                          File "/home/ursula/systolic-abft-checker/tb/test_injection_extra.py", line 112, in test_extra
+                                                            res = await run_multiply_ext(dut, design, A, B, W, faults, handles, stall_p)
+                                                          File "/home/ursula/systolic-abft-checker/tb/injector.py", line 143, in run_multiply_ext
+                                                            _apply(h, f, c)
+                                                          File "/home/ursula/systolic-abft-checker/tb/injector.py", line 56, in _apply
+                                                            word = handle.value.to_unsigned()
+                                                        AttributeError: 'Logic' object has no attribute 'to_unsigned'
+ 14995.00ns INFO     cocotb.regression                  *****************************************************************************************
+                                                        ** TEST                             STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        *****************************************************************************************
+                                                        ** test_injection_extra.test_extra   FAIL       14995.00           0.03     444525.39  **
+                                                        *****************************************************************************************
+                                                        ** TESTS=1 PASS=0 FAIL=1 SKIP=0                 14995.00           0.04     419880.55  **
+                                                        *****************************************************************************************
+- (null):0: Verilog $finish

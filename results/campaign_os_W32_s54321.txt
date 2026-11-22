@@ -1,0 +1,28 @@
+Fault injection campaign, design = os, W = 32, 1000 flips, 1000 stuck-at, 1000 fault-free, no stalls
+
+By fault kind (coverage = detected / (detected + missed); masked faults excluded)
+  group                  injected  masked  detected  missed  coverage  masked %
+  flip                       1000     483       517       0    100.0%     48.3%
+  stuck                      1000     547       453       0    100.0%     54.7%
+
+By register class
+  group                  injected  masked  detected  missed  coverage  masked %
+  flip / a                    358     256       102       0    100.0%     71.5%
+  flip / acc                  319       0       319       0    100.0%      0.0%
+  flip / b                    323     227        96       0    100.0%     70.3%
+  stuck / a                   335     214       121       0    100.0%     63.9%
+  stuck / acc                 347     119       228       0    100.0%     34.3%
+  stuck / b                   318     214       104       0    100.0%     67.3%
+
+Accumulator bits: real bits vs ghost bits (copies of the sign bit)
+  group                  injected  masked  detected  missed  coverage  masked %
+  ghost bit                   262      52       210       0    100.0%     19.8%
+  real bit                    404      67       337       0    100.0%     16.6%
+
+Fault-free multiplies: 1000, flagged: 0  -> false alarm rate 0.0000
+All injections: 2000, masked 1030, detected 970, missed 0, flag_without_change 0
+Detection coverage = 970/970 = 100.00%   (false alarm rate 0.0000, same table)
+Detection latency (cycles from result valid to error flag): 1 in every run (asserted in run_multiply)
+Faults that changed exactly one element: 709, checker located the element: 709
+Changed elements per injection (how many outputs one fault corrupted): 1: 709, 2: 144, 3: 117
+Checker hardware disagrees with model/abft.py in 0 of 3000 multiplies

@@ -1,0 +1,301 @@
+idx,group,faults,target,kind,done,done_cycle,chk_seen,changed,n_wrong,flag,label
+0,free_stall,,,,1,15,1,0,0,0,masked
+1,checker,stuck:chk.b_q[104]@0,chk.b_q,stuck,1,10,1,0,0,0,masked
+2,stall,stuck:pe[1][3].a_out[3]@4,pe[1][3].a_out,stuck,1,13,1,0,0,0,masked
+3,stall,flip:pe[3][1].a_out[1]@3,pe[3][1].a_out,flip,1,17,1,0,0,0,masked
+4,stall,stuck:pe[0][3].acc[15]@1,pe[0][3].acc,stuck,1,13,1,0,0,0,masked
+5,stall,flip:pe[0][1].a_out[3]@3,pe[0][1].a_out,flip,1,12,1,1,2,1,detected
+6,control,flip:ctrl.a_q[77]@8,ctrl.a_q,flip,1,10,1,0,0,0,masked
+7,checker,flip:chk.a_q[122]@3,chk.a_q,flip,1,10,1,0,0,1,flag_without_change
+8,stall,stuck:pe[1][0].a_out[1]@3,pe[1][0].a_out,stuck,1,12,1,1,3,1,detected
+9,free_stall,,,,1,16,1,0,0,0,masked
+10,stall,flip:pe[0][0].acc[10]@0,pe[0][0].acc,flip,1,14,1,1,1,1,detected
+11,checker,stuck:chk.a_q[113]@2,chk.a_q,stuck,1,10,1,0,0,1,flag_without_change
+12,free_stall,,,,1,12,1,0,0,0,masked
+13,control,stuck:ctrl.b_q[91]@1,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+14,free_stall,,,,1,12,1,0,0,0,masked
+15,free_stall,,,,1,11,1,0,0,0,masked
+16,checker,flip:chk.b_q[52]@7,chk.b_q,flip,1,10,1,0,0,0,masked
+17,double,flip:pe[2][3].acc[0]@8 + flip:pe[1][0].a_out[0]@1,pe[2][3].acc,flip,1,10,1,1,1,1,detected
+18,checker,stuck:chk.ref_row[52]@1,chk.ref_row,stuck,1,10,1,0,0,1,flag_without_change
+19,control,flip:ctrl.a_q[4]@8,ctrl.a_q,flip,1,10,1,0,0,0,masked
+20,free_stall,,,,1,13,1,0,0,0,masked
+21,control,flip:ctrl.b_q[75]@10,ctrl.b_q,flip,1,10,1,0,0,0,masked
+22,free_stall,,,,1,12,1,0,0,0,masked
+23,free_stall,,,,1,12,1,0,0,0,masked
+24,checker,stuck:chk.err_col[0]@5,chk.err_col,stuck,1,10,1,0,0,0,masked
+25,stall,flip:pe[1][1].b_out[2]@4,pe[1][1].b_out,flip,1,11,1,1,2,1,detected
+26,control,flip:ctrl.a_q[8]@6,ctrl.a_q,flip,1,10,1,0,0,0,masked
+27,double,stuck:pe[2][1].acc[14]@1 + stuck:pe[2][1].acc[17]@8,pe[2][1].acc,stuck,1,10,1,1,1,1,detected
+28,free_stall,,,,1,15,1,0,0,0,masked
+29,control,stuck:ctrl.a_q[40]@10,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+30,stall,stuck:pe[3][3].acc[15]@7,pe[3][3].acc,stuck,1,11,1,1,1,1,detected
+31,checker,flip:chk.b_q[67]@6,chk.b_q,flip,1,10,1,0,0,0,masked
+32,checker,flip:chk.a_q[109]@8,chk.a_q,flip,1,10,1,0,0,0,masked
+33,stall,flip:pe[2][2].a_out[2]@0,pe[2][2].a_out,flip,1,15,1,0,0,0,masked
+34,stall,flip:pe[0][2].acc[10]@3,pe[0][2].acc,flip,1,11,1,1,1,1,detected
+35,free_stall,,,,1,11,1,0,0,0,masked
+36,stall,flip:pe[2][3].b_out[3]@3,pe[2][3].b_out,flip,1,14,1,0,0,0,masked
+37,checker,flip:chk.b_q[78]@4,chk.b_q,flip,1,10,1,0,0,0,masked
+38,stall,flip:pe[3][0].acc[8]@9,pe[3][0].acc,flip,1,18,1,1,1,1,detected
+39,control,stuck:ctrl.a_q[41]@1,ctrl.a_q,stuck,1,10,1,1,4,1,detected
+40,double,flip:pe[3][0].a_out[3]@3 + stuck:pe[3][3].b_out[7]@5,pe[3][0].a_out,flip,1,10,1,0,0,0,masked
+41,double,stuck:pe[0][1].acc[15]@6 + stuck:pe[0][3].a_out[0]@1,pe[0][1].acc,stuck,1,10,1,0,0,0,masked
+42,free_stall,,,,1,11,1,0,0,0,masked
+43,stall,flip:pe[2][1].acc[11]@0,pe[2][1].acc,flip,1,11,1,1,1,1,detected
+44,double,stuck:pe[1][1].b_out[7]@0 + flip:pe[3][2].b_out[0]@2,pe[1][1].b_out,stuck,1,10,1,1,2,1,detected
+45,double,flip:pe[2][3].acc[9]@5 + stuck:pe[3][2].b_out[4]@9,pe[2][3].acc,flip,1,10,1,1,1,1,detected
+46,control,stuck:ctrl.b_q[34]@8,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+47,double,flip:pe[0][2].acc[10]@0 + stuck:pe[1][3].acc[3]@8,pe[0][2].acc,flip,1,10,1,1,2,1,detected
+48,control,stuck:ctrl.b_q[106]@4,ctrl.b_q,stuck,1,10,1,1,2,1,detected
+49,checker,flip:chk.ref_row[2]@9,chk.ref_row,flip,1,10,1,0,0,1,flag_without_change
+50,stall,stuck:pe[2][0].a_out[4]@1,pe[2][0].a_out,stuck,1,12,1,1,3,1,detected
+51,double,flip:pe[3][2].b_out[4]@1 + flip:pe[0][0].acc[14]@9,pe[3][2].b_out,flip,1,10,1,1,1,1,detected
+52,checker,stuck:chk.a_q[81]@9,chk.a_q,stuck,1,10,1,0,0,0,masked
+53,control,stuck:ctrl.b_q[47]@7,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+54,checker,stuck:chk.b_q[67]@4,chk.b_q,stuck,1,10,1,0,0,0,masked
+55,checker,flip:chk.ref_col[15]@10,chk.ref_col,flip,1,10,1,0,0,0,masked
+56,control,flip:ctrl.a_q[81]@5,ctrl.a_q,flip,1,10,1,0,0,0,masked
+57,control,stuck:ctrl.b_q[11]@0,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+58,stall,stuck:pe[3][2].a_out[5]@2,pe[3][2].a_out,stuck,1,15,1,0,0,0,masked
+59,stall,flip:pe[2][3].a_out[3]@0,pe[2][3].a_out,flip,1,17,1,0,0,0,masked
+60,checker,flip:chk.ref_col[20]@10,chk.ref_col,flip,1,10,1,0,0,0,masked
+61,double,stuck:pe[3][0].acc[5]@0 + flip:pe[2][1].acc[0]@9,pe[3][0].acc,stuck,1,10,1,1,2,1,detected
+62,stall,flip:pe[2][2].a_out[0]@4,pe[2][2].a_out,flip,1,11,1,0,0,0,masked
+63,checker,flip:chk.b_q[9]@0,chk.b_q,flip,1,10,1,0,0,1,flag_without_change
+64,free_stall,,,,1,13,1,0,0,0,masked
+65,stall,stuck:pe[2][3].a_out[5]@2,pe[2][3].a_out,stuck,1,17,1,0,0,0,masked
+66,control,stuck:ctrl.a_q[38]@1,ctrl.a_q,stuck,1,10,1,1,4,1,detected
+67,free_stall,,,,1,13,1,0,0,0,masked
+68,checker,stuck:chk.b_q[15]@5,chk.b_q,stuck,1,10,1,0,0,0,masked
+69,control,stuck:ctrl.b_q[99]@8,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+70,stall,stuck:pe[3][2].a_out[4]@0,pe[3][2].a_out,stuck,1,12,1,0,0,0,masked
+71,checker,flip:chk.a_q[55]@10,chk.a_q,flip,1,10,1,0,0,0,masked
+72,checker,stuck:chk.ref_row[54]@3,chk.ref_row,stuck,1,10,1,0,0,1,flag_without_change
+73,free_stall,,,,1,15,1,0,0,0,masked
+74,control,stuck:ctrl.a_q[71]@0,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+75,double,flip:pe[0][2].a_out[4]@4 + stuck:pe[0][3].acc[7]@4,pe[0][2].a_out,flip,1,10,1,1,1,1,detected
+76,checker,flip:chk.a_q[67]@6,chk.a_q,flip,1,10,1,0,0,0,masked
+77,free_stall,,,,1,13,1,0,0,0,masked
+78,stall,flip:pe[1][0].acc[6]@6,pe[1][0].acc,flip,1,11,1,1,1,1,detected
+79,checker,stuck:chk.ref_col[63]@1,chk.ref_col,stuck,1,10,1,0,0,0,masked
+80,double,stuck:pe[0][0].a_out[0]@0 + stuck:pe[1][0].acc[13]@3,pe[0][0].a_out,stuck,1,10,1,1,1,1,detected
+81,checker,flip:chk.a_q[43]@3,chk.a_q,flip,1,10,1,0,0,0,masked
+82,double,flip:pe[3][1].acc[8]@1 + stuck:pe[2][0].acc[0]@0,pe[3][1].acc,flip,1,10,1,1,1,1,detected
+83,double,flip:pe[1][1].b_out[1]@1 + stuck:pe[0][0].a_out[7]@5,pe[1][1].b_out,flip,1,10,1,0,0,0,masked
+84,free_stall,,,,1,16,1,0,0,0,masked
+85,stall,stuck:pe[3][3].b_out[3]@9,pe[3][3].b_out,stuck,1,14,1,0,0,0,masked
+86,control,stuck:ctrl.b_q[6]@3,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+87,control,stuck:ctrl.b_q[21]@3,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+88,stall,flip:pe[2][2].a_out[7]@3,pe[2][2].a_out,flip,1,11,1,0,0,0,masked
+89,control,flip:ctrl.a_q[68]@10,ctrl.a_q,flip,1,10,1,0,0,0,masked
+90,control,flip:ctrl.a_q[124]@0,ctrl.a_q,flip,1,10,1,1,4,1,detected
+91,stall,flip:pe[3][2].a_out[1]@8,pe[3][2].a_out,flip,1,13,1,1,1,1,detected
+92,control,flip:ctrl.a_q[98]@1,ctrl.a_q,flip,1,10,1,1,4,1,detected
+93,control,flip:ctrl.b_q[80]@0,ctrl.b_q,flip,1,10,1,1,4,1,detected
+94,free_stall,,,,1,13,1,0,0,0,masked
+95,checker,stuck:chk.b_q[53]@5,chk.b_q,stuck,1,10,1,0,0,0,masked
+96,free_stall,,,,1,15,1,0,0,0,masked
+97,free_stall,,,,1,13,1,0,0,0,masked
+98,control,stuck:ctrl.a_q[115]@8,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+99,checker,stuck:chk.ref_row[53]@4,chk.ref_row,stuck,1,10,1,0,0,1,flag_without_change
+100,stall,flip:pe[0][1].a_out[6]@9,pe[0][1].a_out,flip,1,14,1,0,0,0,masked
+101,double,flip:pe[1][2].b_out[7]@3 + flip:pe[2][2].a_out[7]@9,pe[1][2].b_out,flip,1,10,1,0,0,0,masked
+102,double,stuck:pe[1][3].acc[5]@6 + stuck:pe[2][2].a_out[4]@7,pe[1][3].acc,stuck,1,10,1,1,1,1,detected
+103,free_stall,,,,1,14,1,0,0,0,masked
+104,double,flip:pe[3][2].b_out[6]@0 + flip:pe[1][0].b_out[0]@6,pe[3][2].b_out,flip,1,10,1,0,0,0,masked
+105,double,flip:pe[3][2].b_out[7]@3 + flip:pe[0][3].a_out[4]@2,pe[3][2].b_out,flip,1,10,1,0,0,0,masked
+106,control,stuck:ctrl.b_q[61]@5,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+107,double,flip:pe[3][2].b_out[3]@4 + stuck:pe[2][1].b_out[6]@5,pe[3][2].b_out,flip,1,10,1,1,1,1,detected
+108,checker,stuck:chk.b_q[106]@7,chk.b_q,stuck,1,10,1,0,0,0,masked
+109,free_stall,,,,1,13,1,0,0,0,masked
+110,free_stall,,,,1,13,1,0,0,0,masked
+111,checker,flip:chk.a_q[110]@1,chk.a_q,flip,1,10,1,0,0,1,flag_without_change
+112,free_stall,,,,1,17,1,0,0,0,masked
+113,stall,flip:pe[0][0].b_out[6]@0,pe[0][0].b_out,flip,1,11,1,0,0,0,masked
+114,free_stall,,,,1,14,1,0,0,0,masked
+115,checker,stuck:chk.ref_col[46]@1,chk.ref_col,stuck,1,10,1,0,0,1,flag_without_change
+116,checker,flip:chk.ref_col[12]@0,chk.ref_col,flip,1,10,1,0,0,1,flag_without_change
+117,control,stuck:ctrl.a_q[21]@2,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+118,stall,stuck:pe[0][3].acc[2]@1,pe[0][3].acc,stuck,1,16,1,0,0,0,masked
+119,double,flip:pe[2][3].acc[5]@7 + stuck:pe[1][2].acc[17]@8,pe[2][3].acc,flip,1,10,1,1,1,1,detected
+120,double,stuck:pe[1][1].acc[10]@8 + stuck:pe[1][3].acc[8]@0,pe[1][1].acc,stuck,1,10,1,1,2,1,detected
+121,checker,flip:chk.ref_row[31]@1,chk.ref_row,flip,1,10,1,0,0,1,flag_without_change
+122,stall,flip:pe[0][2].acc[6]@3,pe[0][2].acc,flip,1,17,1,1,1,1,detected
+123,stall,flip:pe[3][2].acc[7]@5,pe[3][2].acc,flip,1,13,1,1,1,1,detected
+124,stall,stuck:pe[2][2].acc[1]@9,pe[2][2].acc,stuck,1,11,1,1,1,1,detected
+125,control,flip:ctrl.b_q[11]@10,ctrl.b_q,flip,1,10,1,0,0,0,masked
+126,stall,flip:pe[0][0].acc[9]@8,pe[0][0].acc,flip,1,10,1,1,1,1,detected
+127,free_stall,,,,1,15,1,0,0,0,masked
+128,double,flip:pe[2][3].b_out[2]@8 + flip:pe[2][3].a_out[6]@4,pe[2][3].b_out,flip,1,10,1,1,1,1,detected
+129,checker,flip:chk.b_q[103]@0,chk.b_q,flip,1,10,1,0,0,1,flag_without_change
+130,stall,stuck:pe[3][1].acc[1]@1,pe[3][1].acc,stuck,1,16,1,1,1,1,detected
+131,double,stuck:pe[3][2].acc[2]@3 + flip:pe[0][0].acc[16]@6,pe[3][2].acc,stuck,1,10,1,1,1,1,detected
+132,control,flip:ctrl.b_q[112]@6,ctrl.b_q,flip,1,10,1,0,0,0,masked
+133,free_stall,,,,1,18,1,0,0,0,masked
+134,control,flip:ctrl.a_q[69]@1,ctrl.a_q,flip,1,10,1,1,4,1,detected
+135,free_stall,,,,1,13,1,0,0,0,masked
+136,double,stuck:pe[3][1].b_out[4]@6 + stuck:pe[2][1].a_out[1]@5,pe[3][1].b_out,stuck,1,10,1,1,2,1,detected
+137,double,stuck:pe[3][1].b_out[7]@4 + stuck:pe[2][3].acc[14]@9,pe[3][1].b_out,stuck,1,10,1,1,1,1,detected
+138,double,flip:pe[2][1].acc[5]@0 + flip:pe[0][2].b_out[5]@6,pe[2][1].acc,flip,1,10,1,1,4,1,detected
+139,control,flip:ctrl.a_q[10]@9,ctrl.a_q,flip,1,10,1,0,0,0,masked
+140,double,stuck:pe[0][0].acc[14]@2 + flip:pe[2][1].a_out[1]@1,pe[0][0].acc,stuck,1,10,1,1,1,1,detected
+141,stall,stuck:pe[1][1].a_out[3]@9,pe[1][1].a_out,stuck,1,14,1,0,0,0,masked
+142,stall,stuck:pe[0][3].a_out[7]@5,pe[0][3].a_out,stuck,1,12,1,0,0,0,masked
+143,free_stall,,,,1,14,1,0,0,0,masked
+144,free_stall,,,,1,14,1,0,0,0,masked
+145,double,stuck:pe[1][1].b_out[3]@3 + flip:pe[0][3].acc[6]@9,pe[1][1].b_out,stuck,1,10,1,1,3,1,detected
+146,double,flip:pe[2][3].a_out[3]@1 + flip:pe[3][2].b_out[2]@8,pe[2][3].a_out,flip,1,10,1,0,0,0,masked
+147,control,flip:ctrl.a_q[62]@10,ctrl.a_q,flip,1,10,1,0,0,0,masked
+148,free_stall,,,,1,15,1,0,0,0,masked
+149,double,stuck:pe[0][1].a_out[3]@3 + flip:pe[1][3].b_out[0]@9,pe[0][1].a_out,stuck,1,10,1,0,0,0,masked
+150,control,flip:ctrl.b_q[72]@7,ctrl.b_q,flip,1,10,1,0,0,0,masked
+151,stall,flip:pe[3][3].b_out[1]@0,pe[3][3].b_out,flip,1,14,1,0,0,0,masked
+152,checker,flip:chk.b_q[98]@7,chk.b_q,flip,1,10,1,0,0,0,masked
+153,stall,flip:pe[0][0].a_out[3]@4,pe[0][0].a_out,flip,1,11,1,1,3,1,detected
+154,double,flip:pe[3][3].acc[6]@9 + stuck:pe[2][0].b_out[3]@8,pe[3][3].acc,flip,1,10,1,1,1,1,detected
+155,double,stuck:pe[0][3].b_out[4]@8 + stuck:pe[1][1].b_out[6]@6,pe[0][3].b_out,stuck,1,10,1,1,2,1,detected
+156,free_stall,,,,1,14,1,0,0,0,masked
+157,double,stuck:pe[3][3].acc[9]@1 + flip:pe[1][1].acc[15]@3,pe[3][3].acc,stuck,1,10,1,1,2,1,detected
+158,checker,flip:chk.ref_col[51]@6,chk.ref_col,flip,1,10,1,0,0,1,flag_without_change
+159,double,flip:pe[2][1].b_out[0]@1 + flip:pe[1][1].a_out[2]@2,pe[2][1].b_out,flip,1,10,1,0,0,0,masked
+160,stall,flip:pe[1][0].a_out[2]@8,pe[1][0].a_out,flip,1,12,1,0,0,0,masked
+161,control,stuck:ctrl.a_q[39]@8,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+162,stall,stuck:pe[0][3].b_out[5]@8,pe[0][3].b_out,stuck,1,12,1,0,0,0,masked
+163,control,stuck:ctrl.cnt[0]@0,ctrl.cnt,stuck,1,15,1,1,1,1,detected
+164,stall,flip:pe[1][1].a_out[0]@0,pe[1][1].a_out,flip,1,13,1,0,0,0,masked
+165,control,stuck:ctrl.a_q[89]@8,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+166,stall,stuck:pe[0][2].acc[3]@9,pe[0][2].acc,stuck,1,18,1,1,1,1,detected
+167,control,stuck:ctrl.a_q[1]@3,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+168,checker,stuck:chk.ref_row[16]@0,chk.ref_row,stuck,1,10,1,0,0,0,masked
+169,checker,stuck:chk.b_q[86]@4,chk.b_q,stuck,1,10,1,0,0,0,masked
+170,free_stall,,,,1,11,1,0,0,0,masked
+171,stall,stuck:pe[0][2].a_out[0]@5,pe[0][2].a_out,stuck,1,16,1,0,0,0,masked
+172,control,stuck:ctrl.a_q[63]@6,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+173,checker,flip:chk.b_q[53]@7,chk.b_q,flip,1,10,1,0,0,0,masked
+174,free_stall,,,,1,12,1,0,0,0,masked
+175,checker,flip:chk.ref_row[0]@2,chk.ref_row,flip,1,10,1,0,0,1,flag_without_change
+176,control,stuck:ctrl.a_q[111]@7,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+177,checker,flip:chk.b_q[116]@5,chk.b_q,flip,1,10,1,0,0,0,masked
+178,double,stuck:pe[1][1].b_out[3]@8 + flip:pe[1][1].a_out[0]@9,pe[1][1].b_out,stuck,1,10,1,0,0,0,masked
+179,checker,stuck:chk.ref_row[33]@6,chk.ref_row,stuck,1,10,1,0,0,1,flag_without_change
+180,control,flip:ctrl.a_q[75]@2,ctrl.a_q,flip,1,10,1,1,4,1,detected
+181,free_stall,,,,1,14,1,0,0,0,masked
+182,control,stuck:ctrl.b_q[32]@0,ctrl.b_q,stuck,1,10,1,1,4,1,detected
+183,free_stall,,,,1,15,1,0,0,0,masked
+184,free_stall,,,,1,12,1,0,0,0,masked
+185,double,flip:pe[2][2].acc[12]@4 + stuck:pe[2][0].acc[17]@5,pe[2][2].acc,flip,1,10,1,1,2,1,detected
+186,stall,stuck:pe[2][3].a_out[4]@9,pe[2][3].a_out,stuck,1,11,1,0,0,0,masked
+187,control,stuck:ctrl.a_q[48]@7,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+188,free_stall,,,,1,17,1,0,0,0,masked
+189,checker,flip:chk.ref_col[7]@3,chk.ref_col,flip,1,10,1,0,0,1,flag_without_change
+190,stall,stuck:pe[0][3].a_out[3]@4,pe[0][3].a_out,stuck,1,12,1,0,0,0,masked
+191,double,flip:pe[3][1].b_out[5]@7 + flip:pe[1][1].b_out[6]@2,pe[3][1].b_out,flip,1,10,1,0,0,0,masked
+192,free_stall,,,,1,12,1,0,0,0,masked
+193,double,stuck:pe[0][2].acc[5]@6 + flip:pe[1][2].b_out[7]@6,pe[0][2].acc,stuck,1,10,1,1,3,1,detected
+194,double,flip:pe[1][1].b_out[5]@0 + stuck:pe[1][2].a_out[7]@1,pe[1][1].b_out,flip,1,10,1,0,0,0,masked
+195,double,flip:pe[2][1].b_out[1]@5 + stuck:pe[3][2].a_out[3]@0,pe[2][1].b_out,flip,1,10,1,1,1,1,detected
+196,stall,stuck:pe[1][2].acc[0]@1,pe[1][2].acc,stuck,1,17,1,0,0,0,masked
+197,checker,stuck:chk.ref_row[56]@2,chk.ref_row,stuck,1,10,1,0,0,0,masked
+198,stall,flip:pe[2][0].b_out[3]@5,pe[2][0].b_out,flip,1,13,1,1,1,1,detected
+199,stall,stuck:pe[1][2].a_out[6]@1,pe[1][2].a_out,stuck,1,14,1,0,0,0,masked
+200,double,stuck:pe[0][0].a_out[2]@3 + flip:pe[3][0].a_out[5]@7,pe[0][0].a_out,stuck,1,10,1,1,6,1,detected
+201,double,flip:pe[0][3].acc[16]@5 + stuck:pe[2][1].b_out[6]@8,pe[0][3].acc,flip,1,10,1,1,1,1,detected
+202,free_stall,,,,1,15,1,0,0,0,masked
+203,double,flip:pe[2][1].acc[0]@2 + flip:pe[1][0].a_out[1]@4,pe[2][1].acc,flip,1,10,1,1,4,1,detected
+204,double,flip:pe[2][2].acc[5]@2 + flip:pe[0][3].b_out[2]@8,pe[2][2].acc,flip,1,10,1,1,1,1,detected
+205,double,stuck:pe[0][1].a_out[5]@9 + stuck:pe[2][3].acc[2]@9,pe[0][1].a_out,stuck,1,10,1,0,0,0,masked
+206,free_stall,,,,1,14,1,0,0,0,masked
+207,checker,stuck:chk.err_loc_valid[0]@1,chk.err_loc_valid,stuck,1,10,1,0,0,0,masked
+208,control,flip:ctrl.a_q[101]@5,ctrl.a_q,flip,1,10,1,0,0,0,masked
+209,free_stall,,,,1,12,1,0,0,0,masked
+210,stall,stuck:pe[3][3].acc[13]@7,pe[3][3].acc,stuck,1,10,1,1,1,1,detected
+211,free_stall,,,,1,11,1,0,0,0,masked
+212,double,flip:pe[2][3].acc[14]@8 + stuck:pe[2][1].acc[6]@8,pe[2][3].acc,flip,1,10,1,1,2,1,detected
+213,control,flip:ctrl.a_q[16]@4,ctrl.a_q,flip,1,10,1,0,0,0,masked
+214,checker,flip:chk.a_q[42]@5,chk.a_q,flip,1,10,1,0,0,0,masked
+215,control,stuck:ctrl.a_q[98]@8,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+216,stall,flip:pe[2][2].acc[14]@2,pe[2][2].acc,flip,1,13,1,1,1,1,detected
+217,control,flip:ctrl.b_q[112]@3,ctrl.b_q,flip,1,10,1,1,4,1,detected
+218,free_stall,,,,1,12,1,0,0,0,masked
+219,stall,flip:pe[2][2].b_out[4]@1,pe[2][2].b_out,flip,1,11,1,0,0,0,masked
+220,double,stuck:pe[2][3].acc[1]@4 + flip:pe[0][3].b_out[7]@5,pe[2][3].acc,stuck,1,10,1,1,3,1,detected
+221,control,flip:ctrl.b_q[72]@8,ctrl.b_q,flip,1,10,1,0,0,0,masked
+222,checker,stuck:chk.b_q[83]@9,chk.b_q,stuck,1,10,1,0,0,0,masked
+223,free_stall,,,,1,10,1,0,0,0,masked
+224,control,flip:ctrl.a_q[92]@6,ctrl.a_q,flip,1,10,1,0,0,0,masked
+225,checker,flip:chk.b_q[52]@7,chk.b_q,flip,1,10,1,0,0,0,masked
+226,free_stall,,,,1,13,1,0,0,0,masked
+227,control,stuck:ctrl.b_q[17]@8,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+228,free_stall,,,,1,13,1,0,0,0,masked
+229,double,flip:pe[3][3].acc[11]@0 + flip:pe[3][0].b_out[6]@4,pe[3][3].acc,flip,1,10,1,1,1,1,detected
+230,stall,flip:pe[2][0].b_out[0]@0,pe[2][0].b_out,flip,1,12,1,0,0,0,masked
+231,free_stall,,,,1,13,1,0,0,0,masked
+232,free_stall,,,,1,13,1,0,0,0,masked
+233,stall,flip:pe[0][3].b_out[1]@8,pe[0][3].b_out,flip,1,12,1,1,3,1,detected
+234,stall,flip:pe[1][2].a_out[0]@8,pe[1][2].a_out,flip,1,13,1,1,1,1,detected
+235,checker,flip:chk.ref_col[9]@1,chk.ref_col,flip,1,10,1,0,0,1,flag_without_change
+236,stall,flip:pe[3][2].acc[15]@8,pe[3][2].acc,flip,1,12,1,1,1,1,detected
+237,checker,stuck:chk.a_q[13]@1,chk.a_q,stuck,1,10,1,0,0,0,masked
+238,free_stall,,,,1,11,1,0,0,0,masked
+239,free_stall,,,,1,15,1,0,0,0,masked
+240,control,flip:ctrl.a_q[85]@8,ctrl.a_q,flip,1,10,1,0,0,0,masked
+241,free_stall,,,,1,11,1,0,0,0,masked
+242,free_stall,,,,1,16,1,0,0,0,masked
+243,double,stuck:pe[1][3].acc[10]@9 + flip:pe[0][3].b_out[6]@2,pe[1][3].acc,stuck,1,10,1,1,1,1,detected
+244,stall,flip:pe[1][0].acc[14]@7,pe[1][0].acc,flip,1,10,1,1,1,1,detected
+245,checker,stuck:chk.ref_col[26]@6,chk.ref_col,stuck,1,10,1,0,0,0,masked
+246,double,stuck:pe[1][1].a_out[4]@2 + stuck:pe[1][3].b_out[2]@3,pe[1][1].a_out,stuck,1,10,1,1,2,1,detected
+247,free_stall,,,,1,11,1,0,0,0,masked
+248,checker,stuck:chk.a_q[42]@6,chk.a_q,stuck,1,10,1,0,0,0,masked
+249,control,stuck:ctrl.b_q[71]@1,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+250,checker,flip:chk.a_q[101]@9,chk.a_q,flip,1,10,1,0,0,0,masked
+251,control,flip:ctrl.a_q[77]@6,ctrl.a_q,flip,1,10,1,0,0,0,masked
+252,control,flip:ctrl.a_q[7]@1,ctrl.a_q,flip,1,10,1,0,0,0,masked
+253,double,flip:pe[2][2].acc[14]@5 + flip:pe[2][0].acc[7]@3,pe[2][2].acc,flip,1,10,1,1,2,1,detected
+254,double,flip:pe[2][2].acc[0]@2 + flip:pe[3][3].acc[12]@7,pe[2][2].acc,flip,1,10,1,1,2,1,detected
+255,double,stuck:pe[0][1].b_out[5]@7 + stuck:pe[0][2].acc[14]@9,pe[0][1].b_out,stuck,1,10,1,0,0,0,masked
+256,control,stuck:ctrl.b_q[73]@9,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+257,double,flip:pe[0][2].acc[10]@5 + flip:pe[0][2].acc[2]@6,pe[0][2].acc,flip,1,10,1,1,1,1,detected
+258,checker,stuck:chk.a_q[4]@4,chk.a_q,stuck,1,10,1,0,0,0,masked
+259,control,stuck:ctrl.cnt[2]@2,ctrl.cnt,stuck,1,14,1,1,16,1,detected
+260,free_stall,,,,1,12,1,0,0,0,masked
+261,double,flip:pe[1][0].b_out[2]@6 + stuck:pe[0][3].a_out[4]@7,pe[1][0].b_out,flip,1,10,1,0,0,0,masked
+262,checker,flip:chk.ref_row[12]@5,chk.ref_row,flip,1,10,1,0,0,1,flag_without_change
+263,stall,stuck:pe[0][3].a_out[2]@1,pe[0][3].a_out,stuck,1,16,1,0,0,0,masked
+264,checker,stuck:chk.ref_col[52]@7,chk.ref_col,stuck,1,10,1,0,0,0,masked
+265,stall,flip:pe[1][1].a_out[3]@6,pe[1][1].a_out,flip,1,12,1,0,0,0,masked
+266,double,flip:pe[2][2].acc[2]@2 + stuck:pe[0][1].b_out[3]@7,pe[2][2].acc,flip,1,10,1,1,1,1,detected
+267,checker,stuck:chk.b_q[114]@6,chk.b_q,stuck,1,10,1,0,0,0,masked
+268,control,stuck:ctrl.b_q[123]@3,ctrl.b_q,stuck,1,10,1,1,4,1,detected
+269,checker,flip:chk.ref_row[50]@1,chk.ref_row,flip,1,10,1,0,0,1,flag_without_change
+270,checker,stuck:chk.b_q[107]@8,chk.b_q,stuck,1,10,1,0,0,0,masked
+271,stall,stuck:pe[1][2].a_out[0]@2,pe[1][2].a_out,stuck,1,14,1,1,1,1,detected
+272,checker,flip:chk.a_q[79]@1,chk.a_q,flip,1,10,1,0,0,0,masked
+273,free_stall,,,,1,10,1,0,0,0,masked
+274,double,stuck:pe[3][3].a_out[4]@2 + stuck:pe[1][1].a_out[3]@3,pe[3][3].a_out,stuck,1,10,1,1,2,1,detected
+275,free_stall,,,,1,15,1,0,0,0,masked
+276,control,stuck:ctrl.b_q[85]@0,ctrl.b_q,stuck,1,10,1,1,4,1,detected
+277,free_stall,,,,1,13,1,0,0,0,masked
+278,control,stuck:ctrl.b_q[80]@7,ctrl.b_q,stuck,1,10,1,0,0,0,masked
+279,control,flip:ctrl.b_q[12]@10,ctrl.b_q,flip,1,10,1,0,0,0,masked
+280,checker,stuck:chk.a_q[26]@0,chk.a_q,stuck,1,10,1,0,0,1,flag_without_change
+281,checker,stuck:chk.b_q[81]@2,chk.b_q,stuck,1,10,1,0,0,1,flag_without_change
+282,stall,stuck:pe[2][0].a_out[6]@5,pe[2][0].a_out,stuck,1,10,1,1,2,1,detected
+283,free_stall,,,,1,13,1,0,0,0,masked
+284,double,flip:pe[0][1].acc[6]@2 + stuck:pe[1][3].acc[3]@5,pe[0][1].acc,flip,1,10,1,1,2,1,detected
+285,stall,flip:pe[0][1].a_out[0]@2,pe[0][1].a_out,flip,1,11,1,0,0,0,masked
+286,control,flip:ctrl.b_q[25]@4,ctrl.b_q,flip,1,10,1,0,0,0,masked
+287,control,stuck:ctrl.a_q[50]@4,ctrl.a_q,stuck,1,10,1,0,0,0,masked
+288,double,flip:pe[2][2].acc[2]@1 + flip:pe[3][3].a_out[4]@3,pe[2][2].acc,flip,1,10,1,1,1,1,detected
+289,free_stall,,,,1,14,1,0,0,0,masked
+290,control,flip:ctrl.a_q[73]@9,ctrl.a_q,flip,1,10,1,0,0,0,masked
+291,control,flip:ctrl.b_q[48]@7,ctrl.b_q,flip,1,10,1,0,0,0,masked
+292,free_stall,,,,1,10,1,0,0,0,masked
+293,checker,flip:chk.ref_col[27]@0,chk.ref_col,flip,1,10,1,0,0,1,flag_without_change
+294,double,stuck:pe[3][2].acc[2]@1 + flip:pe[0][2].acc[10]@5,pe[3][2].acc,stuck,1,10,1,1,2,1,detected
+295,double,flip:pe[1][2].b_out[2]@1 + flip:pe[3][2].a_out[3]@7,pe[1][2].b_out,flip,1,10,1,1,1,1,detected
+296,stall,stuck:pe[0][0].a_out[2]@4,pe[0][0].a_out,stuck,1,11,1,1,3,1,detected
+297,checker,stuck:chk.b_q[69]@0,chk.b_q,stuck,1,10,1,0,0,1,flag_without_change
+298,stall,stuck:pe[1][0].acc[15]@5,pe[1][0].acc,stuck,1,10,1,1,1,1,detected
+299,checker,stuck:chk.b_q[112]@10,chk.b_q,stuck,1,10,1,0,0,0,masked

@@ -48,6 +48,46 @@ class Target:
         return self.is_acc and bit >= ACC_BITS
 
 
+@dataclass(frozen=True)
+class FlopTarget:
+    """A register of the control logic or of the checker, reached by a path of names.
+
+    Unlike the PE targets above, these are chosen with every flip-flop equally likely, so a
+    128-bit register is hit 128 times more often than a 1-bit one.
+    """
+    design: str
+    group: str          # "ctrl" or "chk"
+    reg: str
+    width: int
+
+    @property
+    def name(self):
+        return f"{self.group}.{self.reg}"
+
+    def handle(self, dut):
+        if self.group == "ctrl":
+            node = getattr(getattr(dut, REGISTERS[self.design][0]), "u_ctrl")
+        else:
+            node = dut.u_chk
+        return getattr(node, self.reg)
+
+
+def ctrl_targets(design, W):
+    """Control-logic registers. The OS result is a wire from the PE accumulators, not a register."""
+    regs = [("state", 2), ("cnt", 4), ("a_q", 128), ("b_q", 128), ("done", 1)]
+    if design == "ws":
+        regs.append(("c_mat", 16 * W))                 # the captured result of the WS control
+    return [FlopTarget(design, "ctrl", r, w) for r, w in regs]
+
+
+def chk_targets(design, W):
+    """Registers of the ABFT checker."""
+    regs = [("a_q", 128), ("b_q", 128), ("ref_col", 4 * W), ("ref_row", 4 * W), ("ref_k", 2),
+            ("ref_run", 1), ("ref_ready", 1), ("chk_valid", 1), ("err_flag", 1),
+            ("err_loc_valid", 1), ("err_row", 2), ("err_col", 2)]
+    return [FlopTarget(design, "chk", r, w) for r, w in regs]
+
+
 def targets(design, W):
     block, regs = REGISTERS[design]
     return [Target(design, reg, cls, r, c, W if is_acc else 8, is_acc)

@@ -80,7 +80,7 @@ def run_cocotb(toplevel, sources, test_module, tag, parameters=None, seed=None, 
         build_dir=build_dir,
         seed=seed,
         waves=waves,
-        extra_env={"PYTHONPATH": f"{ROOT}:{ROOT / 'tb'}"},
+        extra_env={"PYTHONPATH": f"{ROOT}:{ROOT / 'tb'}", "CAMP_SEED": str(seed)},
         results_xml=str(log_dir / "results.xml"),
         log_file=log_dir / "sim.log",
     )

@@ -1,0 +1,62 @@
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:242  in gpi_load_users                  Loaded entry library: '/usr/lib/x86_64-linux-gnu/libpython3.10.so.1.0'
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:233  in gpi_load_users                  Running entry func 'initialize' from loaded library '/home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb/simulator.cpython-310-x86_64-linux-gnu.so'
+     -.--ns INFO     pygpi                              ..ib/pygpi/embed.cpp:114  in initialize                      Using Python 3.10.19 interpreter at /home/ursula/systolic-abft-checker/.venv/bin/python3
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:74   in gpi_print_registered_impl       GPI: VPI support registered
+     0.00ns INFO     cocotb.initialize                  Seeding Python random module with 54321
+     0.00ns INFO     cocotb.initialize                  Initialized cocotb v2.1.0 from /home/ursula/systolic-abft-checker/.venv/lib/python3.10/site-packages/cocotb
+     0.00ns INFO     cocotb.initialize                  Running on Verilator version 5.055 devel
+     0.00ns INFO     cocotb.regression                  Running tests
+     0.00ns INFO     cocotb.regression                  running test_injection_extra.test_extra (1/1)
+1385225.00ns INFO     cocotb.top                         
+                                                        Extra fault injection, design = ws, W = 32, seed = 54321, 1000 per group, every multiply from a reset
+                                                        
+                                                          group            n              masked            detected              missed           no_result flag_without_change  coverage
+                                                          control       1000                 802                 198                   0                   0                   0    100.0%
+                                                          fsm           1000                 512                 293                   0                 195                   0    100.0%
+                                                          checker       1000                 604                   0                   0                   0                 396       n/a
+                                                          stall         1000                 643                 357                   0                   0                   0    100.0%
+                                                          double        1000                 429                 571                   0                   0                   0    100.0%
+                                                          free_stall    1000                1000                   0                   0                   0                   0       n/a
+                                                          (coverage = detected / (detected + missed); masked faults excluded)
+                                                        
+                                                        Control faults by register
+                                                          register             n              masked            detected              missed           no_result flag_without_change
+                                                          ctrl.a_q           167                 111                  56                   0                   0                   0
+                                                          ctrl.b_q           160                 139                  21                   0                   0                   0
+                                                          ctrl.c_mat         662                 545                 117                   0                   0                   0
+                                                          ctrl.cnt             7                   3                   4                   0                   0                   0
+                                                          ctrl.done            4                   4                   0                   0                   0                   0
+                                                        
+                                                        Control-state faults by register
+                                                          register             n              masked            detected              missed           no_result flag_without_change
+                                                          ctrl.cnt           570                 289                 281                   0                   0                   0
+                                                          ctrl.done          139                 139                   0                   0                   0                   0
+                                                          ctrl.state         291                  84                  12                   0                 195                   0
+                                                        
+                                                        Checker faults by register
+                                                          register             n              masked            detected              missed           no_result flag_without_change
+                                                          chk.a_q            268                 244                   0                   0                   0                  24
+                                                          chk.b_q            260                 230                   0                   0                   0                  30
+                                                          chk.chk_valid        1                   1                   0                   0                   0                   0
+                                                          chk.err_col          2                   2                   0                   0                   0                   0
+                                                          chk.err_flag         1                   1                   0                   0                   0                   0
+                                                          chk.err_loc_valid     1                   1                   0                   0                   0                   0
+                                                          chk.err_row          1                   1                   0                   0                   0                   0
+                                                          chk.ref_col        246                  59                   0                   0                   0                 187
+                                                          chk.ref_k            9                   7                   0                   0                   0                   2
+                                                          chk.ref_ready        2                   2                   0                   0                   0                   0
+                                                          chk.ref_row        206                  55                   0                   0                   0                 151
+                                                          chk.ref_run          3                   1                   0                   0                   0                   2
+                                                        
+                                                        Fault-free with stalls: 1000, flagged: 0
+                                                        Checker hardware disagrees with model/abft.py (healthy-checker groups): 0
+                                                        Control-state faults where done still came at the nominal cycle: 297, at another cycle: 508
+1385225.00ns INFO     cocotb.regression                  test_injection_extra.test_extra passed
+1385225.00ns INFO     cocotb.regression                  *****************************************************************************************
+                                                        ** TEST                             STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        *****************************************************************************************
+                                                        ** test_injection_extra.test_extra   PASS     1385225.00           2.37     584148.29  **
+                                                        *****************************************************************************************
+                                                        ** TESTS=1 PASS=1 FAIL=0 SKIP=0               1385225.00           2.37     584069.66  **
+                                                        *****************************************************************************************
+- (null):0: Verilog $finish

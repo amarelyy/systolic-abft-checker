@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites name="cocotb tests"><testsuite name="test_injection_extra" errors="0" failures="1" skipped="0" tests="1" time="0.034" timestamp="2026-11-22T09:36:10.775136+00:00" hostname="ursula-ubuntu"><testcase classname="test_injection_extra" name="test_extra" time="0.034"><failure message="'Logic' object has no attribute 'to_unsigned'" type="AttributeError">Traceback (most recent call last):
+  File "/home/ursula/systolic-abft-checker/tb/test_injection_extra.py", line 112, in test_extra
+    res = await run_multiply_ext(dut, design, A, B, W, faults, handles, stall_p)
+  File "/home/ursula/systolic-abft-checker/tb/injector.py", line 143, in run_multiply_ext
+    _apply(h, f, c)
+  File "/home/ursula/systolic-abft-checker/tb/injector.py", line 56, in _apply
+    word = handle.value.to_unsigned()
+AttributeError: 'Logic' object has no attribute 'to_unsigned'
+</failure><properties><property name="cocotb" value="True" /><property name="random_seed" value="12345" /><property name="file" value="/home/ursula/systolic-abft-checker/tb/test_injection_extra.py" /><property name="line" value="78" /><property name="sim_time_unit" value="ns" /><property name="sim_time_start" value="0.0" /><property name="sim_time_stop" value="14995.0" /><property name="sim_time_duration" value="14995.0" /><property name="sim_time_ratio" value="444525.39480867225" /><property name="attachment" value="/home/ursula/systolic-abft-checker/logs/2026-11-22T163607_injection_extra_ws_W18_s12345/sim.log" /></properties><system-out>[[ATTACHMENT|/home/ursula/systolic-abft-checker/logs/2026-11-22T163607_injection_extra_ws_W18_s12345/sim.log]]
+</system-out><system-err>Test failed with COCOTB_RANDOM_SEED=12345
+</system-err></testcase></testsuite></testsuites>

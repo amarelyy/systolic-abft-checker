@@ -42,5 +42,20 @@ pytest             # all tests, both designs, W = 18, 16, 32
 
 Each simulation run saves its log, seed and tool versions to its own folder in `logs/`.
 
+### Run in Docker (reproducible on Windows or macOS)
+
+The project runs natively on Ubuntu with `source env.sh`. The `Dockerfile` builds the same environment
+(Ubuntu 24.04, OSS CAD Suite 2026-11-10, Lean v4.35.0, the pinned Python packages) for other systems:
+
+```bash
+docker build -t systolic-abft .
+docker run --rm -v "$PWD/logs:/work/logs" systolic-abft                    # pytest (all 66 tests, about 7 min)
+docker run --rm -v "$PWD/logs:/work/logs" systolic-abft formal/run_all.sh  # formal proofs
+docker run --rm -v "$PWD/logs:/work/logs" systolic-abft lean/check.sh      # Lean proof
+```
+
+The `-v` option keeps the run logs on your machine. `.gitattributes` keeps shell scripts on LF line
+endings so they also work after a Windows checkout.
+
 Formal proofs: `formal/run_all.sh`. Lean proof: `lean/check.sh`. Results of every run are saved in `logs/`
 and the fault-injection tables in `results/`.

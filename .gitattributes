@@ -1,0 +1,3 @@
+*.sh text eol=lf
+*.sby text eol=lf
+lean-toolchain text eol=lf
